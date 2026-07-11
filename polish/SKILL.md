@@ -20,6 +20,12 @@ commentary proportional to actual contracts and risk.
   documentation, types or schemas, and authoritative specifications as contract
   evidence. Apply a narrow defect fix when the contract is unambiguous and add
   focused verification; ask before choosing between plausible contracts.
+- Treat affected tests as discriminating contract evidence. Each goes red for a
+  specific production-side fault in its maintained behavioral claim, stays
+  green outside that claim, and serves a justified coverage role. Removing or
+  replacing one preserves its claim, boundary role, and fault sensitivity
+  elsewhere, or cites affirmative evidence that the claim is no longer
+  maintained.
 - Remove unwarranted ceremony: helpers, wrappers, guards, abstractions,
   indirection, strictness, or commentary whose cost exceeds the clarity,
   contract, or risk they carry. Preserve trust-boundary validation, meaningful
@@ -86,11 +92,18 @@ commentary proportional to actual contracts and risk.
    text, examples, and normative documentation agree, while historical records
    retain their intended context.
 4. Verify and audit the result.
+   For each added, materially changed, removed, or replaced test, establish
+   claim-specific red evidence against the base, otherwise against a minimal
+   production-side fault, otherwise through a falsifiable trace naming the
+   execution obstacle, fault, and failing assertion. For broad assertion
+   surfaces, also observe a relevant claim-preserving variation stay green;
+   focused assertions may establish specificity from their bounded dependencies.
    Run the narrowest checks that meaningfully prove the edits. Follow
    repository-mandated gates and use broader checks when scope or risk warrants
    them. Review the normal diff and a whitespace-insensitive diff when useful.
-   Complete when every resulting change is accounted for, material verification
-   gaps are known, and excluded dirty work remains intact.
+   Complete when every affected test satisfies the discriminating-evidence
+   contract, every resulting change is accounted for, material verification gaps
+   are known, and excluded dirty work remains intact.
 5. Report adaptively.
    Report material changes, verification, skipped areas, and unresolved
    decisions. For repo-wide or blocked passes, also report scope, comparison
