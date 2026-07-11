@@ -35,8 +35,9 @@ node_modules/
 /vendor/
 
 # Generic generated output
-/.gstack/
 /.cache/
+/.gstack/
+/.lycheecache
 /build/
 /coverage/
 /dist/

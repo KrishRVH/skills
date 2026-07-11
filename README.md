@@ -4,8 +4,8 @@ A collection of reusable coding-agent skills for clean working trees, tidy
 repositories, and pre-commit quality.
 
 Each visible top-level folder is a skill package with a required `SKILL.md`
-entry point and optional supporting files such as templates, references,
-helpers, assets, and examples.
+entry point and optional supporting files such as references, assets, helpers,
+templates, and examples.
 
 See `AGENTS.md` for repository conventions, `STYLE.md` for authoring rules, and
 `.config/mise/config.toml` for the standards command surface.

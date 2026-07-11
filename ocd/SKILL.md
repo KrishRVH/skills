@@ -1,6 +1,6 @@
 ---
 name: ocd
-description: Idiomatic config ordering and clean project organization pass.
+description: Behavior-preserving configuration ordering and project organization pass.
 disable-model-invocation: true
 ---
 
@@ -25,11 +25,13 @@ sorting only among true peers.
 - Establish peerhood before lexical sorting. True peers have the same role and
   no dependency, priority, override, narrative, lifecycle, cascade, or
   match-order relationship.
-- Enter through project task wrappers. A formatter or normalizer owns only the
-  regions it actually rewrites; its silence creates no ordering rule.
-- Reorder only when the result improves a higher rung of the precedence. Remove
-  duplicates only when a canonical normalizer does so or the collection is
-  demonstrably set-like. Keep comments attached to the entries they explain.
+- Use available project task wrappers for every project tool you run. A
+  formatter or normalizer owns only the regions it actually rewrites; its
+  silence creates no ordering rule.
+- Reorder only when the result better satisfies the highest applicable rung of
+  this precedence. Remove duplicates only when a canonical normalizer does so
+  or the collection is demonstrably set-like. Keep comments attached to the
+  entries they explain.
 - Preserve unrelated dirty work and generated, vendored, dependency, build,
   cache, coverage, and lock output. Allow repository tools to update owned
   output during verification, and account for it explicitly.
@@ -62,18 +64,18 @@ sorting only among true peers.
    Run canonical normalizers for the regions they own, then hand-order the
    remaining regions using the contract precedence. Apply a Tier 1 move only
    when it is mechanical and convention-backed, preserves the file's identity,
-   has discoverable repository references, shows no external path contract, and
-   can be verified. Record architectural, competing-convention, or externally
-   visible Tier 2 moves without applying them. Complete when every candidate
-   region is normalized, improved, or intentionally preserved.
+   has only discoverable repository references, shows no external path
+   contract, and can be verified. Record architectural, competing-convention,
+   or externally visible Tier 2 moves without applying them. Complete when every
+   candidate region is normalized, improved, or intentionally preserved.
 4. Audit and verify.
    Review normal and whitespace-insensitive diffs. Account for every changed
    value, removal, reorder, deduplication, and move introduced by the pass as
    behavior-preserving. Run the narrowest checks that meaningfully prove the
    edits, follow repository-mandated gates, and use broader checks when scope or
-   risk warrants them. Recheck normalizer convergence when doing so adds useful
-   evidence rather than ceremony. Complete when the diff is fully accounted for
-   and material verification gaps are known.
+   risk warrants them. Recheck normalizer convergence when a second run can
+   expose unstable or incomplete normalization. Complete when the diff is fully
+   accounted for and material verification gaps are known.
 5. Report adaptively.
    Report material organization changes, preserved semantic-order regions,
    verification, skipped areas, and separately discovered semantic concerns.
@@ -97,19 +99,20 @@ sorting only among true peers.
   keep metadata, dependencies, scripts, tooling, and package-manager data in
   their conventional groups.
 - Linter/editor configuration: put analysis context before diagnostic policy;
-  within policy, put baseline enables before exceptions or disables and
-  reporting severity. Sort only independent rule names and diagnostic codes.
+  within policy, order baseline enablement first, then exceptions and disabled
+  rules, then reporting severity. Sort only independent rule names and
+  diagnostic codes.
 - Ignore files: group by purpose or ecosystem; preserve every match-order
   relationship, including negation; sort only positive true-peer patterns.
 - Shell and configuration scripts: group aliases and functions while preserving
   initialization, PATH precedence, side effects, and command-availability
   checks.
 - Source code: prefer repository convention, public API and lifecycle order,
-  dependency, conceptual grouping, and reading flow. Lexically sort only
+  dependency order, conceptual grouping, and reading flow. Lexically sort only
   established true peers.
 - Documentation: reorder factual peer lists and layout descriptions; leave
   prose wording to a prose-polish pass.
-- Danger zones include CSS cascade, Dockerfile layers, CI steps, configuration
-  cascades, migrations, route registration, plugin arrays, override lists,
-  shell startup code, and every include or exclude collection whose match order
-  affects the result.
+- Danger zones include CSS cascade, container build layers, CI steps,
+  configuration cascades, migrations, route registration, plugin arrays,
+  override lists, shell startup code, and every include or exclude collection
+  whose match order affects the result.

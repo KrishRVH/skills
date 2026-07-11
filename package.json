@@ -14,7 +14,6 @@
     "standards": "bun run format && bun run lint:fix",
     "standards:check": "bun run lint && bun run mdx:check && bun run format:check"
   },
-  "dependencies": {},
   "devDependencies": {
     "@mdx-js/mdx": "^3.1.1",
     "@shikijs/rehype": "^4.2.0",

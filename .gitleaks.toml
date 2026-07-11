@@ -3,7 +3,7 @@ title = "Project secret scanning"
 [extend]
 useDefault = true
 
-[allowlist]
+[[allowlists]]
 description = "Generated dependency, build, cache, and release-output paths"
 paths = [
   '''(^|/)\.cache/''',
@@ -13,6 +13,7 @@ paths = [
   '''(^|/)\.godot/''',
   '''(^|/)\.gradle/''',
   '''(^|/)\.kotlin/''',
+  '''(^|/)\.lycheecache$''',
   '''(^|/)\.lua-language-server/''',
   '''(^|/)\.mypy_cache/''',
   '''(^|/)\.next/''',

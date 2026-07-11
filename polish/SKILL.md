@@ -1,6 +1,6 @@
 ---
 name: polish
-description: Exhaustive pre-commit code and documentation polish pass.
+description: Exhaustive pre-commit code and documentation finishing pass.
 disable-model-invocation: true
 ---
 
@@ -21,11 +21,11 @@ commentary proportional to actual contracts and risk.
   evidence. Apply a narrow defect fix when the contract is unambiguous and add
   focused verification; ask before choosing between plausible contracts.
 - Treat affected tests as discriminating contract evidence. Each goes red for a
-  specific production-side fault in its maintained behavioral claim, stays
-  green outside that claim, and serves a justified coverage role. Removing or
-  replacing one preserves its claim, boundary role, and fault sensitivity
-  elsewhere, or cites affirmative evidence that the claim is no longer
-  maintained.
+  specific production-side fault that violates its maintained behavioral claim,
+  stays green for claim-preserving behavior, and serves a justified coverage
+  role. Removing or replacing one preserves its claim, boundary role, and fault
+  sensitivity elsewhere, or cites affirmative evidence that the claim is no
+  longer maintained.
 - Remove unwarranted ceremony: helpers, wrappers, guards, abstractions,
   indirection, strictness, or commentary whose cost exceeds the clarity,
   contract, or risk they carry. Preserve trust-boundary validation, meaningful
@@ -67,7 +67,7 @@ commentary proportional to actual contracts and risk.
    repository's default integration branch, then include staged, unstaged, and
    untracked work. Repo-wide scope includes every active human-maintained path.
    Inspect base and diff content for deletions and renames. Record generated,
-   vendor, tool-owned, and unrelated dirty paths without editing them.
+   vendored, tool-owned, and unrelated dirty paths without editing them.
 
    For a large scope, delegate only substantial, reasoning-heavy, disjoint
    slices whose value exceeds coordination cost. Use the highest-capability
