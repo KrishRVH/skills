@@ -24,9 +24,10 @@ mise run standards:check
 
 ## Pre-Commit Quality
 
-- **polish** - Exhaustive pre-commit code and documentation polish pass. Use it
-  after significant branch work to remove sediment, tighten implementation
-  quality, update stale docs, and verify the final diff before committing.
+- **polish** - Exhaustive pre-commit code and documentation finishing pass.
+  Defaults to current branch changes and pursues idiomatic elegance while
+  preserving intended contracts, applying proportionate verification, and
+  removing unwarranted ceremony from code and current documentation.
 
   ```sh
   npx skills@latest add KrishRVH/skills/polish
@@ -34,9 +35,9 @@ mise run standards:check
 
 ## Repository Tidiness
 
-- **ocd** - Idiomatic config ordering and clean project organization pass. Use
-  it when behavior should stay fixed but manifests, config, ignore files, docs
-  lists, or other safe-to-sort surfaces need cleaner grouping and ordering.
+- **ocd** - Behavior-preserving configuration and project organization pass.
+  Defaults to current branch changes and prioritizes semantic grouping,
+  ecosystem convention, and deterministic ordering among true peers.
 
   ```sh
   npx skills@latest add KrishRVH/skills/ocd

@@ -52,8 +52,7 @@ output expectations, or forward-testing.
 - `examples/` is optional and only for concrete sample inputs or outputs that
   improve trigger behavior, output expectations, or forward-testing.
 - Template filenames must match the parent skill name in uppercase form,
-  preserving kebab-case. Examples: `polish/templates/POLISH.md`,
-  `ocd/templates/OCD.md`.
+  preserving kebab-case: `skill-name/templates/SKILL-NAME.md`.
 - Only create directories that the skill actually uses. Avoid empty scaffolding.
 
 ## Working In This Repo
