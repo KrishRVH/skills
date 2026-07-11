@@ -43,6 +43,10 @@ node_modules/
 /out/
 /sbom/
 
+# Godot
+/.godot/
+*.translation
+
 # JavaScript / TypeScript
 *.tsbuildinfo
 .eslintcache
@@ -84,7 +88,6 @@ mise.*.local.lock
 /.phpstan.cache/
 /.phpunit.cache/
 /.phpunit.result.cache
-/.rector-cache/
 /composer.phar
 /var/cache/
 /var/log/
@@ -92,7 +95,7 @@ mise.*.local.lock
 # C# / .NET
 /.vs/
 /artifacts/
-/TestResults/
+**/TestResults/
 **/[Bb]in/[Dd]ebug/
 **/[Bb]in/[Rr]elease/
 **/[Oo]bj/
@@ -154,6 +157,14 @@ luac.out
 *.mod
 !go.mod
 *.smod
+
+# Ada / SPARK
+/alire/build_hash_inputs
+/alire/flags/
+/alire/settings.toml
+/config/*_config.ads
+/config/*_config.gpr
+/config/*_config.h
 
 # JVM / Kotlin / Gradle
 /.gradle/

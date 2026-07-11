@@ -44,14 +44,15 @@ sorting only among true peers.
    repository's default integration branch, then include staged, unstaged, and
    untracked work. Repo-wide scope inventories every active human-maintained
    configuration file, manifest, task, ignore rule, structured list,
-   source-ordering region, and layout surface. Complete when scope, canonical
-   commands, exclusions, and the candidate inventory are fixed.
+   source-ordering region, and layout surface.
 
    For a large scope, delegate only substantial, reasoning-heavy, disjoint
    slices whose value exceeds coordination cost. Use the highest-capability
    workers available, keep canonical files with their mirrors, share one
    inventory, and retain policy and final-diff ownership with one coordinator.
-   Do not delegate menial work.
+   Do not delegate menial work. Complete when scope, canonical commands,
+   exclusions, and the candidate inventory are fixed.
+
 2. Classify ordering regions.
    Classify regions, not whole files, as normalizer-owned, semantic or
    conventional order, true-peer sort, order-sensitive, already idiomatic,

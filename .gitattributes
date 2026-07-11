@@ -38,9 +38,12 @@
 *.fs text
 *.fsi text
 *.fsx text
-*.go text diff=go
 *.f90 text
 *.F90 text
+*.gd text
+*.gdshader text
+*.gdshaderinc text
+*.go text diff=go
 *.hs text
 *.lhs text
 *.hs-boot text
@@ -81,6 +84,8 @@ Makefile text
 *.env.template text
 *.gitignore text
 *.gitattributes text
+*.gdextension text
+*.godot text
 *.gradle text
 *.gradle.kts text
 *.ini text
@@ -102,6 +107,10 @@ Makefile text
 *.slnx text
 *.targets text
 *.toml text
+pylock.*.toml text linguist-generated=true
+*.tres text
+*.tscn text
+*.uid text
 *.vbproj text
 *.vcxproj text
 *.vcxproj.filters text
@@ -136,19 +145,19 @@ cabal.project.freeze text linguist-generated=true
 *.ez binary
 *.gif binary
 *.gz binary
-*.ico binary
 *.icns binary
+*.ico binary
 *.jar binary
 *.jpeg binary
 *.jpg binary
 *.lib binary
 *.mp3 binary
 *.mp4 binary
-*.otf binary
-*.pdf binary
-*.pdb binary
-*.png binary
 *.nupkg binary
+*.otf binary
+*.pdb binary
+*.pdf binary
+*.png binary
 *.snupkg binary
 *.so binary
 *.sqlite binary
@@ -164,6 +173,5 @@ cabal.project.freeze text linguist-generated=true
 *.xz binary
 *.zip binary
 
-# Bun's old lockfile format is binary. `bun.lock` is text and covered by
-# `*.lock`.
+# `bun.lockb` is binary. `bun.lock` is text and covered by `*.lock`.
 bun.lockb binary

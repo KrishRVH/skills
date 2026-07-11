@@ -50,7 +50,7 @@ commentary proportional to actual contracts and risk.
   cache, coverage, and lock output. Allow repository tools to update owned
   output during verification, and account for it explicitly.
 - Commit only when the caller asks. Keep broad sorting, grouping, and
-  layout-only churn in `$ocd`; when both are invoked, finish Polish first.
+  layout-only churn in the OCD pass; when both are invoked, finish Polish first.
 
 ## Steps
 
@@ -61,15 +61,15 @@ commentary proportional to actual contracts and risk.
    repository's default integration branch, then include staged, unstaged, and
    untracked work. Repo-wide scope includes every active human-maintained path.
    Inspect base and diff content for deletions and renames. Record generated,
-   vendor, tool-owned, and unrelated dirty paths without editing them. Complete
-   when every candidate path has exactly one disposition: edit, already
-   polished, skip with reason, or caller decision.
+   vendor, tool-owned, and unrelated dirty paths without editing them.
 
    For a large scope, delegate only substantial, reasoning-heavy, disjoint
    slices whose value exceeds coordination cost. Use the highest-capability
    workers available, keep canonical files with their mirrors, share one ledger,
    and retain policy and final-diff ownership with one coordinator. Do not
-   delegate menial work.
+   delegate menial work. Complete when every candidate path has exactly one
+   disposition: edit, already polished, skip with reason, or caller decision.
+
 2. Inspect each candidate end to end.
    Read the whole current file and relevant surrounding flow, not only changed
    hunks. Check correctness, security, and performance risks, local idiom,

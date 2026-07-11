@@ -20,6 +20,8 @@ Use this guide when creating or updating any skill in this repository.
   checks.
 - Do not add language-specific standards files unless the repository gains that
   language surface.
+- Keep repository-wide Markdown helpers under `.config/markdown/` so visible
+  root directories remain skill packages.
 
 ## Naming And Layout
 

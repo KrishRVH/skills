@@ -66,10 +66,20 @@ output expectations, or forward-testing.
 ## Commands
 
 - Use `mise run tasks` to list the available command surface.
-- Use `mise run standards:check` before handoff. For this Markdown-only skill
-  catalog, the standards gate runs shared checks and reports no detected
-  language-specific build, lint, format, or test tasks.
+- Use `mise run standards` to format and lint-fix Markdown and MDX.
+- Use `mise run standards:check` before handoff. It scans for secrets, checks
+  Markdown structure and formatting, compile-checks MDX, validates local links,
+  and checks prose and filenames for typos.
 - Use `mise run secrets` for a focused secret scan.
+
+Do not call package managers or quality tools directly unless fixing the mise
+task that wraps them.
+
+## Git
+
+- Keep generated and local-only files out of commits.
+- Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/#specification)
+  for every commit message.
 
 ## Language Rules
 

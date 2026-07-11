@@ -15,10 +15,11 @@ top-level folder so discovery and install paths stay predictable.
 
 ## Project Commands
 
-This repository has no language-specific build profile. The shared standards
-gate still applies through mise:
+The Markdown and MDX standards profile formats and lints content, compile-checks
+MDX, validates local links, checks typos, and scans for secrets:
 
 ```sh
+mise run standards
 mise run standards:check
 ```
 
