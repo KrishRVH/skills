@@ -7,16 +7,14 @@ Each visible top-level folder is a skill package with a required `SKILL.md`
 entry point and optional supporting files such as references, assets, helpers,
 templates, and examples.
 
-See `AGENTS.md` for repository conventions, `STYLE.md` for authoring rules, and
-`.config/mise/config.toml` for the standards command surface.
+See `AGENTS.md` for repository conventions and `STYLE.md` for authoring rules.
 
 Skills are grouped below for browsing only. Each skill remains a visible
 top-level folder so discovery and install paths stay predictable.
 
 ## Project Commands
 
-The Markdown and MDX standards profile formats and lints content, compile-checks
-MDX, validates local links, checks typos, and scans for secrets:
+Format the skills or run all repository checks through mise:
 
 ```sh
 mise run standards

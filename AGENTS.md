@@ -4,7 +4,7 @@ This repository stores reusable skills.
 
 ## What Lives Here
 
-- Each top-level folder is one skill.
+- Each visible top-level folder is one skill.
 - Every skill folder must contain a `SKILL.md` at its root.
 - Supporting material should live inside the skill folder, not at the
   repository root.
@@ -42,7 +42,7 @@ output expectations, or forward-testing.
   fields as the portable skill-selection contract.
 - Do not create visible root-level non-skill folders. Use dot-prefixed folders
   for repo infrastructure.
-- Keep skill categories as README/catalog organization only. Do not create
+- Keep skill categories in README only. Do not create
   visible grouping folders such as `quality/`, `workflow/`, or `config/`.
 - `references/` is for longer factual or background material the skill may lean on.
 - `assets/` is for static resources consumed by the skill's output, such as
@@ -66,10 +66,10 @@ output expectations, or forward-testing.
 ## Commands
 
 - Use `mise run tasks` to list the available command surface.
-- Use `mise run standards` to format and lint-fix Markdown and MDX.
+- Use `mise run standards` to format and lint-fix Markdown.
 - Use `mise run standards:check` before handoff. It scans for secrets, checks
-  Markdown structure and formatting, compile-checks MDX, validates local links,
-  and checks prose and filenames for typos.
+  Markdown structure and formatting, validates local links, and checks prose and
+  filenames for typos.
 - Use `mise run secrets` for a focused secret scan.
 
 Do not call package managers or quality tools directly unless fixing the mise

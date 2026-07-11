@@ -48,26 +48,40 @@ sorting only among true peers.
    configuration file, manifest, task, ignore rule, structured list,
    source-ordering region, and layout surface.
 
+   Also inventory each scope mismatch: a coherent project-ecosystem or
+   file-type policy family in repository-scoped configuration whose target
+   surface is absent from human-maintained paths, manifests, the documented
+   repository shape, and the task graph. Families include grouped attributes,
+   project ignores, allowlists, and task branches; judge the family, not each
+   entry. Treat configuration as
+   repository-scoped unless a discoverable consumer or distribution path for
+   that configuration independently corroborates a declared portable baseline.
+   Unmatched single rules and environment-wide hygiene require explicit
+   conflicting repository policy.
+
    For a large scope, delegate only substantial, reasoning-heavy, disjoint
    slices whose value exceeds coordination cost. Use the highest-capability
    workers available, keep canonical files with their mirrors, share one
    inventory, and retain policy and final-diff ownership with one coordinator.
    Do not delegate menial work. Complete when scope, canonical commands,
-   exclusions, and the candidate inventory are fixed.
+   exclusions, and the candidate inventory, including every scope mismatch,
+   are fixed.
 
 2. Classify ordering regions.
    Classify regions, not whole files, as normalizer-owned, semantic or
    conventional order, true-peer sort, order-sensitive, already idiomatic,
-   layout Tier 1, layout Tier 2, or excluded. Complete when no candidate region
-   is unclassified.
+   layout Tier 1, or excluded. Flag every scope mismatch, plus every
+   architectural, externally visible, or competing-convention membership or
+   placement ambiguity, as Tier 2. Complete when every candidate region is
+   classified and every Tier 2 decision is flagged.
 3. Normalize and organize.
    Run canonical normalizers for the regions they own, then hand-order the
    remaining regions using the contract precedence. Apply a Tier 1 move only
    when it is mechanical and convention-backed, preserves the file's identity,
    has only discoverable repository references, shows no external path
-   contract, and can be verified. Record architectural, competing-convention,
-   or externally visible Tier 2 moves without applying them. Complete when every
-   candidate region is normalized, improved, or intentionally preserved.
+   contract, and can be verified. Record Tier 2 decisions without applying them.
+   Complete when every candidate region is normalized, improved, or
+   intentionally preserved.
 4. Audit and verify.
    Review normal and whitespace-insensitive diffs. Account for every changed
    value, removal, reorder, deduplication, and move introduced by the pass as
@@ -80,9 +94,10 @@ sorting only among true peers.
    Report material organization changes, preserved semantic-order regions,
    verification, skipped areas, and separately discovered semantic concerns.
    For repo-wide or blocked passes, also report scope, baseline, and coverage.
-   After completing unambiguous work, present all Tier 2 layout proposals in one
-   follow-up batch. Omit empty sections and placeholders. Complete when the
-   caller can accept or reject the proposals without another repository audit.
+   After completing unambiguous work, batch all Tier 2 decisions by policy or
+   region for the caller; defer any requested commit or push until they are
+   resolved. Omit empty sections and placeholders. Complete when the caller can
+   resolve each decision without another repository audit.
 
 ## Ordering Reference
 

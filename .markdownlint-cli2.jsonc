@@ -1,25 +1,11 @@
 {
   "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.23.0/schema/markdownlint-cli2-config-schema.json",
-  "globs": ["**/*.{md,mdx}"],
+  "globs": ["**/*.md"],
   "gitignore": true,
-  "ignores": [
-    ".next/**",
-    ".nuxt/**",
-    ".svelte-kit/**",
-    ".turbo/**",
-    ".vite/**",
-    "build/**",
-    "coverage/**",
-    "dist/**",
-    "node_modules/**",
-    "out/**",
-    "sbom/**"
-  ],
   "frontMatter": "^---\\s*\\n[\\s\\S]*?\\n---\\s*",
   "noBanner": true,
   "noProgress": true,
   "config": {
-    "default": true,
     "MD003": {
       "style": "atx"
     },
@@ -28,40 +14,6 @@
       "code_blocks": false,
       "headings": false,
       "tables": false
-    },
-    "MD024": {
-      "siblings_only": true
-    },
-    "MD025": {
-      "front_matter_title": ""
-    },
-    "MD033": {
-      "allowed_elements": [
-        "a",
-        "aside",
-        "br",
-        "details",
-        "kbd",
-        "span",
-        "strong",
-        "sub",
-        "summary",
-        "sup"
-      ]
-    },
-    "MD040": {
-      "language_only": false
-    },
-    "MD041": false
-  },
-  "overrides": [
-    {
-      "filter": ["**/*.mdx"],
-      "combine": "merge",
-      "config": {
-        "MD033": false,
-        "MD041": false
-      }
     }
-  ]
+  }
 }

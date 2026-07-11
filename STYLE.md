@@ -10,18 +10,7 @@ Use this guide when creating or updating any skill in this repository.
 - Match specificity to risk: fragile work needs tighter guardrails; contextual
   work needs room for judgment.
 - Separate facts, guesses, and recommended next steps.
-- Keep skills agent agnostic. Do not depend on a named product or model.
-
-## Standards Scope
-
-- Keep shared repository hygiene files aligned with the local standards catalog
-  unless this repo needs a documented exception.
-- Keep `.config/mise/config.toml` as the command surface for shared standards
-  checks.
-- Do not add language-specific standards files unless the repository gains that
-  language surface.
-- Keep repository-wide Markdown helpers under `.config/markdown/` so visible
-  root directories remain skill packages.
+- Keep skills agent-agnostic. Do not depend on a named product or model.
 
 ## Naming And Layout
 
@@ -126,7 +115,5 @@ Before finishing a change, confirm:
 - each behavior has one source of truth and no obvious no-op wording
 - support folders are useful and non-empty
 - templates, when justified, use the parent skill's uppercase name
-- README catalog entries and install commands are current
+- README entries and install commands are current
 - substantial revisions were forward-tested when practical
-- generated, vendored, dependency, build, cache, coverage, and lock output are
-  untouched unless a repository tool intentionally updated them

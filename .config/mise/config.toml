@@ -1,25 +1,21 @@
-# Copy to .config/mise/config.toml.
-
 min_version = "2026.3.11"
 
 [settings]
 lockfile = true
 
 [tools]
+bun = "1.3.14"
 gitleaks = "8.30.1"
-syft = "1.45.1"
+lychee = "0.24.2"
+typos = "1.48.0"
 
 [tasks.install]
-description = "Install pinned project tools"
-run = "mise install"
+description = "Install pinned project tools and dependencies"
+run = "mise install && bun install --frozen-lockfile"
 
 [tasks.lock]
-description = "Refresh mise.lock after tool-version changes"
-run = "mise lock"
-
-[tasks.doctor]
-description = "Inspect mise configuration and installed tools"
-run = "mise doctor"
+description = "Refresh project lockfiles"
+run = "mise lock && bun install"
 
 [tasks.tasks]
 description = "List available project tasks"
@@ -29,148 +25,24 @@ run = "mise tasks"
 description = "Scan the working tree for secrets"
 run = "gitleaks dir . --redact --no-banner"
 
-[tasks.sbom]
-description = "Generate a CycloneDX JSON SBOM for the project filesystem"
-run = """
-set -eu
-source_name="${SYFT_SOURCE_NAME:-$(basename "$PWD")}"
-source_version="${SYFT_SOURCE_VERSION:-0.0.0}"
-export SYFT_CHECK_FOR_APP_UPDATE="${SYFT_CHECK_FOR_APP_UPDATE:-false}"
-rm -rf sbom
-mkdir -p sbom
-syft scan dir:. --source-name "$source_name" --source-version "$source_version" --exclude ./sbom --exclude ./.git --output cyclonedx-json=sbom/sbom.cdx.json
-"""
-
-[tasks._dispatch]
-description = "Dispatch an aggregate task using detected project markers"
+[tasks._install]
 hide = true
-usage = 'arg "task"'
-run = """
-set -eu
+run = "bun install --frozen-lockfile"
 
-task="${usage_task:?usage: mise run _dispatch -- <fmt|fmt:check|lint|test|standards|standards:check>}"
-case "$task" in
-  fmt|fmt:check|lint|test|standards|standards:check) ;;
-  *)
-    echo "Unsupported aggregate task: $task" >&2
-    exit 2
-    ;;
-esac
+[tasks._links]
+hide = true
+run = "lychee --root-dir \"$PWD\" --offline --extensions md ."
 
-ran=0
-dispatch() {
-  # Marker-selected fragments cannot be declared as static dependencies. Keep
-  # profiles sequential because mixed-language projects may share files and
-  # package-manager state; each child retains its own native task graph.
-  mise run "$1:$task"
-  ran=1
-}
-
-if [ -f composer.json ]; then
-  dispatch php
-fi
-
-if [ -f pyproject.toml ]; then
-  dispatch py
-fi
-
-if [ -f package.json ] && [ -f tsconfig.json ]; then
-  dispatch ts
-fi
-
-if [ -f .markdownlint-cli2.jsonc ]; then
-  dispatch md
-fi
-
-if [ -f Cargo.toml ]; then
-  dispatch rust
-fi
-
-if [ -f alire.toml ] && find . -maxdepth 4 \\( -name '*.ads' -o -name '*.adb' -o -name '*.gpr' \\) -print -quit | grep -q .; then
-  dispatch spark
-fi
-
-if [ -f go.mod ]; then
-  dispatch go
-fi
-
-if [ -f project.godot ] && find src tests -type f -name '*.gd' -print -quit 2>/dev/null | grep -q .; then
-  dispatch godot
-fi
-
-if [ -f mix.exs ]; then
-  dispatch elixir
-fi
-
-if [ -f cabal.project ] || find . -maxdepth 2 -name '*.cabal' -print -quit | grep -q .; then
-  dispatch haskell
-fi
-
-if [ -f fpm.toml ]; then
-  dispatch fortran
-fi
-
-if [ -f settings.gradle.kts ] || [ -f build.gradle.kts ]; then
-  dispatch kotlin
-fi
-
-if [ -f build.zig ]; then
-  dispatch zig
-fi
-
-if [ -f CMakeLists.txt ] && find . -maxdepth 4 \\( -name '*.cc' -o -name '*.cpp' -o -name '*.cxx' -o -name '*.hh' -o -name '*.hpp' -o -name '*.hxx' -o -name '*.ixx' -o -name '*.cppm' -o -name '*.cxxm' \\) -print -quit | grep -q .; then
-  dispatch cpp
-fi
-
-if [ -f CMakeLists.txt ] && find . -maxdepth 4 -name '*.c' -print -quit | grep -q .; then
-  dispatch c
-fi
-
-if find . -maxdepth 3 \\( -name '*.sln' -o -name '*.csproj' \\) -print -quit | grep -q .; then
-  dispatch csharp
-fi
-
-if [ -f stylua.toml ] || [ -f .luarc.json ]; then
-  dispatch lua
-fi
-
-if [ -f .shellcheckrc ]; then
-  dispatch shell
-fi
-
-if [ "$ran" = 0 ]; then
-  case "$task" in
-    fmt) echo "No formatter tasks detected." ;;
-    fmt:check) echo "No formatting checks detected." ;;
-    lint) echo "No lint tasks detected." ;;
-    test) echo "No test tasks detected." ;;
-    standards) echo "No standards tasks detected." ;;
-    standards:check) echo "No standards checks detected." ;;
-  esac
-fi
-"""
-
-[tasks.fmt]
-description = "Format the project using detected language tasks"
-run = [{ task = "_dispatch", args = ["fmt"] }]
-
-[tasks."fmt:check"]
-description = "Check formatting using detected language tasks"
-run = [{ task = "_dispatch", args = ["fmt:check"] }]
-
-[tasks.lint]
-description = "Lint/analyze using detected language tasks"
-run = [{ task = "_dispatch", args = ["lint"] }]
-
-[tasks.test]
-description = "Run tests using detected language tasks"
-run = [{ task = "_dispatch", args = ["test"] }]
+[tasks._typos]
+hide = true
+run = "typos --config typos.toml ."
 
 [tasks.standards]
-description = "Run standards autofixes using detected language tasks"
-run = [{ task = "_dispatch", args = ["standards"] }]
+description = "Format and lint-fix Markdown"
+depends = ["_install"]
+run = "bun run standards"
 
 [tasks."standards:check"]
-description = "Run standards CI checks using detected language tasks"
-depends = ["secrets"]
-run = [{ task = "_dispatch", args = ["standards:check"] }]
+description = "Run repository quality checks"
+depends = ["_install", "_links", "_typos", "secrets"]
+run = "bun run standards:check"
