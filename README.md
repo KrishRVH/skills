@@ -44,8 +44,8 @@ mise run standards:check
 
 ## Repository Tidiness
 
-- **ocd** - Behavior-preserving configuration and project organization pass.
-  Defaults to current branch changes and prioritizes semantic grouping,
+- **ocd** - Behavior-preserving configuration ordering and project organization
+  pass. Defaults to current branch changes and prioritizes semantic grouping,
   ecosystem convention, and deterministic ordering among true peers.
 
   ```sh

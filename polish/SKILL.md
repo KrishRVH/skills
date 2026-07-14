@@ -10,8 +10,8 @@ Polish is a relentless, file-by-file finishing pass over the caller's requested
 scope. Default to current branch changes; honor explicit paths, commits, ranges,
 or repo-wide scope.
 
-Pursue idiomatic elegance with proportionality. Prefer the clearest conventional
-expression of the real problem, with abstraction, validation, strictness, and
+Pursue proportionate, idiomatic elegance. Prefer the clearest conventional
+expression of the real problem. Keep abstraction, validation, strictness, and
 commentary proportional to actual contracts and risk.
 
 ## Contract
@@ -23,9 +23,10 @@ commentary proportional to actual contracts and risk.
 - Treat every affected test as discriminating contract evidence under the
   contract defined in Step 4.
 - Remove unwarranted ceremony: helpers, wrappers, guards, abstractions,
-  indirection, strictness, or commentary whose cost exceeds the clarity,
-  contract, or risk they carry. Preserve trust-boundary validation, meaningful
-  error handling, security controls, and useful domain structure.
+  indirection, strictness, or commentary whose cost outweighs its benefits to
+  clarity, contract enforcement, or risk reduction. Preserve trust-boundary
+  validation, meaningful error handling, security controls, and useful domain
+  structure.
 - Keep specialist audits separate. Address correctness, security, performance,
   and architecture concerns encountered during the pass without claiming a
   dedicated threat model, profile, or architecture review.
@@ -45,8 +46,8 @@ commentary proportional to actual contracts and risk.
   changelogs, release notes, active migration guides, and archived decisions as
   historical records; correct them only when inaccurate in their stated context.
 - Make unambiguous fixes directly. Record path-local decisions and continue
-  independent work; interrupt only when a decision changes scope or a shared
-  contract, creates material security or data risk, or would invalidate
+  independent work; interrupt only when a decision would change scope or a
+  shared contract, create material security or data risk, or invalidate
   substantial downstream work.
 - Preserve unrelated dirty work and generated, vendored, dependency, build,
   cache, coverage, and lock output. Allow repository tools to update owned
@@ -59,10 +60,11 @@ commentary proportional to actual contracts and risk.
 
 1. Establish scope and build the ledger.
    Read local instructions, task documentation, package scripts, formatter,
-   linter, and test configuration, plus the current status and diff. Honor an
-   explicit scope and base. Otherwise compare `HEAD` with the merge base of the
-   repository's default integration branch, then include staged, unstaged, and
-   untracked work. Repo-wide scope includes every active human-maintained path.
+   linter, and test configuration, plus the current status and diff. Honor any
+   explicit scope and comparison base. When no base is given, compare `HEAD`
+   with the merge base of the repository's default integration branch. Include
+   staged, unstaged, and untracked work. Repo-wide scope includes every active
+   human-maintained path.
    Inspect base and diff content for deletions and renames. Record generated,
    vendored, tool-owned, and unrelated dirty paths without editing them.
 

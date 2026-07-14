@@ -29,8 +29,9 @@ Use this guide when creating or updating any skill in this repository.
 - Use `examples/` only when concrete sample inputs or outputs improve trigger
   behavior, output expectations, or forward-testing.
 - Keep the structure minimal. Add folders only when they serve the skill.
-- Name templates after the parent skill in uppercase form, preserving
-  kebab-case: `skill-name/templates/SKILL-NAME.md`.
+- Use the parent skill name as each template's uppercase stem, preserve
+  kebab-case, and keep the format's normal extension:
+  `skill-name/templates/SKILL-NAME.ext`.
 
 ## Invocation And Frontmatter
 

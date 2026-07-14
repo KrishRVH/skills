@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 OCD is a behavior-preserving organization pass over the caller's requested
 scope. Default to current branch changes; honor explicit paths, commits, ranges,
-or repo-wide scope. When both skills are invoked, run OCD after Polish.
+or repo-wide scope. When Polish and OCD are both invoked, run OCD after Polish.
 
 Use semantic grouping first, conventional ordering second, and deterministic
 sorting only among true peers.
@@ -28,9 +28,9 @@ sorting only among true peers.
 - Use available project task wrappers for every project tool you run. A
   formatter or normalizer owns only the regions it actually rewrites; its
   silence creates no ordering rule.
-- Reorder only when the result better satisfies the highest applicable rung of
-  this precedence. Remove duplicates only when a canonical normalizer does so
-  or the collection is demonstrably set-like. Keep comments attached to the
+- Reorder only when the result better satisfies the first applicable criterion
+  in that order. Remove duplicates only when a canonical normalizer does so or
+  the collection is demonstrably set-like. Keep comments attached to the
   entries they explain.
 - Preserve unrelated dirty work and generated, vendored, dependency, build,
   cache, coverage, and lock output. Allow repository tools to update owned
@@ -41,11 +41,11 @@ sorting only among true peers.
 
 1. Establish scope, baseline, and inventory.
    Read local instructions, task definitions, package scripts, formatter and
-   linter configuration, plus the current status and diff. Honor an explicit
-   scope and base. Otherwise compare `HEAD` with the merge base of the
-   repository's default integration branch, then include staged, unstaged, and
-   untracked work. Repo-wide scope inventories every active human-maintained
-   configuration file, manifest, task, ignore rule, structured list,
+   linter configuration, plus the current status and diff. Honor any explicit
+   scope and comparison base. When no base is given, compare `HEAD` with the
+   merge base of the repository's default integration branch. Include staged,
+   unstaged, and untracked work. For repo-wide scope, inventory every active
+   human-maintained configuration file, manifest, task, ignore rule, structured list,
    source-ordering region, and layout surface.
 
    Also inventory each scope mismatch. A scope mismatch is a coherent
@@ -57,8 +57,9 @@ sorting only among true peers.
 
    Treat configuration as repository-scoped unless a discoverable consumer or
    distribution path for that configuration independently corroborates a
-   declared portable baseline. Unmatched single rules and environment-wide
-   hygiene require explicit conflicting repository policy.
+   declared portable baseline. Treat unmatched single rules and environment-wide
+   hygiene as scope mismatches only when they conflict with explicit repository
+   policy.
 
    Keep every scope mismatch in the inventory for caller decision; do not apply
    a change on account of the mismatch in this pass.
@@ -69,7 +70,7 @@ sorting only among true peers.
    inventory, and retain policy and final-diff ownership with one coordinator.
    Do not delegate menial work. Complete when scope, canonical commands,
    exclusions, and the candidate inventory, including every scope mismatch,
-   are fixed.
+   are established.
 
 2. Classify ordering regions.
    Tier 1 denotes layout-move candidates for direct application. A Tier 1
@@ -103,7 +104,8 @@ sorting only among true peers.
    accounted for and material verification gaps are known.
 5. Report adaptively.
    Report material organization changes, preserved semantic-order regions,
-   verification, skipped areas, and separately discovered semantic concerns.
+   verification, and skipped areas. Report discovered semantic concerns
+   separately.
    For repo-wide or blocked passes, also report scope, baseline, and coverage.
    After completing unambiguous work, batch all Tier 2 decisions by policy or
    region for the caller; defer any requested commit or push until they are

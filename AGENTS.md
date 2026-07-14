@@ -28,7 +28,7 @@ skill-name/
   helpers/
     HELPER-NAME.md
   templates/
-    SKILL-NAME.md
+    SKILL-NAME.ext
 ```
 
 Optional examples may live in `examples/` when they support trigger behavior,
@@ -51,8 +51,9 @@ output expectations, or forward-testing.
 - `templates/` is for reusable output skeletons when a skill needs them.
 - `examples/` is optional and only for concrete sample inputs or outputs that
   improve trigger behavior, output expectations, or forward-testing.
-- Template filenames must match the parent skill name in uppercase form,
-  preserving kebab-case: `skill-name/templates/SKILL-NAME.md`.
+- Template filenames must use the parent skill name as their uppercase stem,
+  preserve kebab-case, and keep the format's normal extension:
+  `skill-name/templates/SKILL-NAME.ext`.
 - Only create directories that the skill actually uses. Avoid empty scaffolding.
 
 ## Working In This Repo

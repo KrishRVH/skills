@@ -45,12 +45,12 @@
   <p class="copy plain">{{SUMMARY_PLAIN — what the user sees now vs before; where on the screen to look.}}</p>
   <p class="copy technical">{{SUMMARY_TECHNICAL — route, files/columns touched, format strings, edge cases handled; where to look.}}</p>
   <figure class="before">
-    <span class="label">BEFORE</span>
-    <div class="shot"><img src="data:image/png;base64,{{BEFORE_B64}}" alt="{{BEFORE_ALT}}"></div>
+    <figcaption class="label">BEFORE</figcaption>
+    <div class="shot"><img src="data:image/png;base64,{{BEFORE_B64}}" alt="{{BEFORE_ALT — plain-safe description of the prior screen state}}"></div>
   </figure>
   <figure class="after">
-    <span class="label">AFTER</span>
-    <div class="shot"><img src="data:image/png;base64,{{AFTER_B64}}" alt="{{AFTER_ALT}}"></div>
+    <figcaption class="label">AFTER</figcaption>
+    <div class="shot"><img src="data:image/png;base64,{{AFTER_B64}}" alt="{{AFTER_ALT — plain-safe description of the current screen state}}"></div>
   </figure>
 </section>
 
@@ -58,9 +58,7 @@
 function toggleAudience() {
   const technical = document.body.classList.toggle('audience-technical');
   document.body.classList.toggle('audience-plain', !technical);
-  const b = document.getElementById('audienceBtn');
-  b.setAttribute('aria-pressed', String(technical));
-  b.textContent = technical ? 'Stakeholder view' : 'Technical view';
+  document.getElementById('audienceBtn').setAttribute('aria-pressed', String(technical));
 }
 function toggleFit() {
   const fit = document.body.classList.toggle('fit');
