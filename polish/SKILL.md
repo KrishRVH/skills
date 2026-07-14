@@ -20,12 +20,8 @@ commentary proportional to actual contracts and risk.
   documentation, types or schemas, and authoritative specifications as contract
   evidence. Apply a narrow defect fix when the contract is unambiguous and add
   focused verification; ask before choosing between plausible contracts.
-- Treat affected tests as discriminating contract evidence. Each goes red for a
-  specific production-side fault that violates its maintained behavioral claim,
-  stays green for claim-preserving behavior, and serves a justified coverage
-  role. Removing or replacing one preserves its claim, boundary role, and fault
-  sensitivity elsewhere, or cites affirmative evidence that the claim is no
-  longer maintained.
+- Treat every affected test as discriminating contract evidence under the
+  contract defined in Step 4.
 - Remove unwarranted ceremony: helpers, wrappers, guards, abstractions,
   indirection, strictness, or commentary whose cost exceeds the clarity,
   contract, or risk they carry. Preserve trust-boundary validation, meaningful
@@ -55,8 +51,9 @@ commentary proportional to actual contracts and risk.
 - Preserve unrelated dirty work and generated, vendored, dependency, build,
   cache, coverage, and lock output. Allow repository tools to update owned
   output during verification, and account for it explicitly.
-- Commit only when the caller asks. Keep broad sorting, grouping, and
-  layout-only churn in the OCD pass; when both are invoked, finish Polish first.
+- Commit only when the caller asks. Broad sorting, grouping, and layout-only
+  churn are out of scope for this pass. When OCD is also invoked, leave that
+  work to the OCD pass and finish Polish first.
 
 ## Steps
 
@@ -73,8 +70,10 @@ commentary proportional to actual contracts and risk.
    slices whose value exceeds coordination cost. Use the highest-capability
    workers available, keep canonical files with their mirrors, share one ledger,
    and retain policy and final-diff ownership with one coordinator. Do not
-   delegate menial work. Complete when every candidate path has exactly one
-   disposition: edit, already polished, skip with reason, or caller decision.
+   delegate menial work.
+
+   Complete when every candidate path has exactly one disposition: edit, already
+   polished, skip with reason, or caller decision.
 
 2. Inspect each candidate end to end.
    Read the whole current file and relevant surrounding flow, not only changed
@@ -92,18 +91,35 @@ commentary proportional to actual contracts and risk.
    text, examples, and normative documentation agree, while historical records
    retain their intended context.
 4. Verify and audit the result.
+   Under the discriminating-evidence contract, every affected test has these
+   properties:
+
+   - It goes red for a specific production-side fault that violates its
+     maintained behavioral claim.
+   - It stays green for claim-preserving behavior.
+   - It serves a justified coverage role.
+
    For each added, materially changed, removed, or replaced test, establish
-   claim-specific red evidence against the base, otherwise against a minimal
-   production-side fault, otherwise through a falsifiable trace naming the
-   execution obstacle, fault, and failing assertion. For broad assertion
-   surfaces, also observe a relevant claim-preserving variation stay green;
-   focused assertions may establish specificity from their bounded dependencies.
+   claim-specific red evidence using this fallback hierarchy:
+
+   1. Against the base.
+   2. Otherwise, against a minimal production-side fault.
+   3. Otherwise, through a falsifiable trace naming the execution obstacle,
+      fault, and failing assertion.
+
+   For broad assertion surfaces, also observe a relevant claim-preserving
+   variation stay green. Focused assertions may establish specificity from
+   their bounded dependencies. Removing or replacing a test preserves its
+   claim, boundary role, and fault sensitivity elsewhere, or cites affirmative
+   evidence that the claim is no longer maintained.
+
    Run the narrowest checks that meaningfully prove the edits. Follow
    repository-mandated gates and use broader checks when scope or risk warrants
    them. Review the normal diff and a whitespace-insensitive diff when useful.
    Complete when every affected test satisfies the discriminating-evidence
    contract, every resulting change is accounted for, material verification gaps
    are known, and excluded dirty work remains intact.
+
 5. Report adaptively.
    Report material changes, verification, skipped areas, and unresolved
    decisions. For repo-wide or blocked passes, also report scope, comparison

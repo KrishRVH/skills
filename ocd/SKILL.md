@@ -48,16 +48,20 @@ sorting only among true peers.
    configuration file, manifest, task, ignore rule, structured list,
    source-ordering region, and layout surface.
 
-   Also inventory each scope mismatch: a coherent project-ecosystem or
-   file-type policy family in repository-scoped configuration whose target
-   surface is absent from human-maintained paths, manifests, the documented
-   repository shape, and the task graph. Families include grouped attributes,
-   project ignores, allowlists, and task branches; judge the family, not each
-   entry. Treat configuration as
-   repository-scoped unless a discoverable consumer or distribution path for
-   that configuration independently corroborates a declared portable baseline.
-   Unmatched single rules and environment-wide hygiene require explicit
-   conflicting repository policy.
+   Also inventory each scope mismatch. A scope mismatch is a coherent
+   project-ecosystem or file-type policy family in repository-scoped
+   configuration whose target surface is absent from each of these surfaces:
+   human-maintained paths, manifests, the documented repository shape, and the
+   task graph. Families include grouped attributes, project ignores, allowlists,
+   and task branches. Judge the family, not each entry.
+
+   Treat configuration as repository-scoped unless a discoverable consumer or
+   distribution path for that configuration independently corroborates a
+   declared portable baseline. Unmatched single rules and environment-wide
+   hygiene require explicit conflicting repository policy.
+
+   Keep every scope mismatch in the inventory for caller decision; do not apply
+   a change on account of the mismatch in this pass.
 
    For a large scope, delegate only substantial, reasoning-heavy, disjoint
    slices whose value exceeds coordination cost. Use the highest-capability
@@ -68,12 +72,19 @@ sorting only among true peers.
    are fixed.
 
 2. Classify ordering regions.
+   Tier 1 denotes layout-move candidates for direct application. A Tier 1
+   candidate may be applied only when every Step 3 application condition holds.
+   Tier 2 denotes caller decisions about the scope mismatches and ambiguities
+   enumerated in this step. Step 3 records those decisions without applying
+   corresponding changes, and Step 5 batches them for the caller.
+
    Classify regions, not whole files, as normalizer-owned, semantic or
    conventional order, true-peer sort, order-sensitive, already idiomatic,
    layout Tier 1, or excluded. Flag every scope mismatch, plus every
    architectural, externally visible, or competing-convention membership or
    placement ambiguity, as Tier 2. Complete when every candidate region is
    classified and every Tier 2 decision is flagged.
+
 3. Normalize and organize.
    Run canonical normalizers for the regions they own, then hand-order the
    remaining regions using the contract precedence. Apply a Tier 1 move only

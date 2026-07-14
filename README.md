@@ -32,6 +32,16 @@ mise run standards:check
   npx skills@latest add KrishRVH/skills/polish
   ```
 
+## Demos And Communication
+
+- **demo-html** - Single-file before/after HTML demo of UI changes, with
+  screenshots captured from the running app and a technical vs non-technical
+  language toggle for mixed stakeholder audiences.
+
+  ```sh
+  npx skills@latest add KrishRVH/skills/demo-html
+  ```
+
 ## Repository Tidiness
 
 - **ocd** - Behavior-preserving configuration and project organization pass.

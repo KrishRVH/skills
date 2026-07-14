@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} — before / after</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 2rem auto; max-width: 1500px; padding: 0 1.5rem; line-height: 1.55; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.15rem; margin-top: 3rem; border-top: 2px solid #8884; padding-top: 1.5rem; }
+  .controls { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0 2rem; }
+  button { font: inherit; padding: .35rem .9rem; cursor: pointer; border-radius: .3rem; border: 1px solid #8886; background: transparent; }
+  button[aria-pressed="true"] { background: #1d6fd1; border-color: #1d6fd1; color: #fff; }
+  /* Audience toggle: both copies live in the DOM; body class picks one. */
+  .copy { max-width: 70rem; }
+  body.audience-plain .copy.technical { display: none; }
+  body.audience-technical .copy.plain { display: none; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em; background: #8882; border-radius: .25rem; padding: .08em .35em; }
+  .label { display: inline-block; font-weight: 700; font-size: .8rem; letter-spacing: .05em; padding: .15rem .6rem; border-radius: .25rem; margin: 1rem 0 .35rem; color: #fff; }
+  .before .label { background: #c62828; }
+  .after .label { background: #2e7d32; }
+  figure { margin: 0 0 1rem; }
+  .shot { overflow-x: auto; border: 1px solid #8886; border-radius: .4rem; }
+  .shot img { display: block; max-width: none; }   /* full resolution by default inside a scrollable frame */
+  body.fit .shot img { max-width: 100%; }
+  .note { font-size: .85rem; opacity: .7; }
+</style>
+</head>
+<body class="audience-plain">
+<h1>{{TITLE}}</h1>
+<p class="note">Captured {{DATE}} from {{ENVIRONMENT}}.</p>
+
+<div class="controls">
+  <button id="audienceBtn" aria-pressed="false" onclick="toggleAudience()">Technical view</button>
+  <button id="fitBtn" aria-pressed="false" onclick="toggleFit()">Fit images to width</button>
+</div>
+
+<p class="copy plain">{{INTRO_PLAIN — one or two sentences: what changed across the product and why the reader should care.}}</p>
+<p class="copy technical">{{INTRO_TECHNICAL — the same ground with routes/identifiers and scope notes.}}</p>
+
+<!-- One section per change. Repeat this block. -->
+<section>
+  <h2>{{CHANGE_TITLE — plain-safe: name the screen, not the route}}</h2>
+  <p class="copy plain">{{SUMMARY_PLAIN — what the user sees now vs before; where on the screen to look.}}</p>
+  <p class="copy technical">{{SUMMARY_TECHNICAL — route, files/columns touched, format strings, edge cases handled; where to look.}}</p>
+  <figure class="before">
+    <span class="label">BEFORE</span>
+    <div class="shot"><img src="data:image/png;base64,{{BEFORE_B64}}" alt="{{BEFORE_ALT}}"></div>
+  </figure>
+  <figure class="after">
+    <span class="label">AFTER</span>
+    <div class="shot"><img src="data:image/png;base64,{{AFTER_B64}}" alt="{{AFTER_ALT}}"></div>
+  </figure>
+</section>
+
+<script>
+function toggleAudience() {
+  const technical = document.body.classList.toggle('audience-technical');
+  document.body.classList.toggle('audience-plain', !technical);
+  const b = document.getElementById('audienceBtn');
+  b.setAttribute('aria-pressed', String(technical));
+  b.textContent = technical ? 'Stakeholder view' : 'Technical view';
+}
+function toggleFit() {
+  const fit = document.body.classList.toggle('fit');
+  document.getElementById('fitBtn').setAttribute('aria-pressed', String(fit));
+}
+</script>
+</body>
+</html>
