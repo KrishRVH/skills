@@ -1,4 +1,7 @@
 # Normalize detected text files to LF.
 * text=auto eol=lf
 
-*.md diff=markdown
+# Use format-aware diffs and include the repository's primary content in
+# GitHub's language statistics.
+*.html diff=html
+*.md diff=markdown linguist-detectable
