@@ -1,73 +1,106 @@
 # Pulse
 
-After the sweep the text is clean, and possibly dead: sterile, voiceless prose is as obvious as slop. These moves put a person back in it. Apply them in step 3 for edit and write jobs, always under the two laws (never invent; fix disease, not symptom).
+Use this reference during step 3 for Edit and Write jobs. The aim is not to add quirks; it is to keep or recover the choices that make this particular writer clear and recognizable, or, when no writer exists, to build one coherent voice from the brief and hold it.
 
-## Voice comes first
+The precedence in [SKILL.md](../SKILL.md#two-laws) governs every move: facts and meaning, then the caller's request and house style, then established voice and genre, then these heuristics.
 
-**Editing:** the author's voice outranks every rule in this skill, including the em dash policy. Reread the 3-5 voice signals from step 1 and keep them: their vocabulary, cadence, bluntness, humor, uncertainty, digressions, level of polish. Make the minimum effective edit; a rough draft with a real voice should sound like the same person afterward, just sharper.
+## Contents
 
-**Writing:** if the user named a vibe, match it. If they provided samples, mirror them: study sentence lengths, openings, punctuation habits, recurring phrases, transitions, and match those habits silently. If they showed writing they dislike, treat it as a map of what to avoid. Given neither, default to the clear thinker and go; ask nothing.
+- [Voice before shaping](#voice-before-shaping)
+- [Rhythm follows thought](#rhythm-follows-thought)
+- [Earn specificity](#earn-specificity)
+- [Stance proportionate to evidence](#stance-proportionate-to-evidence)
+- [Open and end for the genre](#open-and-end-for-the-genre)
+- [Preserve texture; never fabricate it](#preserve-texture-never-fabricate-it)
+- [Register guide](#register-guide)
+- [Final read-back](#final-read-back)
 
-Presets when a named vibe helps. Each line is executable guidance, in order: rhythm, stance, signature.
+## Voice before shaping
 
-- **Clear thinker** (default): mid-length sentences that follow the argument, short ones to land points; transitions mostly implicit; sparse adjectives, zero decoration. Stance stated once, plainly. Signature: reads like a good engineer explaining a decision they already made.
-- **Casual storyteller**: loose paragraphs, contractions, direct address, asides in parentheses; scenes and moments over abstractions; humor allowed. Stance emerges from the story rather than a thesis line. Signature: you can hear the person talking.
-- **Sharp and opinionated**: verdict first, evidence after; short sentences and short paragraphs; no hedges; concessions explicit and brief ("The counterargument is X. It fails because Y."). Signature: the reader always knows exactly where the writer stands.
-- **Warm professional**: complete sentences, courteous but plain; "we" and "you"; measured stance rather than fake neutrality; no jargon. Signature: credible enough for a client, human enough that no one suspects a template.
+For owned text, reread the voice signals from step 1: characteristic vocabulary, sentence movement, directness, humor, uncertainty, digressions, technical density, level of polish. Change only what impedes the piece; the writer should still recognize their own decisions.
 
-**Register decides how much personality.** Blogs, essays, opinion, and posts want a visible person: stances, asides, uneven rhythm. Encyclopedic, technical, legal, and scientific text wants neutral and plain, and there neutral IS the correct human voice: no first person, no opinions, no injected color.
+For unowned text there is no author to preserve. Build the voice from the brief, the samples, or the register's conventions, then apply it consistently; consistency is what separates a voice from a patchwork of repairs.
 
-## Rhythm
+When the caller supplies samples, match durable features (register, density, directness, paragraph movement) without copying memorable phrases or exaggerating superficial quirks. Given no sample or named style, default to a clear, unshowy voice.
 
-Vary sentence length deliberately. A long sentence that lets an idea breathe, then a short one. Then two medium. An occasional fragment. Models write at an even mid-length cadence because it is the statistically safe choice; the variation is what reads alive.
+These loose profiles help interpret a brief; they are starting points, not templates, applied at the lightest intensity that makes them recognizable. Do not turn one quality, such as warmth or sarcasm, into a recurring device.
 
-Vary paragraph shape and endings the same way. Vary openings too: "And" and "But" at the start of a sentence are how people write when nobody is grading them.
+- **Clear and analytical:** follow the argument, prefer concrete verbs, state the position without decorative emphasis.
+- **Casual and narrative:** allow contractions, direct address, asides, and scene-level detail the material supports.
+- **Sharp and opinionated:** put the judgment early, show the evidence, keep honest concessions explicit and brief.
+- **Warm and professional:** courteous, direct sentences; a measured stance rather than fake neutrality; no corporate ceremony or forced familiarity.
 
-The test is the ear: read the piece aloud (internally). Anywhere it turns metronomic, break the meter.
+## Rhythm follows thought
 
-## Specificity
+Read paragraphs as units, not sentences in isolation. Revise cadence when repeated sentence lengths, openings, or clause shapes make the argument feel mechanical.
 
-Numbers, names, dates, places, mechanisms. "Query time dropped from 847ms to 12ms after adding the index" beats "performance improved significantly." "Tested on Next.js, Remix, and Astro" beats "works with popular frameworks."
+When a passage is monotone, these are the usual repairs; choose per passage and never impose an alternation formula:
 
-Run the anywhere-test on load-bearing sentences: if it could appear unchanged in any other piece on any topic, replace it with one only this piece could contain, using material from the source or the user.
+- split a long sentence at the joint between its thoughts
+- let one short sentence carry the landing
+- merge two stubby sentences into one that holds the qualification
+- open with And, But, or So where the logic really is additive or adversative
+- move a subordinate clause so consecutive sentences stop opening alike
 
-State limitations honestly; they read human and build trust. "This won't catch dynamic imports; fix those manually" beats "handles all use cases."
+Deliberate repetition that clarifies a comparison or builds emphasis stays. A fragment is available in casual registers when it reflects the voice; it is never added as proof of texture.
 
-Make verbs do the work: decided, shipped, broke, cut, measured. Show instead of announcing ("here is the entire conversion, 90 seconds" instead of "the process is simple and efficient").
+Read the result internally at normal speed. Repair the places where syntax obscures thought, the pace stalls, or several sentences strike the same note by accident.
 
-## Commitment
+## Earn specificity
 
-Take the position the content supports and say it. Cut "it could be argued that" and "some might say" unless you then name who says it.
+Prefer concrete actors, actions, mechanisms, examples, names, numbers, dates, and places when the authorized material provides them and the reader needs them. Keep the broader claim when greater precision would be false or irrelevant.
 
-One genuine hedge is honesty, and keeping "I think" or "maybe" where the writer means it preserves their voice. Ten hedges are evasion.
+Use the anywhere test on load-bearing sentences: if a sentence could appear unchanged in an unrelated piece, ask what it contributes here, then replace it with supported detail, narrow it to the real claim, or cut it.
 
-Name the actor in every sentence that has one: who decided, who built it, who broke it, who pays.
+State limitations where they change the reader's decision; an honest limit reads better and earns more trust than a comprehensive claim. Do not add a disclaimer merely to sound candid.
 
-Superlatives and definitive statements a human can defend ("the first", "the only", "one of the best") are human signals; keep them when true and supportable.
+Make verbs do the work: decided, shipped, measured, cut. Show rather than announce; the demonstration that takes ninety seconds beats the sentence that says the process is simple.
 
-## Openings and endings
+## Stance proportionate to evidence
 
-Open with the most informative or interesting sentence you have. No context ramp, no setup. "Codemods automate 70% of migrations; this gets you to 95%" beats "In this post, we will discuss migrations."
+State the position the material supports. Remove stacked hedges that obscure it, and preserve the uncertainty that changes the claim; a precise may is stronger than an unjustified certainly.
 
-Write headings as specific statements a scanner could learn from: "Docs go stale", "Why codemods aren't enough", never "Introduction" or "Background".
+Name the actor when responsibility matters and the material identifies one. Passive voice is legitimate when the actor is unknown, irrelevant, obvious, or conventionally backgrounded by the genre.
 
-End on a concrete point, an action ("Try it: prpm install ..."), or an honest loose end ("I'm still not sure this generalizes"). Never a recap, never a send-off.
+Keep defensible superlatives and comparisons when the boundary supports them and the genre benefits. They are claims to verify, not signals of humanity to sprinkle.
 
-## Texture
+## Open and end for the genre
 
-Small imperfections read human: a parenthetical aside, an admission of uncertainty, a self-correction, a slightly informal word in a formal stretch. Keep the ones already present; do not sand the prose smooth.
+An opening performs the genre's first job:
 
-Do not manufacture them either. Forced quirkiness ("fellow humans, am I right?") is worse than slop. The goal is invisible: a reader who never thinks about how the text was written.
+- an essay or post leads with the tension, judgment, scene, or strongest concrete fact
+- a report or decision memo leads with the finding, decision, or request
+- technical documentation orients the reader to the task and prerequisites
+- an abstract summarizes question, method, result, and significance in the field's expected form
 
-Let one idea sit unresolved when the writer's honest state is unresolved. "This mostly works and something about it still bothers me" is a stronger ending than a resolution nobody earned.
+Cut generic setup that delays that job; keep background the reader genuinely needs. Write headings as specific statements a scanner learns from.
 
-## Register table
+An ending gives a conclusion, decision, next action, implication, or honest open question. Avoid restating the piece or attaching an upbeat send-off with no new information; keep a recap when the genre, length, or accessibility needs one.
 
-| Register | Do | Avoid |
+## Preserve texture; never fabricate it
+
+Keep existing parentheticals, self-corrections, asymmetry, unusual details, mixed feelings, and unresolved notes when they serve the writer. Clean neutral prose can be the right outcome; do not add quirks as proof of humanity, and never invent an anecdote, error, or persona.
+
+The invisible-edit test: the prose should feel more exact and easier to follow without drawing attention to the editor. Forced casualness fails this test as badly as slop does.
+
+## Register guide
+
+| Register | Favor | Watch for |
 |---|---|---|
-| Scientific, academic | "we" for own work; cite named authors ("Fridrichova argues", never "researchers have shown"); domain terms are precision, keep them ("weighted interval score" is fine); claims backed by sources; formal and plain | blog voice; "It has long been recognized that"; business buzzwords leaking into technical prose; fractal abstract-style summaries in the body |
-| Technical, developer | peer voice; numbers, code, edge cases, expected output; assume the basics | teacher voice; marketing adjectives; walkthrough narration ("Let's dive into how caching works") |
-| Blog, newsletter, essay | "you"; put the reader in the room ("You don't sit down one day and decide to..."); visible opinions; concrete anecdotes | narrator-from-a-distance ("People tend to..."); thought-leadership framing ("key takeaway", "I learned") |
-| LinkedIn | hook as the first line; sentences under ~20 words; one thought per line; tell what happened; end on something real and unresolved | setup paragraphs; lesson-shaped endings; hashtags, emoji, engagement bait unless asked |
-| Marketing, product | evidence per claim (a number, a named user, a comparison); honest limits; specifics over superlatives | "We're thrilled to announce"; revolutionary/amazing/best-in-class; claims no reader can check |
-| Fiction, creative | invented detail is the job (Law 1 relaxes here); voice per narrator and character; rhythm as a tool | letting narration slip into catalog tells (tapestry, testament, staccato drama); uniform cadence across characters |
+| Scientific or academic | field terminology, calibrated claims, expected section structure, the field's citation style, named attributions | injected personality, oversimplification, deleting necessary passives or required summaries |
+| Technical | peer-level explanation, examples, edge cases, expected output, explicit limitations | tutorial patter, marketing claims, unexplained abstraction |
+| Essay, blog, newsletter | a visible point of view, concrete scenes and examples from the source, flexible paragraph movement, direct address | lesson-shaped endings, borrowed intimacy, narrator-at-a-distance generalities |
+| Professional post | an informative first line, one coherent idea, readable line breaks, a concrete close or honest open end | engagement bait, slogan stacks, hashtags or emoji unrequested, a moral the material did not earn |
+| Marketing or product | verifiable claims, named comparisons, useful limits, the audience's own language | uncheckable superlatives, ceremonial announcements, features presented as outcomes |
+| Legal or policy | defined terms, exact scope, consistent modality, required formality and repetition | any edit that changes obligations, exceptions, citations, or deliberate parallelism |
+| Fiction or creative | distinct narrator and character voices, purposeful rhythm, invented detail within the brief | normalizing every voice, mistaking stylization for defect, catalog ceremony leaking into narration |
+
+## Final read-back
+
+Ask five questions:
+
+1. Does each substantive change preserve or clarify what the source supports?
+2. Does the result still sound like this writer, or hold the one voice built for it?
+3. Does the form suit this reader and genre?
+4. Did any repair become a new repeated mannerism?
+5. Would a cold reader still flag any passage as machine ceremony or evasive mush? If yes, return to the catalog before delivering.

@@ -1,87 +1,94 @@
 ---
 name: animize
 description: >
-  Animize prose: strip AI tells, restore a human pulse. Use when the user wants
-  text humanized, deslopped, de-AI'd, or made to sound less like ChatGPT (edit);
-  wants writing audited or checked for AI patterns without rewriting (detect); or
-  asks for a new draft that must read as human-written, such as a blog post,
-  essay, LinkedIn post, newsletter, abstract, or report where authentic voice
-  matters (write). Trigger on: humanize, deslop, slop, AI tells, "sounds like
-  AI", "make it sound natural".
+  Animize prose: strip generic AI patterns and restore a specific human pulse
+  without inventing facts or replacing the writer's voice. Use when the caller
+  asks to humanize, deslop, or de-AI text, says it sounds like AI or ChatGPT,
+  or wants it less generic (edit); asks to scan, audit, check, or flag
+  AI-pattern issues without a rewrite or an authorship verdict (audit); or
+  wants a natural-sounding draft of a blog post, essay, professional post,
+  newsletter, abstract, or report (write).
 ---
 
 # Animize
 
-An LLM predicts the statistically likely next token, so its prose regresses to the mean: the subject becomes less specific and more exaggerated at the same time. "Inventor of the first train-coupling device" fades into "a revolutionary titan of industry". The result is taxidermy: polished, lifelike, dead. The patterns that give it away are its tells. Animizing removes the tells and puts a pulse back in.
+An LLM predicts the statistically likely next token, so unedited model prose regresses to the mean: subjects become less specific and more exaggerated at once, and the same ceremonies repeat. Animize is the editing method that reverses this. It removes generic performance, evasion, and flattening, and restores what the material actually supports. It is not an authorship detector.
 
 ## The essence
 
-Dead prose does three things. Living prose does the opposite. Every tell in the catalog is one of these three, so when you meet a pattern the catalog missed, ask which verb it fails and apply the cure.
+Three verbs diagnose any weak passage, including patterns the catalog does not name.
 
-| Dead prose... | Living prose... | Cure |
+| Weak prose | Strong prose | Cure |
 |---|---|---|
-| **Performs.** Announces, inflates, decorates, symmetrizes: "marks a pivotal moment in the evolution of regional statistics." | **States.** "The institute was established in 1989." | State the fact plainly. Let the reader judge importance. |
-| **Evades.** Hedges, blurs, hides actors and sources: "Experts argue the initiative faced challenges." | **Commits.** "The pilot lost $40k in Q2 and Ramos cancelled it." | Name the actor, the source, the number, the position. |
-| **Flattens.** Same sentence length, same paragraph shape, same synonym rotation, a bow on every ending. | **Varies.** Long then short. A fragment. A paragraph that just stops. | Break the uniformity so a person shows through. |
+| **Performs.** Announces importance, decorates facts, manufactures drama. | **States.** Gives the fact room to carry its own weight. | Remove the ceremony; keep the substance. |
+| **Evades.** Hides the actor, source, uncertainty, or actual claim. | **Commits.** Names what the available material supports. | Clarify, source, qualify, or flag the claim. |
+| **Flattens.** Repeats one cadence, structure, transition, or finish. | **Varies.** Follows the thought and the writer's habits. | Break the repetition that dulls the passage. |
 
-State. Commit. Vary. That is the whole skill; everything below is execution.
+State. Commit. Vary. These are editing directions, not quotas.
 
 ## Two laws
 
-1. **Never invent.** The output must not contain any fact, name, number, date, quote, or citation absent from the source text or the user. Swapping vague for specific is allowed only when the specific comes from them; if a sentence needs real-world detail to live, ask for it or write the plain version. A fabrication is a defect even when it sounds more human than the vague original. (Fiction is the exception: there, invented detail is the job.)
-2. **Fix the disease, not the symptom.** A tell usually points at a deeper problem: an unsupported claim, an inflated fact, a vague authority, a missing source. Deleting the tell while keeping the problem just launders the text and makes the problem harder to spot. Cure the claim itself, or flag it to the user.
+1. **Never invent, never silently change substance.** Every added or sharpened fact, name, number, date, quote, and citation must come from the source boundary: the supplied material, the caller's statements, and sources the caller authorized. Distinguish style from substance. Ceremony, decoration, and empty scaffolding are style; cut them freely. Propositions, evaluations, and contrasts are substance; preserve them, restate them plainly, or flag them, because a style cue never licenses deleting what the text claims. One register exception: in encyclopedic and reference prose, unsourced editorializing is itself the defect, and the genre licenses cutting it. Fiction may invent within the brief. A fabrication is a defect even when it sounds more human than the vague original.
+2. **Fix the disease, not the symptom.** A watched phrase usually points at puffery, weak evidence, hidden agency, or monotony. Repair that underlying problem; cosmetic removal just launders the text. If no problem remains in context, keep the phrase.
+
+**Precedence** when instructions compete: first factual fidelity and intended meaning, then the caller's request, constraints, and house style, then the writer's established voice and the genre's conventions, then this skill's heuristics. Two implications worth noticing: a caller who asks to de-AI their own draft has licensed removing its ceremony (the request outranks voice preservation for exactly the patterns they named), and nothing in this skill outranks what the text truthfully claims.
+
+## Voice ownership
+
+Record early whether the text has a voice worth preserving; this one judgment sets the editing posture everywhere below.
+
+- **Owned:** an identified writer's prose, a supplied sample, a human draft the caller wants kept theirs. Posture: triage. Fix what harms the piece, retain what belongs to the writer, and match their habits, including their punctuation rate.
+- **Unowned:** model-drafted text, ghost-written or boilerplate copy, a Write-job draft of your own, or text the caller disclaims. Posture: fix by default. Catalog patterns are defects here unless an entry's keep-when condition applies, and there is no author rate to protect.
+
+When ownership is ambiguous and the difference would materially change the edit, ask; otherwise infer from context. "Make this sound less like ChatGPT" usually signals unowned text or, at minimum, a license to remove ceremony from owned text.
 
 ## Jobs
 
-**Edit** (default whenever text is present). Rewrite it. Deliver the full edited text plus a short "What changed" note (3-6 lines, pattern-level, no line-by-line inventory). If you were invoked as one step of a larger task, deliver only the text. If the target is a file, edit the file in place: prose only, leave code blocks, frontmatter, data, and link targets untouched, and report a summary instead of pasting the rewrite back.
+### Edit
 
-**Detect** (user asks to audit, scan, check, or flag, and wants no rewrite). For each hit: quote the line, name the pattern, give the fix in a few words. Then state whether the tells cluster (see Cluster judgment below). Never assert AI authorship as fact and never output a percentage score: humans write with these patterns too, and detectors, including you, have real error rates. Named patterns are evidence the user can verify; verdicts are guesses. Offer to edit afterward.
+The default when the caller supplies prose and permits a rewrite. Return the complete edited text followed by a three- to six-line `What changed` note covering material patterns, retained exceptions, and unresolved flags. When another workflow invokes this skill as an editing step, return only the edited text and propagate material unresolved concerns to that workflow.
 
-**Write** (user asks you to draft something new). Draft with the catalog in mind, then run the full Edit loop on your own draft before delivering. Deliver the piece and nothing else unless asked.
+For a file target, edit prose in place. Preserve code, frontmatter, structured data, quoted material, and link targets unless the caller includes them in scope, and report a concise summary instead of pasting the file back.
+
+### Audit
+
+For requests to scan, audit, check, or flag without rewriting. Report each material issue with the four-field shape in tells.md §8: excerpt, pattern, effect, repair. End with a cluster summary. Never assign an authorship label, model family, probability, or detector-evasion advice. If the caller asks who or what wrote the text, explain that prose cues alone cannot establish provenance, and point to process evidence: drafts, version history, source notes, timestamps, and a conversation with the writer. Offer to edit afterward.
+
+### Write
+
+For a new draft. Draft from the brief and authorized sources, then run the full Edit workflow on the draft before delivery. Return only the piece unless the caller asks for commentary.
 
 ## Workflow
 
-1. **Frame.** Read the entire text (or brief) first. Write an internal note: the job, the reader, the register, the core point, and 3-5 voice signals to preserve (vocabulary, cadence, bluntness, humor, hedges, digressions). If you cannot identify the core point, ask the user; that is the one clarifying question this skill permits. Done when the note exists.
-2. **Sweep the tells.** Open `references/tells.md` and check every section of it against the full text, start to finish. Each entry pairs a pattern with its fix. Edit and write: fix every hit. Detect: log every hit and stop after this step. Done when no section of the catalog remains unchecked against any part of the text.
-3. **Restore the pulse** (edit and write only). Open `references/pulse.md` and apply it: voice, rhythm, specificity, commitment, openings and endings, register. Done when its checks pass.
-4. **Audit** (edit and write only). Interrogate your own draft with two questions and answer them explicitly before moving on: "What still makes this read as AI-generated?" and "Does the rewrite state any fact, name, number, date, quote, or citation absent from the source or the user?" Fix everything the answers surface. A fabrication is a defect even when it sounds more human than the vague original. Done when both answers are "nothing".
-5. **Verify.** Run the gate below against the final text. Any failed row: fix it and run the gate again. A row may be knowingly kept only with a one-line reason (usually: it is the author's own voice, or it sits inside quoted material). Done when every row passes or carries its reason.
-6. **Deliver** per the job's contract.
+1. **Frame.** Read the complete text or brief. Record an internal note: job, reader, register, purpose, core point, constraints, source boundary, voice ownership, and, for owned text, three to five voice signals worth preserving. For a sparse nonfiction brief, batch the blocking questions before drafting; omit optional unsupported details and track those gaps internally rather than as placeholders. Done when every field is known, reasonably inferred, or marked unresolved.
+2. **Sweep.** Open [references/tells.md](references/tells.md) and check every section against the whole text. Give every plausible hit a disposition: **fix**, **retain**, or **flag**. Default by ownership: in unowned text, fix unless a listed keep-when condition applies; in owned text, fix what harms the piece and retain what belongs to the writer. Every retain gets a stated reason; every flag names what lies outside the source boundary. Record per-section hit counts in the internal note, including zeros; a section with no recorded count has not been swept. Audit job: record material hits in the §8 shape and go to step 6. Done when every catalog section has a recorded count against the full text and every hit has a disposition.
+3. **Restore the pulse** (edit and write). Open [references/pulse.md](references/pulse.md) and apply the moves that fit the writer, reader, and genre, preferring local repairs to wholesale normalization. Done when the prose has a coherent voice, readable cadence, supported specificity, and an opening and ending doing their genre's jobs.
+4. **Account for fidelity** (edit and write). Compare the revision with its source or brief and account for every changed fact, implication, evaluation, name, number, date, quote, citation, and link target. Restore any change the boundary does not entail. Where citation verification was out of scope, preserve the citation and flag the concern rather than substituting. Done when every substantive change is entailed by the boundary.
+5. **Read and gate.** Read the final prose continuously, once, holding one question: what here would still read as machine ceremony or evasive mush? Then run the gate below. Repair failures without minting a new repeated mannerism; keep an exception only per the precedence order, with its reason recorded. Done when every gate line passes or carries its reason.
+6. **Deliver** per the job contract, with material unresolved concerns in the required note or summary and no unintended placeholders anywhere.
 
-## Core rules
+## Editing rules
 
-- **Minimum effective edit.** Preserve the writer's point and voice. Keep humor, profanity, digressions, strong opinions, and genuine hedges ("I think", "maybe", "perhaps" when the writer means them). Leave strong human sentences alone; after editing, the same person should sound back.
-- **Quoted material is untouchable.** Never rewrite watched phrases inside quotations, titles, proper names, or examples where the phrase is being discussed rather than used.
-- **Vary your fixes.** The fix for a cliche is never another cliche. If you replace every "Furthermore" with "Also", or end every paragraph with the same clipped cadence, you have created a new tell (secondary convergence). Rotate approaches; often the best transition is none.
-- **Cluster judgment.** One tell in isolation is weak evidence and may be a clean human sentence; a single em dash or one "however" means nothing. Edit an isolated pattern only when the fix genuinely improves the sentence. When tells stack (em dash plus tricolon plus "vibrant tapestry" plus a Conclusion section), edit hard.
-- **Keep the intelligence.** Simple wording, full substance. Plain is smart; dumbed-down is a different failure.
-- **Human beats sanitized.** Do not over-correct into fake-casual ("fellow humans, am I right?" is worse than slop) and do not scrub every hedge, intensifier, or superlative: "very", "perhaps", "was the first" are human speech. The reader should never think about how the text was written at all.
-- **Register decides personality.** Blogs, essays, and posts want a visible person. Encyclopedic, technical, legal, and scientific text wants neutral and plain; there, neutral IS the human voice, so inject no first person or opinion.
+- **Make the minimum effective edit.** Keep strong sentences. Preserve humor, profanity, uncertainty, digressions, technical vocabulary, dialect, and roughness that belong to the writer.
+- **Protected text is untouchable.** Never rewrite quotations, titles, proper names, code, cited wording, or examples that mention a watched phrase rather than use it.
+- **Keep the intelligence.** Prefer plain wording without deleting necessary nuance, domain language, qualification, or logical structure. Plain is smart; dumbed-down is a different failure.
+- **Never fabricate humanity.** No invented anecdotes, personal details, typos, errors, or persona. The rhythm moves in pulse.md remain available; the line runs between shaping real material and faking evidence of a person.
+- **Avoid secondary convergence.** The fix for one mannerism must not become the next mannerism: not every transition replaced with the same word, not every ending clipped, not a length pattern imposed. Let form follow thought.
+- **Let register govern personality.** Personal writing carries opinions and asides. Technical, legal, scientific, and reference prose may be neutral, repetitive, passive, or formally structured for good reasons; there, neutral is the correct human voice.
 
 ## Verification gate
 
-| # | Check |
-|---|---|
-| 1 | Banned vocabulary (tells §1): zero instances remain |
-| 2 | Puffery and importance inflation (testament, pivotal, vital role, nestled, vibrant, rich heritage): zero |
-| 3 | Negative parallelisms (not X but Y, not just X, no X just Z): zero |
-| 4 | Rule-of-three triads: none left without a deliberate reason |
-| 5 | Trailing "-ing" analyses (highlighting, ensuring, reflecting, showcasing): zero |
-| 6 | Throat-clearing, filler phrases, chat artifacts, placeholders: zero |
-| 7 | Rhetorical question answered in the next breath, colon reveals: zero |
-| 8 | Stacked short fragments or a quotable kicker manufacturing drama: none |
-| 9 | Every attributed claim has a named source or is cut; nothing invented |
-| 10 | Passive voice or false agency where the actor is known: zero |
-| 11 | Formal transitions (Furthermore, Moreover, Additionally): two or fewer, never clustered |
-| 12 | Em and en dashes: zero in short copy, at most two in long form, or the author's own rate |
-| 13 | Bold-first bullets, decorative emoji, Title Case Headings: none, unless house style demands them |
-| 14 | Vague declaratives replaced by their specific ("The implications are significant" names the implication) |
-| 15 | Sentence lengths vary; no three consecutive sentences share length and shape |
-| 16 | At least a third of paragraphs end without a bow; the piece ends on something concrete, no recap |
-| 17 | Voice signals from step 1 survive; meaning and facts unchanged |
-| 18 | Fixes varied; read the text aloud once and it sounds like a person |
+Each line passes or carries a recorded reason.
+
+- **Fidelity.** Every changed proposition is entailed by the source boundary; no invented specifics; quotes, citations, and link targets keep their meaning.
+- **Purpose.** The output answers the request and fits reader, register, genre, and house style.
+- **Voice.** Owned signals survive; no replacement house voice; no manufactured quirks.
+- **Catalog.** Every section swept; every hit dispositioned; every retain has a reason; every flag is reported.
+- **Clarity.** No unsupported importance, vague authority, empty scaffolding, chat or markup residue, or placeholders remain unreported.
+- **Cadence.** The catalog's countable tripwires clear (§3 symmetry, §4 transitions, §5 dashes); the continuous read finds no accidental monotony and no repeated repair pattern.
+- **Delivery.** The output matches the job contract with no process narration.
 
 ## Files
 
-- `references/tells.md`: the exhaustive tell catalog for step 2, with a table of contents, before/after pairs per pattern, replacement tables, and an era-drift table for detect. Words, phrases, sentences, composition, formatting, evidence, tone, detection guidance.
-- `references/pulse.md`: the positive craft for step 3. Voice, rhythm, specificity, commitment, openings and endings, register table.
+- [references/tells.md](references/tells.md): the review catalog for step 2, with dispositions, keep-when conditions, countable tripwires, sourced before/after pairs, and the audit reporting guardrail.
+- [references/pulse.md](references/pulse.md): voice, rhythm, specificity, stance, openings, endings, and register for steps 3 through 5.
