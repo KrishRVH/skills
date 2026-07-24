@@ -15,8 +15,7 @@ Use this guide when creating or updating any skill in this repository.
 ## Naming And Layout
 
 - Use a lowercase kebab-case folder name for each skill.
-- Match the folder name and frontmatter `name` unless there is a strong reason
-  not to.
+- Match the folder name and frontmatter `name`.
 - Put the required `SKILL.md` at the root of the skill folder.
 - Treat `SKILL.md` plus frontmatter `name` and `description` as the required
   portable contract.
@@ -63,9 +62,7 @@ non-ignored skill files. The deterministic contract is:
   64 characters, descriptions are nonempty strings with at most 1,024
   characters, and the invocation field is boolean when present. Duplicate YAML
   keys are invalid.
-- A portable name matches its folder and is unique. A hash-locked comparison
-  control may declare its original portable name in
-  `.config/skills/validation.json`.
+- A portable name matches its folder and is unique.
 - A package contains `SKILL.md` plus files only in `references/`, `assets/`,
   `helpers/`, `templates/`, or `examples/`. Packages contain no symlinks.
 - Every support file is reachable from `SKILL.md` through one or more real
@@ -80,10 +77,6 @@ non-ignored skill files. The deterministic contract is:
   other commands, and rendered skill prose omits the unambiguous vendor terms
   configured in `.config/skills/validation.json`. Installation commands are
   exempt from the vendor-term check.
-
-Frozen comparison controls are protected by an exact SHA-256 file manifest and
-excluded from mutating Markdown and spelling tasks. Local-link checks still
-cover them.
 
 These checks enforce portable structure, bounded context, and discoverable
 resources. They do not decide whether a completion criterion is genuinely

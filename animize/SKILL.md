@@ -1,5 +1,5 @@
 ---
-name: animize-candidate
+name: animize
 description: >
   Edit or draft prose so it sounds specific, natural, and true to its writer.
   Use when the caller asks to humanize, deslop, de-AI, or make text sound less
@@ -8,7 +8,7 @@ description: >
   newsletter, abstract, or report.
 ---
 
-# Animize candidate
+# Animize
 
 Animize removes generic performance, evasion, and flattening without replacing
 the writer's voice with another house style. It is an editing method, not an
@@ -55,9 +55,10 @@ When instructions compete, use this order:
 
 Use this job by default when the caller supplies prose and permits a rewrite.
 Return the complete edited text followed by a three- to six-line
-`What changed` note about material patterns. When another workflow invokes the
-skill as an editing step, return only the edited text and propagate any
-material unresolved concern to that workflow.
+`What changed` note covering material patterns, consequential retained
+exceptions, and every unresolved flag. When another workflow invokes the skill as
+an editing step, return only the edited text and propagate any material
+unresolved concern to that workflow.
 
 For a file target, edit prose in place. Preserve code, frontmatter, structured
 data, quoted material, and link targets unless the caller includes them in
@@ -91,7 +92,9 @@ Return only the piece unless the caller asks for commentary.
 
 1. **Frame the work.** Read the complete text or brief. Record an internal note
    with the job, reader, register, purpose, core point, constraints, source
-   boundary, and three to five voice signals worth preserving. For a sparse
+   boundary, and whether the material establishes a voice. When it does,
+   record three to five voice signals worth preserving; otherwise, record the
+   caller's voice constraints and the genre's defaults. For a sparse
    nonfiction brief, batch required questions before drafting when their
    answers are necessary for an accurate, useful result. Omit optional
    unsupported details and track those gaps only in the internal note; do not
@@ -101,9 +104,11 @@ Return only the piece unless the caller asks for commentary.
    [references/tells.md](references/tells.md) and check each section against the
    whole text. Classify every plausible hit as **fix**, **retain**, or **flag**.
    Fix only when the pattern harms meaning, evidence, voice, rhythm, or fitness
-   for the reader. For the Audit job, record material hits and continue to
-   Step 6. Complete this step when every catalog section has been checked and
-   every hit has a disposition.
+   for the reader. Record why any material hit is retained. For every flag,
+   name the fact, source, interpretation, or decision missing from the source
+   boundary. For the Audit job, record material hits and continue to Step 6.
+   Complete this step when every catalog section has been checked and every hit
+   has a disposition.
 3. **Restore the pulse.** For Edit and Write jobs, open
    [references/pulse.md](references/pulse.md). Apply only the moves that suit
    the writer, reader, and genre. Prefer local repairs to wholesale
@@ -111,12 +116,13 @@ Return only the piece unless the caller asks for commentary.
    readable cadence, source-backed specificity, and an opening and ending that
    do their genre-specific jobs.
 4. **Audit fidelity.** Compare the revision with its source or brief. Account
-   for every changed fact, implication, name, number, date, quote, citation,
-   and link target. Restore every unsupported change. Track gaps already
-   present in the source separately; disclosing a gap does not make a new claim
-   safe. When citation verification was not requested, preserve the citation
-   and flag concerns instead of silently replacing it. Complete this step when
-   every substantive change is entailed by authorized material.
+   for every changed fact, implication, evaluation, contrast, name, number,
+   date, quote, citation, and link target. Restore every unsupported change.
+   Track gaps already present in the source separately; disclosing a gap does
+   not make a new claim safe. When citation verification was not requested,
+   preserve the citation and flag concerns instead of silently replacing it.
+   Complete this step when every substantive change is entailed by authorized
+   material.
 5. **Read and verify.** Read the final prose continuously, not as isolated
    sentences, and run the gate below. Repair failures without creating a new
    repeated mannerism. Complete this step when every gate item passes or a
@@ -139,6 +145,13 @@ Return only the piece unless the caller asks for commentary.
 - **Judge in context.** A single transition, dash, passive construction,
   triad, hedge, or formal word can be exactly right. Repetition plus a real
   reader-facing defect warrants intervention.
+- **Preserve evaluative force.** In owned opinion, words that set the strength,
+  direction, or certainty of a judgment are substance. Keep that force unless
+  the caller authorizes a substantive change; a plainer restatement must not
+  weaken or strengthen it. In unowned or formal prose, test evaluative praise
+  against the source boundary: correct and report it when the scope permits,
+  otherwise preserve and flag it. Unsupported promotional praise is not voice
+  evidence.
 - **Keep the intelligence.** Prefer plain wording without deleting necessary
   nuance, domain language, qualifications, or logical structure.
 - **Do not manufacture humanity.** Never add typos, slang, fragments,
@@ -152,15 +165,19 @@ Return only the piece unless the caller asks for commentary.
 
 ## Verification gate
 
-- **Fidelity:** Every factual and logical proposition is supported by the
-  source boundary; quotations, citations, and link targets retain their
-  intended meaning.
+- **Fidelity:** Every changed proposition is entailed by the source boundary;
+  unsupported claims already present in the source are preserved and flagged
+  unless authorized evidence and the requested scope permit a supported
+  correction. A materially unsafe or misleading unsupported claim cannot pass
+  through a detached note alone: obtain caller direction, add an authorized
+  in-artifact qualification, or withhold the artifact as not ready.
+  Quotations, citations, and link targets retain their intended meaning.
 - **Purpose:** The result answers the caller's request and fits its reader,
   register, genre, constraints, and house style.
 - **Voice:** The recorded voice signals survive; no generic replacement voice
   or manufactured quirk has been introduced.
 - **Catalog:** Every section was reviewed, and each plausible hit was fixed,
-  retained for a reason, or flagged.
+  retained for a reason, or flagged with the missing input identified.
 - **Clarity:** Unsupported importance, vague authority, empty scaffolding,
   chat residue, leaked internal markup, and unresolved placeholders are gone
   or explicitly reported.

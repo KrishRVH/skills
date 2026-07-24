@@ -1,11 +1,8 @@
 {
-  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.23.0/schema/markdownlint-cli2-config-schema.json",
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.23.1/schema/markdownlint-cli2-config-schema.json",
   "globs": ["**/*.md"],
   "gitignore": true,
-  "ignores": ["animize-v1/**"],
   "frontMatter": "^---\\s*\\n[\\s\\S]*?\\n---\\s*",
-  "noBanner": true,
-  "noProgress": true,
   "config": {
     "MD003": {
       "style": "atx"
@@ -16,5 +13,7 @@
       "headings": false,
       "tables": false
     }
-  }
+  },
+  "noBanner": true,
+  "noProgress": true
 }

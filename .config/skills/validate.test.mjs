@@ -1,13 +1,10 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { createHash } from "node:crypto";
 import {
   mkdirSync,
   mkdtempSync,
-  readFileSync,
   renameSync,
   rmSync,
   symlinkSync,
-  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -16,7 +13,7 @@ import { dirname, join } from "node:path";
 import { validateRepository } from "./validate.mjs";
 
 const roots = [];
-const defaultConfig = { forbiddenTerms: [], frozenSkills: {} };
+const defaultConfig = { forbiddenTerms: [] };
 
 afterEach(() => {
   for (const root of roots.splice(0)) {
@@ -34,10 +31,6 @@ function write(root, relativePath, content) {
   const path = join(root, relativePath);
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, content);
-}
-
-function remove(root, relativePath) {
-  unlinkSync(join(root, relativePath));
 }
 
 function skillDocument(name, body = "Use the supplied material.\n") {
@@ -103,10 +96,6 @@ function validate(root, config = defaultConfig) {
 
 function codes(errors) {
   return errors.map(({ code }) => code);
-}
-
-function sha256(content) {
-  return createHash("sha256").update(content).digest("hex");
 }
 
 describe("valid repositories", () => {
@@ -738,7 +727,6 @@ describe("publication and policy", () => {
       codes(
         validate(root, {
           forbiddenTerms: ["VendorBot"],
-          frozenSkills: {},
         }),
       ),
     ).toContain("language.vendor");
@@ -754,7 +742,6 @@ describe("publication and policy", () => {
     write(markedUp, "README.md", readme("sample-skill"));
     const config = {
       forbiddenTerms: ["VendorBot"],
-      frozenSkills: {},
     };
     expect(codes(validate(markedUp, config))).toContain("language.vendor");
 
@@ -813,8 +800,7 @@ describe("publication and policy", () => {
       codes(
         validate(root, {
           forbiddenTerms: [],
-          frozenSkills: {},
-          frozenSkill: {},
+          unsupported: {},
         }),
       ),
     ).toContain("config.format");
@@ -827,93 +813,50 @@ describe("publication and policy", () => {
     write(
       root,
       ".config/skills/validation.json",
-      '{"forbiddenTerms":[],"forbiddenTerms":[],"frozenSkills":{}}\n',
+      '{"forbiddenTerms":[],"forbiddenTerms":[]}\n',
     );
 
     expect(codes(validateRepository(root))).toContain("config.format");
   });
 });
 
-describe("frozen controls", () => {
-  function frozenFixture() {
+describe("repository path discovery", () => {
+  function repositoryFixture() {
     const root = fixture();
-    const document = skillDocument("legacy");
-    write(root, "legacy-v1/SKILL.md", document);
-    write(root, "README.md", readme("legacy-v1"));
-
-    return {
-      config: {
-        forbiddenTerms: ["VendorBot"],
-        frozenSkills: {
-          "legacy-v1": {
-            name: "legacy",
-            files: { "SKILL.md": sha256(document) },
-          },
-        },
-      },
-      document,
-      root,
-    };
+    write(root, "sample-skill/SKILL.md", skillDocument("sample-skill"));
+    write(root, "README.md", readme("sample-skill"));
+    return root;
   }
 
-  test("allows an explicitly frozen folder/name mismatch", () => {
-    const { config, root } = frozenFixture();
-
-    expect(validate(root, config)).toEqual([]);
-  });
-
-  test("detects frozen byte changes", () => {
-    const { config, document, root } = frozenFixture();
-    write(root, "legacy-v1/SKILL.md", `${document}\n`);
-
-    expect(codes(validate(root, config))).toContain("frozen.hash");
-  });
-
-  test("detects additions and deletions in a frozen package", () => {
-    const added = frozenFixture();
-    write(added.root, "legacy-v1/references/extra.md", "# Extra\n");
-    expect(codes(validate(added.root, added.config))).toContain("frozen.files");
-
-    const deleted = frozenFixture();
-    remove(deleted.root, "legacy-v1/SKILL.md");
-    expect(codes(validate(deleted.root, deleted.config))).toContain(
-      "frozen.files",
-    );
-  });
-
   test("sees dangling symlinks and POSIX backslash names through Git", () => {
-    const dangling = frozenFixture();
+    const dangling = repositoryFixture();
     expect(
       Bun.spawnSync(["git", "init", "--quiet"], {
-        cwd: dangling.root,
+        cwd: dangling,
       }).exitCode,
     ).toBe(0);
-    mkdirSync(join(dangling.root, "legacy-v1/references"), {
+    mkdirSync(join(dangling, "sample-skill/references"), {
       recursive: true,
     });
     symlinkSync(
       "missing.md",
-      join(dangling.root, "legacy-v1/references/dangling.md"),
+      join(dangling, "sample-skill/references/dangling.md"),
     );
-    const danglingCodes = codes(validate(dangling.root, dangling.config));
-    expect(danglingCodes).toContain("package.symlink");
-    expect(danglingCodes).toContain("frozen.files");
+    expect(codes(validate(dangling))).toContain("package.symlink");
 
     if (process.platform !== "win32") {
-      const backslash = frozenFixture();
+      const backslash = repositoryFixture();
       expect(
         Bun.spawnSync(["git", "init", "--quiet"], {
-          cwd: backslash.root,
+          cwd: backslash,
         }).exitCode,
       ).toBe(0);
       write(
-        backslash.root,
-        "legacy-v1/references\\hidden.md",
+        backslash,
+        "sample-skill/references\\hidden.md",
         "# Hidden\n",
       );
-      expect(codes(validate(backslash.root, backslash.config))).toContain(
-        "frozen.files",
-      );
+      expect(codes(validate(backslash))).toContain("package.layout");
     }
   });
 
@@ -922,26 +865,24 @@ describe("frozen controls", () => {
       return;
     }
 
-    const entry = frozenFixture();
+    const root = repositoryFixture();
     expect(
       Bun.spawnSync(["git", "init", "--quiet"], {
-        cwd: entry.root,
+        cwd: root,
       }).exitCode,
     ).toBe(0);
-    mkdirSync(join(entry.root, "legacy-v1/references"), {
+    mkdirSync(join(root, "sample-skill/references"), {
       recursive: true,
     });
     const prefix = Buffer.from(
-      `${join(entry.root, "legacy-v1/references")}/`,
+      `${join(root, "sample-skill/references")}/`,
     );
     writeFileSync(
       Buffer.concat([prefix, Buffer.from([0xff])]),
       "invalid path\n",
     );
 
-    expect(codes(validate(entry.root, entry.config))).toContain(
-      "repository.path",
-    );
+    expect(codes(validate(root))).toContain("repository.path");
   });
 
   test("fails closed on a non-UTF-8 path without Git", () => {
@@ -949,36 +890,34 @@ describe("frozen controls", () => {
       return;
     }
 
-    const entry = frozenFixture();
-    mkdirSync(join(entry.root, "legacy-v1/references"), {
+    const root = repositoryFixture();
+    mkdirSync(join(root, "sample-skill/references"), {
       recursive: true,
     });
     const prefix = Buffer.from(
-      `${join(entry.root, "legacy-v1/references")}/`,
+      `${join(root, "sample-skill/references")}/`,
     );
     writeFileSync(
       Buffer.concat([prefix, Buffer.from([0xff])]),
       "invalid path\n",
     );
 
-    expect(codes(validate(entry.root, entry.config))).toContain(
-      "repository.path",
-    );
+    expect(codes(validate(root))).toContain("repository.path");
   });
-});
 
-test("Git discovery preserves a trailing space in the repository root", () => {
-  const originalRoot = fixture();
-  const root = `${originalRoot} `;
-  renameSync(originalRoot, root);
-  roots[roots.indexOf(originalRoot)] = root;
-  expect(
-    Bun.spawnSync(["git", "init", "--quiet"], {
-      cwd: root,
-    }).exitCode,
-  ).toBe(0);
-  write(root, "sample-skill/SKILL.md", skillDocument("sample-skill"));
-  write(root, "README.md", readme("sample-skill"));
+  test("Git discovery preserves a trailing space in the repository root", () => {
+    const originalRoot = fixture();
+    const root = `${originalRoot} `;
+    renameSync(originalRoot, root);
+    roots[roots.indexOf(originalRoot)] = root;
+    expect(
+      Bun.spawnSync(["git", "init", "--quiet"], {
+        cwd: root,
+      }).exitCode,
+    ).toBe(0);
+    write(root, "sample-skill/SKILL.md", skillDocument("sample-skill"));
+    write(root, "README.md", readme("sample-skill"));
 
-  expect(validate(root)).toEqual([]);
+    expect(validate(root)).toEqual([]);
+  });
 });

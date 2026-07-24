@@ -36,7 +36,7 @@ output expectations, or forward-testing.
 
 ## Structure Rules
 
-- The folder name is the skill name and should be lowercase kebab-case.
+- The folder name is the skill name and must be lowercase kebab-case.
 - `SKILL.md` is required and is the entry point for the skill.
 - `SKILL.md` frontmatter must include `name` and `description`; treat those
   fields as the portable skill-selection contract.

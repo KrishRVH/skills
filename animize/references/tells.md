@@ -201,6 +201,12 @@ Remove accidental conversational wrappers and document self-narration:
 `Let me know if`, `Here is an overview`, `In this section we will`, and `As we
 will see`.
 
+Treat only clearly accidental lead-ins as session residue, and remove the
+wrapper only after retaining its complete supported limitation. Statements
+about provenance, authorship, capabilities, source access, knowledge horizon,
+compliance, or safety are protected substance. When their status is unclear,
+preserve and flag them rather than cutting them.
+
 Flag unresolved placeholders such as `[Your Name]`, `[insert source]`,
 `PASTE_URL_HERE`, incomplete dates, or internal drafting instructions. Preserve
 intentional tokens in templates and code.
@@ -466,7 +472,9 @@ valid in source formats that convert them during rendering.
 Flag Markdown in a plain-text destination, skipped heading levels, broken list
 nesting, raw template syntax, internal reference tokens, and decorative
 characters that will not render as intended. Preserve literal syntax in code
-and examples.
+and examples. When formatting is explicitly in scope and the destination is
+known, convert leakage only when semantic structure and link targets remain
+identical; otherwise, leave it unchanged and flag it.
 
 ### Inconsistent quotation marks [flattens]
 
@@ -482,10 +490,13 @@ authorship.
 stakes are high` announce a conclusion without giving it. Name the implication,
 reason, or stake from the authorized material, or cut or flag the sentence.
 
-### Unsupported specificity [evades]
+### Unsupported specificity and smoothing [evades]
 
 Never repair vagueness by inventing a number, actor, mechanism, place, example,
 or anecdote. Specificity improves prose only when it is true and relevant.
+The reverse failure is smoothing a supplied number, actor, mechanism, place, or
+other exact detail into a broad category. Preserve supplied specifics unless
+the caller explicitly requests their generalization.
 
 > Before: "The campaign faced financial challenges."
 >

@@ -49,20 +49,13 @@ link, spelling, and secret checks.
 
 ## Writing And Editing
 
-- **animize-candidate** - Fidelity-first prose editing, auditing, and drafting.
+- **animize** - Fidelity-first prose editing, auditing, and drafting.
   Uses contextual review cues to remove generic performance, evasion, and
   flattening without inventing facts, erasing the writer's voice, or inferring
   authorship.
 
   ```sh
-  npx skills@latest add KrishRVH/skills/animize-candidate
-  ```
-
-- **animize-v1** - Frozen original Animize workflow, retained as the comparison
-  control for the candidate.
-
-  ```sh
-  npx skills@latest add KrishRVH/skills/animize-v1
+  npx skills@latest add KrishRVH/skills/animize
   ```
 
 ## Repository Tidiness

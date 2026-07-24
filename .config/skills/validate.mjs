@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import {
   existsSync,
   lstatSync,
@@ -32,7 +31,6 @@ const SUPPORT_DIRECTORIES = new Set([
   "templates",
 ]);
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const SHA256 = /^[a-f0-9]{64}$/;
 const MAX_NAME_CHARACTERS = 64;
 const MAX_DESCRIPTION_CHARACTERS = 1024;
 const MAX_SKILL_LINES = 500;
@@ -87,18 +85,7 @@ export function validateRepository(rootDirectory, options = {}) {
     })
     .map(({ name }) => name)
     .sort();
-  const skillFolderSet = new Set(skillFolders);
   const metadataByFolder = new Map();
-
-  for (const configuredFolder of Object.keys(config.frozenSkills)) {
-    if (!skillFolderSet.has(configuredFolder)) {
-      add(
-        "frozen.files",
-        configuredFolder,
-        "The configured frozen package is missing.",
-      );
-    }
-  }
 
   for (const folder of skillFolders) {
     const packagePrefix = `${folder}/`;
@@ -106,21 +93,12 @@ export function validateRepository(rootDirectory, options = {}) {
       .filter((path) => path.startsWith(packagePrefix))
       .map((path) => path.slice(packagePrefix.length))
       .sort();
-    const frozen = Object.hasOwn(config.frozenSkills, folder)
-      ? config.frozenSkills[folder]
-      : undefined;
-
     if (topLevelSymlinks.has(folder)) {
       add(
         "package.symlink",
         folder,
         "A skill package must be a real directory, not a symlink.",
       );
-      if (frozen) {
-        validateFrozenPackage(root, folder, packageFiles, frozen, add, {
-          hashFiles: false,
-        });
-      }
       continue;
     }
 
@@ -134,10 +112,6 @@ export function validateRepository(rootDirectory, options = {}) {
 
     validatePackageLayout(root, folder, packageFiles, add);
 
-    if (frozen) {
-      validateFrozenPackage(root, folder, packageFiles, frozen, add);
-    }
-
     const skillPath = join(root, folder, "SKILL.md");
     if (!existsSync(skillPath)) {
       continue;
@@ -146,7 +120,7 @@ export function validateRepository(rootDirectory, options = {}) {
     if (skillStat.isSymbolicLink() || !skillStat.isFile()) {
       continue;
     }
-    if (!frozen && skillStat.size > MAX_SKILL_BYTES) {
+    if (skillStat.size > MAX_SKILL_BYTES) {
       add(
         "skill.size",
         `${folder}/SKILL.md`,
@@ -163,18 +137,13 @@ export function validateRepository(rootDirectory, options = {}) {
     );
     if (metadata) {
       metadataByFolder.set(folder, metadata);
-      const expectedName = frozen?.name ?? folder;
-      if (metadata.name !== expectedName) {
+      if (metadata.name !== folder) {
         add(
           "package.name",
           `${folder}/SKILL.md`,
-          `Frontmatter name must be "${expectedName}".`,
+          `Frontmatter name must be "${folder}".`,
         );
       }
-    }
-
-    if (frozen) {
-      continue;
     }
 
     validateSkillContent(skillText, `${folder}/SKILL.md`, add);
@@ -196,10 +165,7 @@ export function validateRepository(rootDirectory, options = {}) {
 }
 
 function normalizeConfig(rawConfig, add) {
-  const normalized = {
-    forbiddenTerms: [],
-    frozenSkills: Object.create(null),
-  };
+  const normalized = { forbiddenTerms: [] };
 
   if (
     rawConfig === null ||
@@ -215,7 +181,7 @@ function normalizeConfig(rawConfig, add) {
   }
 
   for (const key of Object.keys(rawConfig)) {
-    if (key !== "forbiddenTerms" && key !== "frozenSkills") {
+    if (key !== "forbiddenTerms") {
       add(
         "config.format",
         ".config/skills/validation.json",
@@ -244,86 +210,6 @@ function normalizeConfig(rawConfig, add) {
     }
   }
 
-  if (
-    rawConfig.frozenSkills === null ||
-    typeof rawConfig.frozenSkills !== "object" ||
-    Array.isArray(rawConfig.frozenSkills)
-  ) {
-    add(
-      "config.format",
-      ".config/skills/validation.json",
-      "frozenSkills must be an object.",
-    );
-    return normalized;
-  }
-
-  for (const [folder, frozen] of Object.entries(rawConfig.frozenSkills)) {
-    if (!KEBAB_CASE.test(folder)) {
-      add(
-        "config.format",
-        ".config/skills/validation.json",
-        `Frozen skill folder "${folder}" is not lowercase kebab-case.`,
-      );
-      continue;
-    }
-    if (
-      frozen === null ||
-      typeof frozen !== "object" ||
-      Array.isArray(frozen) ||
-      typeof frozen.name !== "string" ||
-      !KEBAB_CASE.test(frozen.name) ||
-      frozen.files === null ||
-      typeof frozen.files !== "object" ||
-      Array.isArray(frozen.files)
-    ) {
-      add(
-        "config.format",
-        ".config/skills/validation.json",
-        `Frozen skill "${folder}" must define a portable name and file hashes.`,
-      );
-      continue;
-    }
-
-    for (const key of Object.keys(frozen)) {
-      if (key !== "files" && key !== "name") {
-        add(
-          "config.format",
-          ".config/skills/validation.json",
-          `Unsupported frozen-skill key "${folder}.${key}".`,
-        );
-      }
-    }
-
-    const files = {};
-    for (const [path, digest] of Object.entries(frozen.files)) {
-      const normalizedPath = posix.normalize(path);
-      if (
-        path !== normalizedPath ||
-        posix.isAbsolute(path) ||
-        normalizedPath === ".." ||
-        normalizedPath.startsWith("../") ||
-        typeof digest !== "string" ||
-        !SHA256.test(digest)
-      ) {
-        add(
-          "config.format",
-          ".config/skills/validation.json",
-          `Frozen file entry "${folder}/${path}" is invalid.`,
-        );
-        continue;
-      }
-      files[path] = digest;
-    }
-    if (!Object.hasOwn(files, "SKILL.md")) {
-      add(
-        "config.format",
-        ".config/skills/validation.json",
-        `Frozen skill "${folder}" must include a SKILL.md hash.`,
-      );
-    }
-    normalized.frozenSkills[folder] = { files, name: frozen.name };
-  }
-
   return normalized;
 }
 
@@ -340,7 +226,7 @@ function readConfig(root, add) {
       relativePath,
       `Could not read valid JSON: ${error.message}`,
     );
-    return { forbiddenTerms: [], frozenSkills: {} };
+    return { forbiddenTerms: [] };
   }
 }
 
@@ -572,52 +458,6 @@ function validatePackageLayout(root, folder, packageFiles, add) {
           `Template filename must be "${expectedName}".`,
         );
       }
-    }
-  }
-}
-
-function validateFrozenPackage(
-  root,
-  folder,
-  packageFiles,
-  frozen,
-  add,
-  options = {},
-) {
-  const expectedFiles = Object.keys(frozen.files).sort();
-  if (
-    expectedFiles.length !== packageFiles.length ||
-    expectedFiles.some((path, index) => path !== packageFiles[index])
-  ) {
-    add(
-      "frozen.files",
-      folder,
-      `Frozen file set must be exactly: ${expectedFiles.join(", ")}.`,
-    );
-  }
-
-  if (options.hashFiles === false) {
-    return;
-  }
-
-  for (const [relativePath, expectedDigest] of Object.entries(frozen.files)) {
-    const path = join(root, folder, relativePath);
-    if (
-      !existsSync(path) ||
-      lstatSync(path).isSymbolicLink() ||
-      !lstatSync(path).isFile()
-    ) {
-      continue;
-    }
-    const actualDigest = createHash("sha256")
-      .update(readFileSync(path))
-      .digest("hex");
-    if (actualDigest !== expectedDigest) {
-      add(
-        "frozen.hash",
-        `${folder}/${relativePath}`,
-        `Frozen SHA-256 must remain ${expectedDigest}.`,
-      );
     }
   }
 }

@@ -26,6 +26,11 @@ vocabulary, sentence movement, directness, humor, uncertainty, digressions,
 technical density, and level of polish. Change only what impedes the piece.
 The writer should still recognize their own decisions.
 
+When the caller disclaims some or all of the draft's voice, treat only the
+rejected features as non-authoritative. Derive the minimum replacement guidance
+from explicit constraints and the genre, preserve unaffected choices, and ask
+when choosing a new voice would materially determine the result.
+
 For a new draft, use samples when the caller supplies them. Match durable
 features such as register, density, directness, and paragraph movement. Do not
 copy memorable phrases or exaggerate superficial quirks. If the caller gives
@@ -51,6 +56,10 @@ Read paragraphs as units. Revise cadence when repeated sentence lengths,
 openings, or clause shapes make the argument feel mechanical. A short sentence
 may land a point; a long one may hold a qualification or sequence. Neither is
 required.
+
+When monotony is real, split a sentence at the joint between its thoughts,
+merge stubby sentences that separate a qualification from its claim, or change
+one of several repeated openings. Choose the repair that follows the thought.
 
 Do not alternate lengths by formula, add fragments for texture, or vary a
 construction that serves parallel ideas. Deliberate repetition can clarify an
