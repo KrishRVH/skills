@@ -49,9 +49,9 @@ link, spelling, and secret checks.
 
 ## Writing And Editing
 
-- **animize** - Fidelity-first prose editing, auditing, and drafting.
-  Uses contextual review cues to remove generic performance, evasion, and
-  flattening without inventing facts, erasing the writer's voice, or inferring
+- **animize** - Content-faithful prose recomposition, auditing, and drafting.
+  Rebuilds generic language and structure into deliberate, reader-specific
+  prose without inventing facts, silently losing substance, or inferring
   authorship.
 
   ```sh
