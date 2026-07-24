@@ -18,8 +18,13 @@ Format the skills or run all repository checks through mise:
 
 ```sh
 mise run standards
+mise run skills:check
 mise run standards:check
 ```
+
+`skills:check` runs the skill-contract test suite and validates every
+non-ignored package. `standards:check` includes that gate alongside Markdown,
+link, spelling, and secret checks.
 
 ## Pre-Commit Quality
 

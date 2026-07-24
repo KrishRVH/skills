@@ -1,0 +1,20 @@
+{
+  "forbiddenTerms": [
+    "Anthropic",
+    "ChatGPT",
+    "GitHub Copilot",
+    "Google Gemini",
+    "LinkedIn",
+    "OpenAI"
+  ],
+  "frozenSkills": {
+    "animize-v1": {
+      "name": "animize",
+      "files": {
+        "SKILL.md": "1cb045d5d9e22073ee55030ecd5fcaf588d9df5721c61bcc3565f6aa8052603e",
+        "references/pulse.md": "50f27d76b0f9cba8a632d64059daf4f399dce788eb4d0b3d336c2929103dc358",
+        "references/tells.md": "e42694bbaadaf8522cfba6bac695ab4e26577f3ae96bb1128e2a1437fc483f73"
+      }
+    }
+  }
+}

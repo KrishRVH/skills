@@ -68,9 +68,11 @@ output expectations, or forward-testing.
 
 - Use `mise run tasks` to list the available command surface.
 - Use `mise run standards` to format and lint-fix Markdown.
+- Use `mise run skills:check` to run the validator tests and validate skill
+  packages, metadata, support-file reachability, and publication entries.
 - Use `mise run standards:check` before handoff. It scans for secrets, checks
-  Markdown structure and formatting, validates local links, and checks prose and
-  filenames for typos.
+  Markdown structure and formatting, validates skills and local links, and
+  checks prose and filenames for typos.
 - Use `mise run secrets` for a focused secret scan.
 
 Do not call package managers or quality tools directly unless fixing the mise

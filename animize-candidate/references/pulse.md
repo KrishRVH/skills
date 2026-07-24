@@ -8,6 +8,17 @@ The precedence in [SKILL.md](../SKILL.md#two-laws) governs every move. Facts and
 meaning come before house style, house style before established voice, and
 voice before these heuristics.
 
+## Contents
+
+- [Preserve a voice before shaping one](#preserve-a-voice-before-shaping-one)
+- [Let rhythm follow thought](#let-rhythm-follow-thought)
+- [Earn specificity](#earn-specificity)
+- [Make stance proportionate to evidence](#make-stance-proportionate-to-evidence)
+- [Open and end for the genre](#open-and-end-for-the-genre)
+- [Preserve texture; do not fabricate it](#preserve-texture-do-not-fabricate-it)
+- [Register guide](#register-guide)
+- [Final read-back](#final-read-back)
+
 ## Preserve a voice before shaping one
 
 For an edit, reread the voice signals from Step 1. Notice characteristic

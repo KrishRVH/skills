@@ -5,8 +5,12 @@
     "": {
       "name": "skills-markdown",
       "devDependencies": {
-        "markdownlint-cli2": "^0.23.0",
-        "prettier": "^3.9.4",
+        "entities": "^4.5.0",
+        "js-yaml": "^5.2.1",
+        "jsonc-parser": "^3.3.1",
+        "markdown-it": "^14.3.0",
+        "markdownlint-cli2": "^0.23.1",
+        "prettier": "^3.9.6",
       },
     },
   },

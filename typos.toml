@@ -1,2 +1,2 @@
 [files]
-extend-exclude = ["bun.lock"]
+extend-exclude = ["animize-v1/**", "bun.lock"]
