@@ -1,0 +1,10 @@
+{
+  "forbiddenTerms": [
+    "Anthropic",
+    "ChatGPT",
+    "GitHub Copilot",
+    "Google Gemini",
+    "LinkedIn",
+    "OpenAI"
+  ]
+}

@@ -15,8 +15,7 @@ Use this guide when creating or updating any skill in this repository.
 ## Naming And Layout
 
 - Use a lowercase kebab-case folder name for each skill.
-- Match the folder name and frontmatter `name` unless there is a strong reason
-  not to.
+- Match the folder name and frontmatter `name`.
 - Put the required `SKILL.md` at the root of the skill folder.
 - Treat `SKILL.md` plus frontmatter `name` and `description` as the required
   portable contract.
@@ -52,6 +51,38 @@ Every `SKILL.md` must include:
 3. Concrete steps, reference, or both, arranged by when the agent needs them.
 4. A quality and output contract strong enough to execute without generic
    filler.
+
+## Automated Skill Contract
+
+`mise run skills:check` tests the validator, then checks tracked and untracked
+non-ignored skill files. The deterministic contract is:
+
+- Frontmatter accepts only `name`, `description`, and the optional
+  `disable-model-invocation` field. Names are lowercase kebab-case with at most
+  64 characters, descriptions are nonempty strings with at most 1,024
+  characters, and the invocation field is boolean when present. Duplicate YAML
+  keys are invalid.
+- A portable name matches its folder and is unique.
+- A package contains `SKILL.md` plus files only in `references/`, `assets/`,
+  `helpers/`, `templates/`, or `examples/`. Packages contain no symlinks.
+- Every support file is reachable from `SKILL.md` through one or more real
+  Markdown links, and local links stay inside their package. Code-span paths do
+  not establish reachability.
+- `SKILL.md` has at most 500 lines and 50,000 UTF-8 bytes. Reference Markdown
+  over 100 lines includes an H2 `Contents` or `Table of contents` section with
+  at least one same-document link. Any supporting Markdown file has at most
+  100,000 UTF-8 bytes.
+- Template names use the uppercase parent skill name, README contains exactly
+  one complete install command per skill folder in a shell fence containing no
+  other commands, and rendered skill prose omits the unambiguous vendor terms
+  configured in `.config/skills/validation.json`. Installation commands are
+  exempt from the vendor-term check.
+
+These checks enforce portable structure, bounded context, and discoverable
+resources. They do not decide whether a completion criterion is genuinely
+checkable, whether a description triggers at the right time, whether an
+invocation setting fits the skill's intended reach, or whether an output is
+good. Review and forward-test those behavioral properties.
 
 ## Information Hierarchy
 

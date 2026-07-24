@@ -8,6 +8,9 @@
 # Dependencies
 node_modules/
 
+# Generated skill archives
+*.skill
+
 # Local mise overrides and locks
 mise.local.toml
 mise.*.local.toml

@@ -25,6 +25,16 @@ run = "mise tasks"
 description = "Scan the working tree for secrets"
 run = "gitleaks dir . --redact --no-banner"
 
+[tasks."skills:test"]
+description = "Run the skill-validator test suite"
+depends = ["_install"]
+run = "bun run skills:test"
+
+[tasks."skills:check"]
+description = "Validate skill packages and portable contracts"
+depends = ["_install", "skills:test"]
+run = "bun run skills:check"
+
 [tasks._install]
 hide = true
 run = "bun install --frozen-lockfile"
@@ -44,5 +54,5 @@ run = "bun run standards"
 
 [tasks."standards:check"]
 description = "Run repository quality checks"
-depends = ["_install", "_links", "_typos", "secrets"]
+depends = ["_install", "_links", "_typos", "secrets", "skills:check"]
 run = "bun run standards:check"

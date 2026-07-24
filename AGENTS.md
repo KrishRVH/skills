@@ -36,7 +36,7 @@ output expectations, or forward-testing.
 
 ## Structure Rules
 
-- The folder name is the skill name and should be lowercase kebab-case.
+- The folder name is the skill name and must be lowercase kebab-case.
 - `SKILL.md` is required and is the entry point for the skill.
 - `SKILL.md` frontmatter must include `name` and `description`; treat those
   fields as the portable skill-selection contract.
@@ -68,9 +68,11 @@ output expectations, or forward-testing.
 
 - Use `mise run tasks` to list the available command surface.
 - Use `mise run standards` to format and lint-fix Markdown.
+- Use `mise run skills:check` to run the validator tests and validate skill
+  packages, metadata, support-file reachability, and publication entries.
 - Use `mise run standards:check` before handoff. It scans for secrets, checks
-  Markdown structure and formatting, validates local links, and checks prose and
-  filenames for typos.
+  Markdown structure and formatting, validates skills and local links, and
+  checks prose and filenames for typos.
 - Use `mise run secrets` for a focused secret scan.
 
 Do not call package managers or quality tools directly unless fixing the mise

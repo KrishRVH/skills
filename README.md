@@ -1,7 +1,7 @@
 # Skills
 
-A collection of reusable coding-agent skills for clean working trees, tidy
-repositories, and pre-commit quality.
+A collection of reusable coding-agent skills for repository quality,
+engineering workflows, visual communication, and prose.
 
 Each visible top-level folder is a skill package with a required `SKILL.md`
 entry point and optional supporting files such as references, assets, helpers,
@@ -18,8 +18,13 @@ Format the skills or run all repository checks through mise:
 
 ```sh
 mise run standards
+mise run skills:check
 mise run standards:check
 ```
+
+`skills:check` runs the skill-contract test suite and validates every
+non-ignored package. `standards:check` includes that gate alongside Markdown,
+link, spelling, and secret checks.
 
 ## Pre-Commit Quality
 
@@ -40,6 +45,17 @@ mise run standards:check
 
   ```sh
   npx skills@latest add KrishRVH/skills/demo-html
+  ```
+
+## Writing And Editing
+
+- **animize** - Fidelity-first prose editing, auditing, and drafting.
+  Uses contextual review cues to remove generic performance, evasion, and
+  flattening without inventing facts, erasing the writer's voice, or inferring
+  authorship.
+
+  ```sh
+  npx skills@latest add KrishRVH/skills/animize
   ```
 
 ## Repository Tidiness
