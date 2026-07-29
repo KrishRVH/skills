@@ -871,36 +871,56 @@ describe("repository path discovery", () => {
         cwd: root,
       }).exitCode,
     ).toBe(0);
-    mkdirSync(join(root, "sample-skill/references"), {
-      recursive: true,
+
+    // Stage the invalid path through the index rather than the working tree.
+    // Git stores index paths as raw bytes, so `git ls-files -z` reports the
+    // 0xff without the name ever having to exist on disk — which APFS and
+    // NTFS both refuse to create.
+    const blob = Bun.spawnSync(["git", "hash-object", "-w", "--stdin"], {
+      cwd: root,
+      stdin: Buffer.from("invalid path\n"),
     });
-    const prefix = Buffer.from(
-      `${join(root, "sample-skill/references")}/`,
-    );
-    writeFileSync(
-      Buffer.concat([prefix, Buffer.from([0xff])]),
-      "invalid path\n",
-    );
+    expect(blob.exitCode).toBe(0);
+    const record = Buffer.concat([
+      Buffer.from(
+        `100644 ${blob.stdout.toString().trim()}\tsample-skill/references/`,
+      ),
+      Buffer.from([0xff, 0x00]),
+    ]);
+    expect(
+      Bun.spawnSync(["git", "update-index", "-z", "--index-info"], {
+        cwd: root,
+        stdin: record,
+      }).exitCode,
+    ).toBe(0);
 
     expect(codes(validate(root))).toContain("repository.path");
   });
 
   test("fails closed on a non-UTF-8 path without Git", () => {
-    if (process.platform === "win32") {
-      return;
-    }
-
     const root = repositoryFixture();
-    mkdirSync(join(root, "sample-skill/references"), {
-      recursive: true,
-    });
-    const prefix = Buffer.from(
-      `${join(root, "sample-skill/references")}/`,
-    );
-    writeFileSync(
-      Buffer.concat([prefix, Buffer.from([0xff])]),
-      "invalid path\n",
-    );
+    const directory = join(root, "sample-skill/references");
+    mkdirSync(directory, { recursive: true });
+    const invalidPath = Buffer.concat([
+      Buffer.from(`${directory}/`),
+      Buffer.from([0xff]),
+    ]);
+
+    // The no-Git branch discovers paths through readdir, so this case needs a
+    // filesystem that will actually hold the name. APFS, HFS+ and NTFS all
+    // reject non-UTF-8 filenames outright, so probe rather than assume.
+    try {
+      writeFileSync(invalidPath, "invalid path\n");
+    } catch (error) {
+      if (
+        error.code === "EILSEQ" ||
+        error.code === "EINVAL" ||
+        error.code === "ENOENT"
+      ) {
+        return;
+      }
+      throw error;
+    }
 
     expect(codes(validate(root))).toContain("repository.path");
   });
