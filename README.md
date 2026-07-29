@@ -37,6 +37,18 @@ link, spelling, and secret checks.
   npx skills@latest add KrishRVH/skills/polish
   ```
 
+## Code Review
+
+- **thorough-pr-review** - Evidence-bound pull request review for changes where
+  a miss is expensive. Traces changed behavior to its real data, executes
+  extractable logic, separates spec conformance from defects, and uses
+  single-lens specialists plus a refuter before drafting or publishing only
+  high-consequence findings.
+
+  ```sh
+  npx skills@latest add KrishRVH/skills/thorough-pr-review
+  ```
+
 ## Demos And Communication
 
 - **demo-html** - Single-file before/after HTML demo of UI changes, with
