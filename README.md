@@ -61,13 +61,22 @@ link, spelling, and secret checks.
 
 ## Writing And Editing
 
-- **animize** - Content-faithful prose recomposition, auditing, and drafting.
-  Rebuilds generic language and structure into deliberate, reader-specific
-  prose without inventing facts, silently losing substance, or inferring
-  authorship.
+- **animize** - Rebuilds AI-generated, AI-assisted, or generic prose into
+  deliberately authored, genre-native writing. Audits prose patterns and
+  rewrite fidelity, and recomposes structure and stance without inventing facts,
+  silently losing substance, or inferring authorship.
 
   ```sh
   npx skills@latest add KrishRVH/skills/animize
+  ```
+
+- **simple-writing** - Plain-language clarity for prose. Drafts, revises, and
+  reviews text guided by George Orwell's writing rules and ASD-STE100 Simplified
+  Technical English, without sacrificing meaning, necessary precision, or
+  deliberate voice.
+
+  ```sh
+  npx skills@latest add KrishRVH/skills/simple-writing
   ```
 
 ## Repository Tidiness

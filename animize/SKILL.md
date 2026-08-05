@@ -3,9 +3,11 @@ name: animize
 description: >
   Recompose AI-generated, AI-assisted, or generic prose into specific,
   natural, genre-native writing. Use when the caller asks to humanize,
-  de-AI, deslop, naturalize, rewrite, or make prose feel deliberately authored;
-  requests a prose-pattern audit; or wants a new draft that avoids generic
-  model-shaped language and structure.
+  de-AI, deslop, or naturalize prose or make it read as deliberately authored;
+  requests a prose-pattern or fidelity audit; or supplies a brief that explicitly
+  requires avoiding generic, model-shaped language and structure. For combined
+  requests, apply a requested style standard, such as plain language, as a
+  constraint within the recomposition.
 ---
 
 # Animize
@@ -82,6 +84,8 @@ Read the complete draft or brief. Record internally:
 - reader, genre, destination, purpose, and desired response
 - main point and required content or structure
 - source boundary and authorized external sources
+- requested style standards or registers, treated as caller constraints on the
+  recomposition
 - selected controls
 
 Infer reasonable defaults. Ask only when a missing answer makes accuracy
