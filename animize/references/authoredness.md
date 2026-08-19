@@ -107,8 +107,9 @@ Sentence shape should reflect the relationship among ideas.
 - Repetition can establish a motif, term, or procedure.
 - A fragment can work in a genre that permits it, but it is never required.
 
-Repair cadence only when the repeated form becomes audible or obscures the
-argument. Do not alternate lengths, punctuation, or openings by formula.
+Vary rhythm: mix short sentences with longer ones that take their time, since
+uniform sentence length is its own tell. Get the variation from sentences doing
+different jobs, not from mechanical alternation of length or punctuation.
 
 Natural lexical repetition is often better than synonym cycling. When one
 thing remains one thing, keep calling it the same thing.
@@ -128,6 +129,8 @@ Allow:
 - a long paragraph when splitting it would sever one line of reasoning
 
 Avoid repeated claim-explain-summary units and a heading over every small idea.
+Perfect structure looks machine-made; let some mess in where the thought is
+genuinely loose.
 
 ## 8. Openings
 

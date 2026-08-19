@@ -212,14 +212,16 @@ limitation; convert formatting only when the destination is known.
 
 ## 17. Mechanical lexical cleanup
 
-**Cues:** every formal word replaced with a shorter one, all dashes removed,
-all passive voice made active, all transitions deleted, or watched words
-systematically substituted.
+**Cues:** every formal word replaced with a shorter one, all passive voice
+made active, all transitions deleted, or watched words substituted without
+regard to precision.
 
 **Effect:** creates a second artificial house style and may damage precision.
 
 **Repair:** restore forms that are accurate, idiomatic, genre-native, or
-necessary. Fix the underlying issue, not the token.
+necessary. Fix the underlying issue, not the token. The line sweep in
+[tells.md](tells.md) lists default-fix forms; applying that catalog without its
+retain conditions produces exactly this defect.
 
 ## Cluster rule
 

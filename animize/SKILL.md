@@ -3,7 +3,8 @@ name: animize
 description: >
   Recompose AI-generated, AI-assisted, or generic prose into specific,
   natural, genre-native writing. Use when the caller asks to humanize,
-  de-AI, deslop, or naturalize prose or make it read as deliberately authored;
+  de-AI, deslop, unslop, or naturalize prose or make it read as deliberately
+  authored;
   requests a prose-pattern or fidelity audit; or supplies a brief that explicitly
   requires avoiding generic, model-shaped language and structure. For combined
   requests, apply a requested style standard, such as plain language, as a
@@ -47,14 +48,20 @@ compresses it.
 
 ## Directions
 
-Use four directions, not quotas:
+Use five directions, not quotas:
 
 - **Select:** decide what deserves emphasis; cut only redundancy and empty
   scaffolding unless compression is authorized.
 - **Ground:** connect claims to supported actors, mechanisms, examples, limits,
   numbers, or consequences.
-- **Commit:** state the position and uncertainty the material supports.
-- **Shape:** let structure and rhythm follow the thought and genre.
+- **Commit:** react to the facts rather than neutrally cataloguing them; state
+  the position and uncertainty the material supports instead of symmetric
+  neutrality.
+- **Plain:** prefer the concrete plain word, the named actor, and the mechanism
+  or number over the mood it is meant to create.
+- **Shape:** let structure and rhythm follow the thought and genre; vary
+  rhythm, mixing short sentences with longer ones that take their time, and
+  let some mess in, because perfect structure looks machine-made.
 
 ## Non-negotiable rules
 
@@ -68,10 +75,14 @@ Use four directions, not quotas:
 3. **Do not manufacture humanity.** Never invent memories, anecdotes, emotions,
    preferences, relationships, credentials, quotations, sources, mistakes,
    slang, dialect, or personal experience.
-4. **Do not add cosmetic randomness.** No formulaic fragments, sentence-length
-   alternation, punctuation variation, misspellings, or transition swapping.
-5. **Do not optimize against a detector or word blacklist.** Repair
-   reader-facing causes, not tokens.
+4. **Do not fake imperfection.** No misspellings, invented typos, manufactured
+   errors, or fake self-corrections as camouflage. Vary rhythm and loosen
+   structure through real sentences doing different jobs, not injected noise.
+5. **Do not optimize against a detector.** Known tells
+   ([references/tells.md](references/tells.md)) are reader-facing defects, not
+   detector tokens: fix them by default, retain a flagged form only when genre
+   or precision requires it, and repair the cause behind the tell rather than
+   substituting a synonym for it.
 6. **Respect genre.** Formality, passive voice, repetition, headings, and
    technical terminology may be necessary.
 
@@ -99,8 +110,9 @@ are known or safely inferred.
 When `job` is `audit`, inspect without rewriting or editing any file:
 
 - For a prose-pattern audit, consult
-  [references/skeptic-patterns.md](references/skeptic-patterns.md) and report
-  each material cluster's location, observable pattern, reader effect, and
+  [references/skeptic-patterns.md](references/skeptic-patterns.md) and
+  [references/tells.md](references/tells.md) and report each material cluster
+  or line-level tell: its location, observable pattern, reader effect, and
   smallest repair direction.
 - For a source-versus-revision fidelity audit, consult
   [references/verification.md](references/verification.md) and report each
@@ -171,16 +183,24 @@ substance, not as a sentence skeleton.
 
 - state the main point early enough for the genre
 - name known actors and mechanisms when relevant
+- write active voice with a named actor unless the actor is unknown or the
+  genre's convention is passive
+- prefer the plain word; say what a thing does or measures, not how it should
+  feel
+- use first person where the genre permits it and the material supports the
+  position
 - keep exact details that carry explanatory weight
 - repeat the clearest term instead of cycling synonyms
 - let paragraph length reflect importance and complexity
 - attach qualifications to the claims they limit
 - let sentence form express the relationship among ideas
 - end paragraphs when their local work is complete
+- default to a quiet typographic register: sentence-case headings, straight
+  quotes, no em dashes, spare bold, no decorative emojis
 - stop when the piece's final job is done
 
 Retain an original sentence only when it is already exact, natural, and
-structurally appropriate—not merely to minimize edits.
+structurally appropriate, not merely to minimize edits.
 
 Complete recomposition when every locked item is represented, every omission is
 authorized, and no sentence survives solely from source inertia.
@@ -207,7 +227,9 @@ quirks or changes to substance.
 
 ### 7. Red-team the skeptical reader
 
-Review for clusters, not isolated words:
+Run two passes.
+
+**Cluster pass.** Review for mutually reinforcing structural choices:
 
 - generic runway or closure
 - exposed scaffolding or exhaustive symmetry
@@ -216,11 +238,21 @@ Review for clusters, not isolated words:
 - over-controlled transitions, recaps, or repeated sentence machinery
 - synthetic balance, borrowed intimacy, promotional voice, or session residue
 
-Fix only observable reader-facing defects. When two or more cues cluster or
-local patches keep creating new mannerisms, consult
-[references/skeptic-patterns.md](references/skeptic-patterns.md) and rebuild the
-affected section. Complete the pass when every material cluster is repaired and
-clean or constrained prose remains untouched.
+When two or more cues cluster or local patches keep creating new mannerisms,
+consult [references/skeptic-patterns.md](references/skeptic-patterns.md) and
+rebuild the affected section.
+
+**Line sweep.** Consult [references/tells.md](references/tells.md) and check
+every sentence for its tells: AI-default vocabulary, fancy copulas, `not just
+X, but Y`, forced triads, false ranges, superficial -ing tails, filler,
+adverb-propped verbs, unmotivated passives, feeling-instead-of-mechanism
+claims, and typographic tells. Fix each one unless genre, precision, or quoted
+material requires the form; note the retain conditions in the catalog's
+overcorrection guard.
+
+Complete the pass when every material cluster is repaired, no known tell
+survives without a justification, and clean or constrained prose remains
+untouched.
 
 ### 8. Verify independently
 
@@ -243,9 +275,11 @@ every exact element matches, and no unauthorized addition or deletion remains.
 
 ### 9. Read continuously and deliver
 
-Read at normal speed. Repair predictable template movement, repeated
-announce-explain-recap paragraphs, slogan endings, unnecessary explanations,
-and any repair that has become a new mannerism.
+Read at normal speed and ask one closing question: what would still make this
+read as obviously machine-generated? Repair whatever answers it, along with
+predictable template movement, repeated announce-explain-recap paragraphs,
+slogan endings, unnecessary explanations, and any repair that has become a new
+mannerism.
 
 - `adaptive`: return only the artifact when nothing requires reporting;
   otherwise append concise source notes or withhold an unsafe artifact.
@@ -274,15 +308,20 @@ The artifact is ready only when all applicable checks pass:
 - **Genre:** formality, terminology, headings, citations, and explanation fit
 - **Skeptic pass:** no unresolved cluster of generic scaffolding, pseudo-insight,
   vague authority, over-symmetry, slogan endings, or session residue
+- **Tells:** no known line-level tell survives without a genre or precision
+  justification
 - **Delivery:** output contains only the requested artifact and necessary
   unresolved warnings
 
 ## Reference-loading policy
 
-Do not load every reference reflexively. Use only the file that addresses the
-observed problem. This avoids turning the diagnostic catalog into a new house
-style.
+Always consult [references/tells.md](references/tells.md) during the step 7
+line sweep for `rewrite` and `write` jobs. Load the remaining references only
+when a file addresses the observed problem; this avoids turning the diagnostic
+catalog into a new house style.
 
+- [references/tells.md](references/tells.md) — line-level tells: vocabulary,
+  sentence machinery, plain speech, typography
 - [references/authoredness.md](references/authoredness.md) — positive
   properties, genre defaults, and voice modes
 - [references/skeptic-patterns.md](references/skeptic-patterns.md) — compact

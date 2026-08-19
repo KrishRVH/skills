@@ -77,7 +77,7 @@ not human.
 
 ### Default `voice_mode: rebuild`
 
-> The migration was rough: we lost most of Tuesday to a schema issue that should
+> The migration was rough. We lost most of Tuesday to a schema issue that should
 > have been obvious and found another after the backfill began. The good news
 > was that the rollback worked exactly as designed.
 
