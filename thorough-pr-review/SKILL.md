@@ -7,9 +7,9 @@ disable-model-invocation: true
 # Thorough PR Review
 
 A slow, evidence-bound review for changes where a miss is expensive. Discovery
-fans out across single-lens specialists, a refuter attacks what they return,
-every dismissal is logged with its deciding evidence, and only high-consequence
-findings are publishable.
+fans out across single-lens specialists, a refuter attacks each candidate they
+return in isolation, every dismissal is logged with its deciding evidence, and
+only high-consequence findings the change itself introduced are publishable.
 
 **Review one pull request per invocation.** When the caller supplies several,
 ask them to invoke the skill separately for each. Batching splits attention, and
@@ -211,7 +211,7 @@ relied on as coverage, check whether it builds the unit's inputs by hand.
 Hand-built inputs leave the input _shape_ untested however many cases follow, so
 trace the real producer and confirm it emits that shape. Read a test comment
 explaining why the real source could not be used as evidence the boundary is
-unverified. Judge behavioural coverage: a test asserting a state production can
+unverified. Judge behavioral coverage: a test asserting a state production can
 never produce is a fixture agreeing with itself.
 
 **Dismissal bar.** Re-read every candidate killed so far; each needs deciding
@@ -254,8 +254,9 @@ from the code with a file and line, and nothing it would not defend under
 push-back. Fan-out without that filter trades one uneven pass for many noisy
 ones.
 
-Then refute, separately and last, over the merged candidate list — the primary
-reviewer's candidates from Steps 3–6 and every specialist's returns together.
+Then run refutation, separately and last, over the merged candidate list — the
+primary reviewer's candidates from Steps 3-6 and every specialist's returns
+together.
 Dispatch one refuter per candidate, in parallel, each briefed with that
 candidate and its evidence pack and nothing from the others: a single refuter
 over the whole list re-creates the thin-tail attention the one-PR rule exists
@@ -411,7 +412,8 @@ conclusion.
 - "Obviously not applicable" — for a sweep row, without recording it.
 - A dismissal whose evidence answers a narrower question than the one asked, or
   cites no deciding evidence.
-- A specialist holding more than one lens, or holding the candidate list.
+- A specialist holding more than one lens, a refuter holding more than one
+  candidate, or either holding the full candidate list.
 - Specialist output merged without each having filtered its own.
 - An ambiguous candidate recorded as refuted rather than unresolved.
 - A candidate whose failing input no traced producer actually emits — "what if

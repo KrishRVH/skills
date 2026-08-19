@@ -62,9 +62,9 @@ Use five directions, not quotas:
   neutrality.
 - **Plain:** prefer the concrete plain word, the named actor, and the mechanism
   or number over the mood it is meant to create.
-- **Shape:** let structure and rhythm follow the thought and genre; vary
-  rhythm, mixing short sentences with longer ones that take their time, and
-  let some mess in, because perfect structure looks machine-made.
+- **Shape:** let structure and rhythm follow the thought and genre: vary
+  sentence length on purpose, and let some mess in, since perfect structure
+  looks machine-made.
 
 ## Non-negotiable rules
 
