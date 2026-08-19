@@ -19,6 +19,10 @@ the last change tends to receive the thinnest pass.
 
 - Hold dismissals to the bar findings get. Refute a candidate only with deciding
   evidence, recorded in the ledger; carry ambiguous candidates as uncertainties.
+- Publish only defects the diff introduces, activates, or materially worsens. A
+  pre-existing defect the review uncovers goes to the caller report, never the
+  publishable set. Unchanged code counts as activated when the diff points a new
+  consumer at it or changes what it must satisfy — the consumer map decides.
 - Publish only Critical, High, and the publishable tier of Medium defined in Step 8. Report everything else to the caller.
 - Write comments as a colleague's reading. Severity lives in the evidence, not
   in the tone.
@@ -33,9 +37,11 @@ the last change tends to receive the thinnest pass.
 ### Step 1: Gather
 
 Resolve exactly one pull request identifier or URL. Fetch the review platform's
-metadata and canonical diff through its available CLI or API, then fetch the
-head revision so surrounding code can be read at the exact revision under
-review. Keep the caller's active checkout untouched: read the fetched objects
+metadata, canonical diff, and existing review threads through its available CLI
+or API, then fetch the head revision so surrounding code can be read at the
+exact revision under review. A repeat invocation on the same pull request must
+know what has already been raised: findings an existing thread already covers
+are referenced there, never re-posted. Keep the caller's active checkout untouched: read the fetched objects
 directly or use an isolated worktree, and save transient artifacts outside the
 repository. If the metadata, canonical diff, or head revision is unavailable,
 stop and report the missing access or artifact.
@@ -52,8 +58,16 @@ understand intent. Verify every conclusion against the final revision.
 git log -p <base>..<review-head> -- <path-of-interest>
 ```
 
-**Complete when:** the whole diff and the commit history have been read, the head
-ref is local, and the repository's applicable standards are known.
+Note the diff's size against the regime where careful review was ever measured
+effective — roughly 400 changed lines or 20 files per sitting for human
+reviewers. Far past it, continue, but record the excess as a named evidence
+limit in the report, and offer the caller a partition by subsystem, one
+invocation each. If the diff is too large to read in full at all, stop and
+propose the partition instead of silently degrading.
+
+**Complete when:** the whole diff, the commit history, and the existing review
+threads have been read, the head ref is local, and the repository's applicable
+standards are known.
 
 ### Step 2: Inventory the change
 
@@ -77,7 +91,10 @@ requirement while being defective, or be flawless while implementing the wrong
 thing; ranking the two together lets one hide the other.
 
 Maintain two ledgers from this point onward: defect candidates and spec
-observations. Spec observations never enter defect severity or publication.
+observations. Give every candidate the same record: an id, its lens, the claim,
+the file and line, the reasoning that produced it, its status — open,
+confirmed, refuted, or unresolved — and the deciding evidence once the status
+is set. Spec observations never enter defect severity or publication.
 
 **Complete when:** every changed behavior is inventoried, every new consumer of
 pre-existing code is in the consumer map, and the spec axis is populated in both
@@ -159,11 +176,15 @@ The **Lens** column is also the partition Step 7 fans out along.
 | Reachability      | Prescribed remedy       | If the change blocks a user and routes them somewhere to resolve it, what does that destination do to their data?                                                                                                          |
 | Consistency       | Duplicated rule         | Is any rule the change introduces implemented in more than one place, and do the copies agree exactly?                                                                                                                     |
 | Consistency       | Cross-path disagreement | Where two paths handle the same state, do they classify it the same way? A change claiming to unify paths gets checked against its own claim.                                                                              |
+| Root cause        | Symptom fix             | Does the change fix the cause or mask a symptom? Where a workaround appears, what makes it needed, and what still fails while the cause remains?                                                                           |
 | Spec              | Unasked-for behavior    | What does the diff do that nothing asked for? Report as scope, not defect.                                                                                                                                                 |
 | Spec              | Missing requirement     | What did the spec ask for that the diff omits or half-does?                                                                                                                                                                |
 | Integrity         | Idempotency             | What happens when this runs twice, and which external side effect duplicates?                                                                                                                                              |
 | Integrity         | Transaction boundary    | What stays committed if this fails halfway, and does anything inside commit independently of the outer transaction?                                                                                                        |
 | Integrity         | Concurrency             | What does each lock actually protect, and which writes stay possible against it?                                                                                                                                           |
+| Deployment        | Rollout ordering        | In what order do the migration, the deploy, and the rollback run — and does old code meet new data, or new code meet old schema, at any point between them?                                                                |
+| Compatibility     | External contract       | Which endpoint, event, schema, or export that consumers outside this repository read does the diff change, and what breaks for a consumer that has not changed?                                                            |
+| Dependencies      | Dependency change       | For each dependency added or version-changed, what behavior shifted, and what newly executes at install or run time?                                                                                                       |
 | Authorization     | Gate parity             | Which roles reach this, and does every branch, redirect, and endpoint it leads to carry an equivalent gate?                                                                                                                |
 | Security          | Input trust             | Can untrusted input reach a query, command, path, template, parser, redirect, or interpreter without the encoding or validation that boundary requires?                                                                    |
 | Security          | Sensitive data          | Can credentials, tokens, personal data, or internal state newly reach logs, telemetry, errors, caches, or responses?                                                                                                       |
@@ -216,6 +237,14 @@ consumer-map entries and producer traces, and only that lens's rows. Withhold
 the candidate list — a specialist that knows what has been found narrows to
 confirming it.
 
+Brief the Security and Authorization specialists with rebuttable trust
+defaults, overridden only by the repository's own documentation or evidence in
+the code: environment variables and CLI flags are trusted inputs; client-side
+code needs no authorization checks of its own where the server enforces them;
+framework auto-escaping counts as output encoding unless the code bypasses it;
+an SSRF that controls only the path is not a finding; memory-safety findings
+require a memory-unsafe language.
+
 If independent workers are unavailable, stop and tell the caller this skill
 cannot provide its claimed adversarial verification. Offer an ordinary local
 review as a separate, explicitly degraded alternative.
@@ -225,28 +254,41 @@ from the code with a file and line, and nothing it would not defend under
 push-back. Fan-out without that filter trades one uneven pass for many noisy
 ones.
 
-Then run the refuter, separately and last, over the merged list:
+Then refute, separately and last, over the merged candidate list — the primary
+reviewer's candidates from Steps 3–6 and every specialist's returns together.
+Dispatch one refuter per candidate, in parallel, each briefed with that
+candidate and its evidence pack and nothing from the others: a single refuter
+over the whole list re-creates the thin-tail attention the one-PR rule exists
+to prevent. When worker slots are scarce, fall back to refuters over small
+batches and say so in the report. Each refuter must:
 
-- try to disprove each candidate
+- try to disprove its candidate
 - classify it as confirmed, refuted, or unresolved
-- cite the deciding evidence for confirmed and refuted candidates
-- name the cheapest check that would settle each unresolved candidate
+- cite the deciding evidence for a confirmed or refuted verdict
+- name the cheapest check that would settle an unresolved verdict
+
+Run every settling check within the review's means — a file read, a fixture
+query, a scratch execution — before letting a candidate stand as unresolved.
+An independent model's reading of the deciding evidence, where available, is a
+legitimate settling check, though weaker than a code trace. Report as
+unresolved only what settling would require access the review lacks.
 
 Preserve each candidate's defect or spec ledger throughout refutation.
 
-Keep the refuter away from the specialists so its skepticism cannot dampen their
-search. Treat every returned claim as evidence rather than verdict: verify it
-against the code yourself, and say plainly when one does not survive.
+Keep the refuters away from the specialists so their skepticism cannot dampen
+the search. Treat every returned verdict as evidence rather than final: verify
+it against the code yourself, and say plainly when one does not survive.
 
 **Complete when:** every applicable lens has run, every skipped lens is
-documented as having no applicable rows, the refuter has passed over the merged
-list, and every returned claim is confirmed or refuted with deciding evidence or
-recorded as unresolved with a settling check.
+documented as having no applicable rows, every candidate from the primary pass
+and the specialists has been refuted in isolation, every affordable settling
+check has run, and every candidate is confirmed or refuted with deciding
+evidence or recorded as unresolved with the access that settling requires.
 
 ### Step 8: Reconcile and rate
 
 Reconcile the defect ledger across the primary pass, non-Spec specialists, and
-the refuter. Fan-out makes duplicates normal — several lenses reach one defect
+the refuters. Fan-out makes duplicates normal — several lenses reach one defect
 from different directions. Keep the finding with the wider blast radius, note
 the narrower one as subsumed, and carry the strongest evidence from either.
 
@@ -295,6 +337,9 @@ established even when its finding holds.
   assumption makes the candidate unresolved, not a lower-severity finding.
 - **Uncertainty is stated where it exists.** A conclusion resting on a code trace
   rather than observed data says so, and names the check that would settle it.
+- **Standards findings quote the rule.** A finding resting on workspace
+  instructions quotes the exact rule, links the governing document, and has
+  confirmed the rule's stated scope covers the file it is applied to.
 
 Then have an adversary read the drafts against the diff, briefed to flag any
 unsupported claim, any severity it would rate lower, and any assertion that
@@ -321,6 +366,12 @@ Keep each comment near 200 words or under. Let the comments in one review take
 different shapes — a shared skeleton reads as generated and buries the finding
 that differs.
 
+Include a committable suggestion block only when applying it alone fully
+resolves the finding; otherwise describe the fix. Reference cross-file
+evidence with full-SHA permalinks. Where an existing review thread already
+covers a finding, reply in or reference that thread rather than opening a
+duplicate.
+
 Anchor each publishable finding inline on the line it concerns. Name the reviewed
 scope, evidence limits, and unresolved questions in the review body.
 
@@ -342,6 +393,8 @@ published under explicit authorization or returned as review-ready drafts.
 - every dismissed candidate with the evidence that killed it
 - any conclusion resting on a code trace rather than observed data, plus the
   cheapest check that would settle it
+- evidence limits: checks that could not run, a diff far past the measured
+  review regime, or refutation degraded to batches
 
 **Complete when:** the caller has the publishable set, the withheld set, the spec
 axis, the dismissal ledger, the publication status, and every material
@@ -361,20 +414,23 @@ conclusion.
 - A specialist holding more than one lens, or holding the candidate list.
 - Specialist output merged without each having filtered its own.
 - An ambiguous candidate recorded as refuted rather than unresolved.
+- A candidate whose failing input no traced producer actually emits — "what if
+  this is null" without the call site that makes it null.
+- A pre-existing defect ranked into the publishable set.
 - A comment claiming more than the evidence gathered for it, or vouching for part
   of the change as sound.
 
-## Out of scope
+## Hand off to a finishing pass
 
 Style, naming, structural smells, simplification, and code-comment wording
-belong to a finishing pass unless evidence connects them to behavior that meets
-the severity bar.
+belong to a dedicated finishing skill; bring them here only when evidence
+connects them to behavior that meets the severity bar.
 
 ## Cost
 
 Full-diff and history reading, producer tracing, execution of extractable logic,
-a twenty-two-class sweep, a reasoning audit, a parallel fan-out, a refuter, and a
-pass over the drafted comments.
+a twenty-six-class sweep, a reasoning audit, a parallel fan-out, per-candidate
+refuters with executed settling checks, and a pass over the drafted comments.
 
 Dispatch specialists in small concurrent waves that stay within the available
 worker limit. Preserve one slot for the primary reviewer so reconciliation can

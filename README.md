@@ -42,38 +42,32 @@ link, spelling, and secret checks.
 - **thorough-pr-review** - Evidence-bound pull request review for changes where
   a miss is expensive. Traces changed behavior to its real data, executes
   extractable logic, separates spec conformance from defects, and uses
-  single-lens specialists plus a refuter before drafting or publishing only
-  high-consequence findings.
+  single-lens specialists plus per-candidate refuters before drafting or
+  publishing only high-consequence findings introduced by the change.
 
   ```sh
   npx skills@latest add KrishRVH/skills/thorough-pr-review
   ```
 
-## Demos And Communication
-
-- **demo-html** - Single-file before/after HTML demo of UI changes, with
-  screenshots captured from the running app and a technical vs non-technical
-  language toggle for mixed stakeholder audiences.
-
-  ```sh
-  npx skills@latest add KrishRVH/skills/demo-html
-  ```
-
 ## Writing And Editing
 
 - **animize** - Rebuilds AI-generated, AI-assisted, or generic prose into
-  deliberately authored, genre-native writing. Audits prose patterns and
-  rewrite fidelity, and recomposes structure and stance without inventing facts,
-  silently losing substance, or inferring authorship.
+  deliberately authored, genre-native writing, for standalone artifacts such
+  as PR descriptions, documentation, articles, and creative prose. Audits
+  prose patterns and rewrite fidelity, recomposes structure and stance, and
+  sweeps a line-level tell catalog adapted from Cursor's unslop skill,
+  preserving facts, substance, and attribution throughout.
 
   ```sh
   npx skills@latest add KrishRVH/skills/animize
   ```
 
-- **simple-writing** - Plain-language clarity for prose. Drafts, revises, and
-  reviews text guided by George Orwell's writing rules and ASD-STE100 Simplified
-  Technical English, without sacrificing meaning, necessary precision, or
-  deliberate voice.
+- **simple-writing** - Clear, direct communication from the coding agent to
+  the user: replies, explanations, status updates, summaries, and review
+  reports, guided by George Orwell's writing rules, Diátaxis response modes,
+  Google developer documentation style, ASD-STE100 Simplified Technical
+  English, and Global English disambiguation, while preserving meaning,
+  necessary precision, and deliberate voice.
 
   ```sh
   npx skills@latest add KrishRVH/skills/simple-writing
