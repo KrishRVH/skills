@@ -31,12 +31,14 @@ plain word the sentence actually needs.
 `numerous` → many, `in the event that` → if, `prior to` → before. The fancier
 synonym is rarely clearer.
 
-**Abstract metaphor nouns.** Substrate, wedge, vector, locus, nexus, primitive
+**Abstract metaphors.** Substrate, wedge, vector, locus, nexus, primitive
 (as noun), harness (as metaphor), bedrock, scaffolding (as metaphor), modality,
-paradigm, ratchet (as metaphor), endgame, north star, flywheel. These read as
-technical but usually hide a plainer concrete word: "substrate" → base, "wedge
-in" → add, "vector" → way, "ratchet" → the mechanism's real name or "a limit
-that only tightens". Retain only when the term is the field's exact word.
+paradigm, ratchet (as metaphor), endgame, north star, flywheel, load-bearing
+(outside engineering). These read as technical but usually hide a plainer
+concrete word: "substrate" → base, "wedge in" → add, "vector" → way, "ratchet"
+→ the mechanism's real name or "a limit that only tightens", "the load-bearing
+assumption" → the assumption everything else depends on. Retain only when the
+term is the field's exact word.
 
 **Promotional adjectives.** Nestled, vibrant, breathtaking, groundbreaking,
 renowned, stunning, seamless, robust, must-visit. Use neutral description or
