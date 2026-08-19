@@ -6,9 +6,12 @@ description: >
   de-AI, deslop, unslop, or naturalize prose or make it read as deliberately
   authored;
   requests a prose-pattern or fidelity audit; or supplies a brief that explicitly
-  requires avoiding generic, model-shaped language and structure. For combined
-  requests, apply a requested style standard, such as plain language, as a
-  constraint within the recomposition.
+  requires avoiding generic, model-shaped language and structure. Covers
+  standalone prose artifacts: PR descriptions, documentation, articles,
+  reports, and creative writing. For the agent's own conversational replies
+  to the user, use simple-writing. For combined requests, apply a requested
+  style standard, such as plain language, as a constraint within the
+  recomposition.
 ---
 
 # Animize
