@@ -1,0 +1,5 @@
+interface:
+  display_name: "OCD"
+  short_description: "Organize projects without changing behavior"
+policy:
+  allow_implicit_invocation: false

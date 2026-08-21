@@ -1,0 +1,5 @@
+interface:
+  display_name: "Thorough PR Review"
+  short_description: "Run an adversarial high-consequence PR review"
+policy:
+  allow_implicit_invocation: false

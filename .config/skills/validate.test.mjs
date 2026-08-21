@@ -31,6 +31,20 @@ function write(root, relativePath, content) {
   const path = join(root, relativePath);
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, content);
+  if (relativePath.endsWith("/SKILL.md")) {
+    const skillDirectory = dirname(path);
+    const metadataPath = join(skillDirectory, "agents/openai.yaml");
+    mkdirSync(dirname(metadataPath), { recursive: true });
+    writeFileSync(
+      metadataPath,
+      [
+        "interface:",
+        '  display_name: "Sample Skill"',
+        '  short_description: "Perform the requested sample skill work"',
+        "",
+      ].join("\n"),
+    );
+  }
 }
 
 function skillDocument(name, body = "Use the supplied material.\n") {
@@ -246,6 +260,62 @@ describe("frontmatter", () => {
 });
 
 describe("package structure", () => {
+  test("requires valid agent metadata", () => {
+    const missingRoot = fixture();
+    write(
+      missingRoot,
+      "sample-skill/SKILL.md",
+      skillDocument("sample-skill"),
+    );
+    rmSync(join(missingRoot, "sample-skill/agents/openai.yaml"));
+    write(missingRoot, "README.md", readme("sample-skill"));
+    expect(codes(validate(missingRoot))).toContain(
+      "agent-metadata.missing",
+    );
+
+    const invalidRoot = fixture();
+    write(
+      invalidRoot,
+      "sample-skill/SKILL.md",
+      skillDocument("sample-skill"),
+    );
+    write(
+      invalidRoot,
+      "sample-skill/agents/openai.yaml",
+      "interface: []\n",
+    );
+    write(invalidRoot, "README.md", readme("sample-skill"));
+    expect(codes(validate(invalidRoot))).toContain(
+      "agent-metadata.interface",
+    );
+  });
+
+  test("requires invocation controls to agree", () => {
+    const root = fixture();
+    write(
+      root,
+      "sample-skill/SKILL.md",
+      "---\nname: sample-skill\ndescription: Work.\ndisable-model-invocation: true\n---\n# Skill\n",
+    );
+    write(root, "README.md", readme("sample-skill"));
+
+    expect(codes(validate(root))).toContain("invocation.mismatch");
+
+    write(
+      root,
+      "sample-skill/agents/openai.yaml",
+      [
+        "interface:",
+        '  display_name: "Sample Skill"',
+        '  short_description: "Perform the requested sample skill work"',
+        "policy:",
+        "  allow_implicit_invocation: false",
+        "",
+      ].join("\n"),
+    );
+    expect(validate(root)).toEqual([]);
+  });
+
   test("rejects visible non-skill directories", () => {
     const root = fixture();
     write(root, "scripts/tool.mjs", "export {};\n");

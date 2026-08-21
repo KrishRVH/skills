@@ -1,16 +1,7 @@
 ---
 name: simple-writing
-description: >
-  Clear, direct communication from the coding agent to the user, using
-  George Orwell's writing rules, Diátaxis response modes, Google
-  developer documentation style, ASD-STE100 Simplified Technical
-  English, and Global English disambiguation. Use when writing or
-  revising replies, explanations, walkthroughs, status updates,
-  summaries, or reports addressed to the user, or when the caller asks
-  for clarity, simplicity, concision, readability, reduced jargon,
-  plain English or plain language, Orwell's rules, STE, or
-  developer-documentation style. For standalone artifacts such as PR
-  descriptions, documentation, or articles, use animize instead.
+description: Clear, direct user-facing prose using plain-language and developer-documentation standards.
+disable-model-invocation: true
 ---
 
 # Simple writing

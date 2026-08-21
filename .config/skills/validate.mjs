@@ -30,6 +30,17 @@ const SUPPORT_DIRECTORIES = new Set([
   "references",
   "templates",
 ]);
+const AGENT_METADATA_PATH = "agents/openai.yaml";
+const AGENT_METADATA_KEYS = new Set(["interface", "policy"]);
+const AGENT_INTERFACE_KEYS = new Set([
+  "brand_color",
+  "default_prompt",
+  "display_name",
+  "icon_large",
+  "icon_small",
+  "short_description",
+]);
+const AGENT_POLICY_KEYS = new Set(["allow_implicit_invocation"]);
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MAX_NAME_CHARACTERS = 64;
 const MAX_DESCRIPTION_CHARACTERS = 1024;
@@ -145,6 +156,14 @@ export function validateRepository(rootDirectory, options = {}) {
         );
       }
     }
+
+    const agentMetadata = validateAgentMetadata(
+      root,
+      folder,
+      packageFiles,
+      add,
+    );
+    validateInvocationContract(folder, metadata, agentMetadata, add);
 
     validateSkillContent(skillText, `${folder}/SKILL.md`, add);
     validateReferenceContent(root, folder, packageFiles, add);
@@ -438,7 +457,19 @@ function validatePackageLayout(root, folder, packageFiles, add) {
       continue;
     }
 
+    if (relativePath === AGENT_METADATA_PATH) {
+      continue;
+    }
+
     const segments = relativePath.split("/");
+    if (segments[0] === "agents") {
+      add(
+        "package.layout",
+        path,
+        `The agents directory may contain only "${AGENT_METADATA_PATH.split("/")[1]}".`,
+      );
+      continue;
+    }
     if (segments.length < 2 || !SUPPORT_DIRECTORIES.has(segments[0])) {
       add(
         "package.layout",
@@ -549,7 +580,174 @@ function validateFrontmatter(text, path, add) {
     );
   }
 
-  return typeof name === "string" ? { name } : null;
+  return typeof name === "string"
+    ? {
+        disableModelInvocation:
+          metadata["disable-model-invocation"] === true,
+        name,
+      }
+    : null;
+}
+
+function validateAgentMetadata(root, folder, packageFiles, add) {
+  const relativePath = AGENT_METADATA_PATH;
+  const displayPath = `${folder}/${relativePath}`;
+  if (!packageFiles.includes(relativePath)) {
+    add(
+      "agent-metadata.missing",
+      displayPath,
+      "Every skill must include agents/openai.yaml.",
+    );
+    return null;
+  }
+
+  const path = join(root, folder, relativePath);
+  const stat = lstatSync(path);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    return null;
+  }
+
+  let metadata;
+  try {
+    metadata = parseYaml(readFileSync(path, "utf8"));
+  } catch (error) {
+    const duplicate = /duplicated mapping key/i.test(error.message);
+    add(
+      duplicate ? "agent-metadata.duplicate" : "agent-metadata.format",
+      displayPath,
+      `agents/openai.yaml is not valid YAML: ${error.message}`,
+    );
+    return null;
+  }
+
+  if (!isMapping(metadata)) {
+    add(
+      "agent-metadata.format",
+      displayPath,
+      "agents/openai.yaml must be a YAML mapping.",
+    );
+    return null;
+  }
+
+  validateKnownKeys(
+    metadata,
+    AGENT_METADATA_KEYS,
+    "agent-metadata.key",
+    displayPath,
+    "agents/openai.yaml",
+    add,
+  );
+
+  const interfaceMetadata = metadata.interface;
+  if (!isMapping(interfaceMetadata)) {
+    add(
+      "agent-metadata.interface",
+      displayPath,
+      "interface must be a YAML mapping.",
+    );
+  } else {
+    validateKnownKeys(
+      interfaceMetadata,
+      AGENT_INTERFACE_KEYS,
+      "agent-metadata.interface",
+      displayPath,
+      "interface",
+      add,
+    );
+    if (!isNonemptyString(interfaceMetadata.display_name)) {
+      add(
+        "agent-metadata.interface",
+        displayPath,
+        "interface.display_name must be a nonempty string.",
+      );
+    }
+    const shortDescription = interfaceMetadata.short_description;
+    if (
+      !isNonemptyString(shortDescription) ||
+      Array.from(shortDescription).length < 25 ||
+      Array.from(shortDescription).length > 64
+    ) {
+      add(
+        "agent-metadata.interface",
+        displayPath,
+        "interface.short_description must contain 25-64 characters.",
+      );
+    }
+  }
+
+  const policy = metadata.policy;
+  if (policy !== undefined && !isMapping(policy)) {
+    add(
+      "agent-metadata.policy",
+      displayPath,
+      "policy must be a YAML mapping when present.",
+    );
+    return { allowImplicitInvocation: null };
+  }
+  if (policy === undefined) {
+    return { allowImplicitInvocation: undefined };
+  }
+
+  validateKnownKeys(
+    policy,
+    AGENT_POLICY_KEYS,
+    "agent-metadata.policy",
+    displayPath,
+    "policy",
+    add,
+  );
+  const allowImplicitInvocation = policy.allow_implicit_invocation;
+  if (typeof allowImplicitInvocation !== "boolean") {
+    add(
+      "agent-metadata.policy",
+      displayPath,
+      "policy.allow_implicit_invocation must be a boolean.",
+    );
+    return { allowImplicitInvocation: null };
+  }
+  return { allowImplicitInvocation };
+}
+
+function validateInvocationContract(folder, frontmatter, agentMetadata, add) {
+  if (frontmatter === null || agentMetadata === null) {
+    return;
+  }
+
+  const portableExplicit = frontmatter.disableModelInvocation;
+  const metadataExplicit =
+    agentMetadata.allowImplicitInvocation === false;
+  if (portableExplicit === metadataExplicit) {
+    return;
+  }
+
+  add(
+    "invocation.mismatch",
+    `${folder}/${AGENT_METADATA_PATH}`,
+    "disable-model-invocation and policy.allow_implicit_invocation must declare the same invocation mode.",
+  );
+}
+
+function validateKnownKeys(
+  metadata,
+  allowedKeys,
+  code,
+  path,
+  label,
+  add,
+) {
+  for (const key of Object.keys(metadata)) {
+    if (!allowedKeys.has(key)) {
+      add(code, path, `${label} contains unsupported key "${key}".`);
+    }
+  }
+}
+
+function isMapping(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function isNonemptyString(value) {
+  return typeof value === "string" && value.trim() !== "";
 }
 
 function validateUniqueNames(metadataByFolder, add) {

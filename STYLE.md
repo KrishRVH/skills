@@ -17,6 +17,7 @@ Use this guide when creating or updating any skill in this repository.
 - Use a lowercase kebab-case folder name for each skill.
 - Match the folder name and frontmatter `name`.
 - Put the required `SKILL.md` at the root of the skill folder.
+- Put picker metadata and invocation policy in `agents/openai.yaml`.
 - Treat `SKILL.md` plus frontmatter `name` and `description` as the required
   portable contract.
 - Keep visible root-level directories reserved for skills.
@@ -34,14 +35,9 @@ Use this guide when creating or updating any skill in this repository.
 
 ## Invocation And Frontmatter
 
-Choose invocation deliberately:
-
-- Use `disable-model-invocation: true` for an expensive or judgment-heavy skill
-  that should run only when the caller names it. Keep its description brief and
-  human-facing; do not repeat invocation conditions in the body.
-- Keep model invocation enabled only when the agent must discover the skill
-  autonomously or another skill must reach it. Front-load a strong task word in
-  its description and include one trigger per genuinely distinct branch.
+Choose invocation deliberately and follow [the invocation
+contract](.agents/invocation.md). Keep the portable frontmatter and machine
+metadata synchronized.
 
 Every `SKILL.md` must include:
 
@@ -63,8 +59,12 @@ non-ignored skill files. The deterministic contract is:
   characters, and the invocation field is boolean when present. Duplicate YAML
   keys are invalid.
 - A portable name matches its folder and is unique.
-- A package contains `SKILL.md` plus files only in `references/`, `assets/`,
-  `helpers/`, `templates/`, or `examples/`. Packages contain no symlinks.
+- A package contains `SKILL.md`, `agents/openai.yaml`, and optional files only
+  in `references/`, `assets/`, `helpers/`, `templates/`, or `examples/`.
+  Packages contain no symlinks.
+- Agent metadata has a nonempty display name, a 25-64 character short
+  description, and an invocation policy synchronized with portable
+  frontmatter.
 - Every support file is reachable from `SKILL.md` through one or more real
   Markdown links, and local links stay inside their package. Code-span paths do
   not establish reachability.

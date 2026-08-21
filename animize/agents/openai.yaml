@@ -1,0 +1,3 @@
+interface:
+  display_name: "Animize"
+  short_description: "Recompose prose into natural authored writing"

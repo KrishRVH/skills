@@ -21,6 +21,8 @@ Use a simple, predictable structure:
 ```text
 skill-name/
   SKILL.md
+  agents/
+    openai.yaml
   references/
     REFERENCE.md
   assets/
@@ -40,6 +42,8 @@ output expectations, or forward-testing.
 - `SKILL.md` is required and is the entry point for the skill.
 - `SKILL.md` frontmatter must include `name` and `description`; treat those
   fields as the portable skill-selection contract.
+- Every skill includes `agents/openai.yaml` for picker metadata and the
+  harness-specific invocation policy.
 - Do not create visible root-level non-skill folders. Use dot-prefixed folders
   for repo infrastructure.
 - Keep skill categories in README only. Do not create
@@ -51,6 +55,8 @@ output expectations, or forward-testing.
 - `templates/` is for reusable output skeletons when a skill needs them.
 - `examples/` is optional and only for concrete sample inputs or outputs that
   improve trigger behavior, output expectations, or forward-testing.
+- `agents/` is machine metadata. It contains only `openai.yaml` and does not
+  participate in support-file reachability.
 - Template filenames must use the parent skill name as their uppercase stem,
   preserve kebab-case, and keep the format's normal extension:
   `skill-name/templates/SKILL-NAME.ext`.
@@ -59,6 +65,8 @@ output expectations, or forward-testing.
 ## Working In This Repo
 
 - Start by reading the target skill's `SKILL.md`.
+- Read [`.agents/invocation.md`](.agents/invocation.md) when adding a skill or
+  changing whether an agent may invoke one implicitly.
 - Keep context and examples close to the skill that uses them.
 - Update `README.md` when adding, renaming, or removing a top-level skill.
 - Follow `STYLE.md` for naming, tone, structure, and update rules.
@@ -86,10 +94,10 @@ task that wraps them.
 
 ## Language Rules
 
-Keep the repository tool- and vendor-neutral:
+Keep skill instructions tool- and vendor-neutral:
 
-- Do not mention specific assistants, models, or products in skills or docs
-  unless a file is documenting an installation command.
+- Keep product-specific names inside installation instructions, machine
+  adapter paths, and documentation that defines those adapters.
 - Prefer neutral terms such as `coding agent`, `caller`, `workflow`,
   `workspace`, or `session`.
 - Write guidance so it still makes sense if the skill is used in a different

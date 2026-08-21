@@ -1,0 +1,5 @@
+interface:
+  display_name: "Polish"
+  short_description: "Run an exhaustive pre-commit finishing pass"
+policy:
+  allow_implicit_invocation: false

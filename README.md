@@ -12,6 +12,15 @@ See `AGENTS.md` for repository conventions and `STYLE.md` for authoring rules.
 Skills are grouped below for browsing only. Each skill remains a visible
 top-level folder so discovery and install paths stay predictable.
 
+## Invocation
+
+User-invoked skills run only when the caller names them: [ocd](ocd/SKILL.md),
+[polish](polish/SKILL.md), [simple-writing](simple-writing/SKILL.md), and
+[thorough-pr-review](thorough-pr-review/SKILL.md).
+
+Model-invoked skills can also be selected automatically when the task matches:
+[animize](animize/SKILL.md).
+
 ## Project Commands
 
 Format the skills or run all repository checks through mise:
