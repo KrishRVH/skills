@@ -96,7 +96,7 @@ function readme(...folders) {
     "# Skills",
     "",
     ...folders.flatMap((folder) => [
-      "```sh",
+      "```ruby",
       `npx skills@latest add KrishRVH/skills/${folder}`,
       "```",
       "",

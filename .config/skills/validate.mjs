@@ -1101,10 +1101,16 @@ function validateReadme(root, skillFolders, add) {
 
   const text = readFileSync(path, "utf8");
   const installs = [];
-  const shellLanguages = new Set(["bash", "sh", "shell", "zsh"]);
+  const commandFenceLanguages = new Set([
+    "bash",
+    "ruby",
+    "sh",
+    "shell",
+    "zsh",
+  ]);
   for (const token of markdownParser.parse(text, {})) {
     const language = token.info?.trim().split(/\s+/, 1)[0].toLowerCase();
-    if (token.type !== "fence" || !shellLanguages.has(language)) {
+    if (token.type !== "fence" || !commandFenceLanguages.has(language)) {
       continue;
     }
     const matches = [];

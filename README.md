@@ -25,7 +25,7 @@ Model-invoked skills can also be selected automatically when the task matches:
 
 Format the skills or run all repository checks through mise:
 
-```sh
+```ruby
 mise run standards
 mise run skills:check
 mise run standards:check
@@ -42,7 +42,7 @@ link, spelling, and secret checks.
   preserving intended contracts, applying proportionate verification, and
   removing unwarranted ceremony from code and current documentation.
 
-  ```sh
+  ```ruby
   npx skills@latest add KrishRVH/skills/polish
   ```
 
@@ -54,7 +54,7 @@ link, spelling, and secret checks.
   single-lens specialists plus per-candidate refuters before drafting or
   publishing only high-consequence findings introduced by the change.
 
-  ```sh
+  ```ruby
   npx skills@latest add KrishRVH/skills/thorough-pr-review
   ```
 
@@ -70,7 +70,7 @@ link, spelling, and secret checks.
   Google developer documentation style guide, ASD-STE100, Kohl's _Global
   English Style Guide_, and Cursor's technical-writing skill.
 
-  ```sh
+  ```ruby
   npx skills@latest add KrishRVH/skills/animize
   ```
 
@@ -80,6 +80,6 @@ link, spelling, and secret checks.
   pass. Defaults to current branch changes and prioritizes semantic grouping,
   ecosystem convention, and deterministic ordering among true peers.
 
-  ```sh
+  ```ruby
   npx skills@latest add KrishRVH/skills/ocd
   ```

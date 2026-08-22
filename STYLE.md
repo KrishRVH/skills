@@ -73,10 +73,10 @@ non-ignored skill files. The deterministic contract is:
   at least one same-document link. Any supporting Markdown file has at most
   100,000 UTF-8 bytes.
 - Template names use the uppercase parent skill name, README contains exactly
-  one complete install command per skill folder in a shell fence containing no
-  other commands, and rendered skill prose omits the unambiguous vendor terms
-  configured in `.config/skills/validation.json`. Installation commands are
-  exempt from the vendor-term check.
+  one complete install command per skill folder in a `ruby` display fence
+  containing no other commands, and rendered skill prose omits the unambiguous
+  vendor terms configured in `.config/skills/validation.json`. Installation
+  commands are exempt from the vendor-term check.
 
 These checks enforce portable structure, bounded context, and discoverable
 resources. They do not decide whether a completion criterion is genuinely
