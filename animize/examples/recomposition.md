@@ -4,6 +4,15 @@ These examples demonstrate the default method: preserve the content boundary,
 discard generic expression, design a new information hierarchy, and write from
 that plan.
 
+## Contents
+
+- [1. Technical incident update](#1-technical-incident-update)
+- [2. Thin source material](#2-thin-source-material)
+- [3. Default rebuild versus explicit voice preservation](#3-default-rebuild-versus-explicit-voice-preservation)
+- [4. Ending without a manufactured moral](#4-ending-without-a-manufactured-moral)
+- [5. Quick reply](#5-quick-reply)
+- [6. Negative scope and a real prohibition](#6-negative-scope-and-a-real-prohibition)
+
 ## 1. Technical incident update
 
 ### Incident source boundary
@@ -69,7 +78,7 @@ not human.
 
 ## 3. Default rebuild versus explicit voice preservation
 
-### Supplied draft
+### Personal source draft
 
 > The migration was rough, honestly. We lost most of Tuesday to a schema issue
 > that should have been obvious, then found a second one after the backfill
@@ -112,3 +121,45 @@ requested voice.
 > material change in error rate. Peak-load behavior remains unmeasured.
 
 The supported result and remaining limit provide their own ending.
+
+## 5. Quick reply
+
+### Available evidence
+
+- `checkout.test.ts` was flaky because its mock clock never advanced past the
+  300 ms debounce window.
+- The responding agent set the debounce to zero in `setup.ts:12`.
+- All 34 tests pass.
+
+### User question
+
+> Did you fix the flaky checkout test?
+
+### Quick response
+
+> Yes. `checkout.test.ts` was flaky because its mock clock never advanced past
+> the 300 ms debounce window. I set the debounce to zero in `setup.ts:12`. All
+> 34 tests pass.
+
+The quick path answers in the destination's form. It uses the real identifiers,
+cause, change, and result without exposing an audit or invoking deep
+recomposition.
+
+## 6. Negative scope and a real prohibition
+
+### Negative-scope draft
+
+> This section explains the importer's scope and limitations. It is important
+> to note that the importer accepts CSV files up to 10 MB. CSV is the only
+> accepted format, which means that it does not accept JSON. Never upload
+> production API keys to the sandbox importer.
+
+### Fidelity-safe rewrite
+
+> The importer accepts only CSV files up to 10 MB. Never upload production API
+> keys to the sandbox importer.
+
+The section announcement and importance flag are scaffolding, so they
+disappear. The format boundary becomes a shorter positive statement without
+changing its scope. The production-key rule remains negative because it is a
+real safety prohibition, not scaffolding.

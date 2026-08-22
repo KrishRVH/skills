@@ -1,5 +1,0 @@
-interface:
-  display_name: "Simple Writing"
-  short_description: "Write clear, direct user-facing prose"
-policy:
-  allow_implicit_invocation: false

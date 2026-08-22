@@ -111,6 +111,10 @@ Vary rhythm: mix short sentences with longer ones that take their time, since
 uniform sentence length is its own tell. Get the variation from sentences doing
 different jobs, not from mechanical alternation of length or punctuation.
 
+Do not split by word count alone. A sentence longer than 30 words can carry one
+coherent thought when its clauses express a necessary sequence, condition,
+comparison, or qualification and the reader does not have to backtrack.
+
 Natural lexical repetition is often better than synonym cycling. When one
 thing remains one thing, keep calling it the same thing.
 
@@ -129,8 +133,8 @@ Allow:
 - a long paragraph when splitting it would sever one line of reasoning
 
 Avoid repeated claim-explain-summary units and a heading over every small idea.
-Perfect structure looks machine-made; let some mess in where the thought is
-genuinely loose.
+Uniform structure can erase hierarchy and voice. Keep genuine asymmetry where
+the thought or genre calls for it.
 
 ## 8. Openings
 
@@ -203,23 +207,49 @@ constraints. Invention is permitted only within the creative brief.
 
 ## 11. Voice modes
 
-### Rebuild — default
+For `preserve` and `match_samples`, complete a voice record before drafting.
+Record three to five observable signals, each tied to source evidence, such as
+sentence movement, density, register, stance, vocabulary, paragraph shape,
+humor, qualification, or deliberate roughness. Exclude topic vocabulary,
+demographic inference, isolated punctuation, and memorable phrases that would
+amount to imitation.
 
-Do not preserve source cadence, sentence shapes, transitions, headings, or
-lexical habits. Use a direct, unshowy register suited to the genre. Preserve
-only content, deliberate terminology, and owned evaluative force.
+Do not mark voice capture complete until three to five supported signals are
+recorded. When the available material supports fewer than three, preserve only
+what is observable and mark writer recognition unverified rather than inventing
+the missing signals. After drafting, ask whether a reader familiar with the
+writer could recognize the same decision-making habits after topic words and
+protected phrases are removed. Recognition is a voice-fidelity test, not proof
+of authorship.
 
-### Preserve — explicit request only
+### Rebuild: default
 
-Record evidence-backed traits such as directness, density, humor, stance,
-syntax, paragraph movement, punctuation, and roughness. Repair material defects
-without replacing those traits.
+Treat source cadence, sentence shapes, transitions, headings, and lexical habits
+as editable rather than protected. Use a direct, unshowy register suited to the
+genre. Preserve content, deliberate terminology, and owned evaluative force.
 
-### Match samples — explicit or sample-led request
+Rebuilding is permission to change the structure, not a quota for change. Leave
+an exact, deliberate, genre-native passage intact when a rewrite would serve no
+reader-facing purpose.
+
+### Preserve: explicit request only
+
+Use the completed voice record to protect source-owned unusual details, mixed
+feelings, asides, fragments, and self-corrections when they are clear and
+functional. Apply those traits to locked content, never to generate a new
+reaction or mannerism. Repair material defects without regularizing them.
+
+### Match samples: explicit or sample-led request
 
 Infer durable traits from more than one passage when possible. Separate writer
 traits from topic vocabulary and genre requirements. Match functional
-properties rather than memorable phrasing.
+properties rather than memorable phrasing. Supplied samples and destination
+style outrank discretionary tell heuristics when they show a consistent
+deliberate choice; they do not override hard generated-output invariants,
+including the `U+2013` and `U+2014` rule. Record both positive habits and
+evidence-backed negative boundaries: registers, phrases, or mannerisms the
+samples consistently avoid. Do not infer an absence from a single short sample
+or from demographic stereotypes.
 
 ## 12. Continuous read tests
 
@@ -228,10 +258,28 @@ Use these after drafting:
 - **Anywhere:** Which sentences could be pasted into an unrelated piece?
 - **Sequence:** Does each sentence make the next one necessary rather than
   merely predictable?
+- **Dependency:** In a cumulative argument, could nonparallel body paragraphs
+  trade places without changing anything? Modular references and FAQs are
+  exempt.
+- **Echo:** Does a distant section repeat an earlier proposition without adding
+  a new condition, inference, example, consequence, action, or required summary?
+  Preserve deliberate refrains, point-of-action warnings, procedural reminders,
+  and repetition needed by independently read sections.
+- **Compression:** If the passage were half as long, which unique claims,
+  examples, constraints, or consequences would disappear? If the answer is
+  almost none, scaffolding remains. This diagnoses filler; it does not authorize
+  dropping unique content.
+- **Continuity:** Does a shift in register, spelling, punctuation, or error
+  profile serve a change in speaker, genre, or subject, or is it an unintegrated
+  seam?
 - **Selection:** Does the space allocation reveal what matters?
 - **Stance:** Can the reader identify the warranted conclusion or uncertainty?
 - **Friction:** Are relevant limits and trade-offs present where they matter?
 - **Necessity:** What can be removed without loss?
+- **Defensibility:** Does an unusual phrase, fragment, aside, or rhetorical
+  device perform an identifiable job, or is a formula supplying the effect?
+- **Recognition:** Under `preserve` or `match_samples`, do the recorded voice
+  signals remain observable without copied catchphrases or invented biography?
 - **Template:** Do several paragraphs move in the same prebuilt pattern?
 - **Ending:** Did the piece finish its job, or merely announce that it is done?
 

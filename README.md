@@ -15,7 +15,7 @@ top-level folder so discovery and install paths stay predictable.
 ## Invocation
 
 User-invoked skills run only when the caller names them: [ocd](ocd/SKILL.md),
-[polish](polish/SKILL.md), [simple-writing](simple-writing/SKILL.md), and
+[polish](polish/SKILL.md), and
 [thorough-pr-review](thorough-pr-review/SKILL.md).
 
 Model-invoked skills can also be selected automatically when the task matches:
@@ -60,26 +60,18 @@ link, spelling, and secret checks.
 
 ## Writing And Editing
 
-- **animize** - Rebuilds AI-generated, AI-assisted, or generic prose into
-  deliberately authored, genre-native writing, for standalone artifacts such
-  as PR descriptions, documentation, articles, and creative prose. Audits
-  prose patterns and rewrite fidelity, recomposes structure and stance, and
-  sweeps a line-level tell catalog adapted from Cursor's unslop skill,
-  preserving facts, substance, and attribution throughout.
+- **animize** - Combines clear communication with fidelity-safe prose
+  recomposition. Its quick processing keeps ordinary
+  replies direct, unambiguous, and ready for their destination. Explicit
+  writing and rewrite requests can use deep processing to rebuild standalone
+  artifacts such as PR descriptions, documentation, articles, and creative
+  prose. The audit job reports prose-pattern or rewrite-fidelity findings
+  without changing the source. Its clarity lineage includes Diátaxis, the
+  Google developer documentation style guide, ASD-STE100, Kohl's _Global
+  English Style Guide_, and Cursor's technical-writing skill.
 
   ```sh
   npx skills@latest add KrishRVH/skills/animize
-  ```
-
-- **simple-writing** - Clear, direct communication from the coding agent to
-  the user: replies, explanations, status updates, summaries, and review
-  reports, guided by George Orwell's writing rules, Diátaxis response modes,
-  Google developer documentation style, ASD-STE100 Simplified Technical
-  English, and Global English disambiguation, while preserving meaning,
-  necessary precision, and deliberate voice.
-
-  ```sh
-  npx skills@latest add KrishRVH/skills/simple-writing
   ```
 
 ## Repository Tidiness
