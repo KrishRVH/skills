@@ -7,7 +7,7 @@ Date: 2026-08-18
 What do the best publicly available code-review skills, prompts, and AI
 reviewer designs actually do, and which techniques are worth absorbing into
 [thorough-pr-review](../thorough-pr-review/SKILL.md)? Sources were read in the
-primary form — the actual SKILL.md/command/agent files on GitHub, official
+primary form: the actual SKILL.md/command/agent files on GitHub, official
 vendor docs and engineering posts, and the papers themselves (two fetched as
 PDFs and text-extracted). Techniques already in the skill (full-diff+history
 reading, consumer map, producer tracing, execution of extractable logic, the
@@ -44,7 +44,7 @@ Distinctive mechanisms:
 - The README describes 0–100 confidence scoring with an 80 threshold
   ([README](https://github.com/anthropics/claude-code/blob/main/plugins/code-review/README.md)),
   though the current command file implements filtering through per-issue
-  validation subagents rather than numeric scores — the README lags the
+  validation subagents rather than numeric scores. The README lags the
   prompt.
 
 ## Anthropic: `pr-review-toolkit` plugin
@@ -57,11 +57,11 @@ The interesting content is in the aspect agents:
 
 - [silent-failure-hunter](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/silent-failure-hunter.md)
   asks, for every catch block, to "list every type of unexpected error that
-  could be hidden by this catch block" — same class as the skill's swallowed-
+  could be hidden by this catch block." This is the same class as the skill's swallowed-
   errors row, with the output shape made explicit.
 - [pr-test-analyzer](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/pr-test-analyzer.md)
   rates each _recommended_ test 1–10 for criticality and requires "specific
-  examples of failures it would catch" — recommendations priced, not listed.
+  examples of failures it would catch." The recommendations are priced, not listed.
 - [comment-analyzer](https://github.com/anthropics/claude-code/blob/main/plugins/pr-review-toolkit/agents/comment-analyzer.md)
   cross-references every claim in a code comment against the implementation
   (comment rot as a reviewable defect class).
@@ -128,7 +128,7 @@ The companion `thermo-nuclear-code-quality-review`
 ([SKILL.md](https://github.com/cursor/plugins/blob/main/cursor-team-kit/skills/thermo-nuclear-code-quality-review/SKILL.md))
 is a deliberately maximalist maintainability lens ("code judo," 1k-line file
 gate, spaghetti-growth blockers). It is the mirror image of
-thorough-pr-review's out-of-scope section — useful as a separate finishing
+thorough-pr-review's out-of-scope section. It is useful as a separate finishing
 skill, not as material for this one.
 
 ## obra/superpowers
@@ -156,14 +156,14 @@ The most honest engineering post in the set
 Baseline: ~19% of generated comments were addressed; the rest were mostly
 technically-correct nits. Three attempts:
 
-1. Prompting against nits — failed.
-2. **LLM-as-judge severity scoring (1–10, cut below 7) — failed because "the
+1. Prompting against nits: failed.
+2. **LLM-as-judge severity scoring (1–10, cut below 7): failed because "the
    LLM's judgment of its own output was nearly random."** This is a directly
    measured negative result against the confidence-score pattern that several
    other tools advertise.
-3. Embedding clustering of past team-labeled comments — block a candidate
-   comment if cosine similarity > 0.7 to ≥3 downvoted comments — worked;
-   address rate rose past 55%.
+3. Embedding clustering of past team-labeled comments blocked a candidate
+   comment if cosine similarity > 0.7 to ≥3 downvoted comments. It worked;
+   the address rate rose past 55%.
 
 The working mechanism depends on longitudinal per-team feedback data, which a
 stateless skill does not have. The transferable lesson is the negative one:
@@ -175,15 +175,15 @@ bar) rather than scores.
 
 ([learnings-from-building-ai-agents](https://www.cubic.dev/blog/learnings-from-building-ai-agents))
 claims a 51% false-positive reduction and half the median comments per PR from
-three changes: (1) **explicit reasoning logs** — the agent must state its
-reasoning before the finding, which made failure patterns diagnosable and
-"forced structured thinking before conclusions"; (2) **fewer tools** — cutting
-the toolset to a simplified LSP plus a terminal reduced confusion; (3)
+three changes: (1) **explicit reasoning logs**, which require the agent to state
+its reasoning before the finding and made failure patterns diagnosable through
+"forced structured thinking before conclusions"; (2) **fewer tools**, where
+cutting the toolset to a simplified LSP plus a terminal reduced confusion; (3)
 **specialized micro-agents** (planner, security, duplication, editorial)
 replacing one mega-prompt full of edge-case rules. The companion post
 ([the-false-positive-problem](https://www.cubic.dev/blog/the-false-positive-problem-why-most-ai-code-reviewers-fail-and-how-cubic-solved-it))
 is mostly mechanism-free marketing (its numbers are industry citations, not
-measurements) — the one concrete item is using static type information to
+measurements). The one concrete item is using static type information to
 check whether a flagged issue can occur.
 
 ## CodeRabbit
@@ -196,9 +196,9 @@ two-tier agent design where "review agents surface candidate comments;
 verification agents filter suggestions against code guidelines and team
 preferences before output" (see also
 [agentic code validation](https://www.coderabbit.ai/blog/how-coderabbits-agentic-code-validation-helps-with-code-reviews),
-which is thin on mechanism). Marketing gloss aside, the load-bearing ideas —
-generate-then-verify, deterministic tooling as evidence, repo-owned learnings
-— are corroborated elsewhere. Independent field data: a study of 31,073
+which is thin on mechanism). Marketing gloss aside, the load-bearing ideas are
+generate-then-verify, deterministic tooling as evidence, and repo-owned
+learnings. They are corroborated elsewhere. Independent field data from a study of 31,073
 CodeRabbit comments found **36.4% accepted, 56.3% rejected**, with rejections
 driven by invalid findings, redundancy, out-of-scope suggestions, and
 intent misalignment ([arXiv:2607.03316](https://arxiv.org/abs/2607.03316)).
@@ -221,8 +221,8 @@ stateless skill beyond "measure against real dispositions if you ever can."
 
 Codex "flags only P0 and P1 issues so review comments stay focused on
 high-priority risks" on GitHub
-([docs](https://developers.openai.com/codex/integrations/github)) — the same
-publishable-tier idea the skill already has. Two mechanisms stand out:
+([docs](https://developers.openai.com/codex/integrations/github)). This matches
+the publishable-tier idea the skill already has. Two mechanisms stand out:
 
 - **Repo-owned review rules**: an AGENTS.md `## Code Review Rules` section,
   scoped by directory, with guidance to "encode a check reviewers repeatedly
@@ -234,22 +234,22 @@ publishable-tier idea the skill already has. Two mechanisms stand out:
   reasons through dependencies, and runs your code and tests to validate
   correctness," and human graders found fewer incorrect/unimportant comments
   ([Introducing upgrades to Codex](https://openai.com/index/introducing-upgrades-to-codex/)).
-  This is independent corroboration of the skill's Step 4 — one of the very
-  few outside confirmations that running the code, not just reading it, is
-  what moves comment correctness.
+  This independently corroborates the skill's Step 4. It is one of the few
+  outside confirmations that running the code, not just reading it, improves
+  comment correctness.
 
 ## Google eng-practices reviewer guide
 
 The standard of review: approve "once it is in a state where it definitely
 improves the overall code health of the system... even if the CL isn't
-perfect"; "there is no such thing as 'perfect' code—there is only better
-code" ([standard](https://google.github.io/eng-practices/review/reviewer/standard.html)).
+perfect"; the guide also argues that code can always be improved
+([standard](https://google.github.io/eng-practices/review/reviewer/standard.html)).
 [What to look for](https://google.github.io/eng-practices/review/reviewer/looking-for.html)
 is a breadth checklist (design, functionality, complexity, tests, naming,
 comments, consistency, every line, context, good things).
 [Comments guidance](https://google.github.io/eng-practices/review/reviewer/comments.html):
 explain why; comment on the code, never the developer; label severity with
-`Nit:` / `Optional (or Consider):` / `FYI:`; and — the sharpest rule — if the
+`Nit:` / `Optional (or Consider):` / `FYI:`. Its sharpest rule says that if the
 author has to _explain_ code to the reviewer, the resolution is "rewrite the
 code more clearly," because review-thread explanations are not durable.
 This is a human-process document about sustained collaboration; its severity
@@ -265,12 +265,12 @@ the skill deliberately keeps out of scope.
   issues"; 29% were code improvements; understanding-seeking was the
   second-largest category, and "understanding is the main challenge when
   doing code reviews." Human review under-delivers on exactly the deep defect
-  classes the skill's sweep targets — evidence that a mechanical sweep adds
+  classes the skill's sweep targets. This is evidence that a mechanical sweep adds
   something humans demonstrably don't do, not that it imitates them.
 - **Czerwonka, Greiler & Tilford 2015**, "Code Reviews Do Not Find Bugs"
   ([PDF](https://www.microsoft.com/en-us/research/wp-content/uploads/2015/05/PID3556473.pdf)):
   ~15% of reviewer comments indicate a possible defect; ≥50% concern
-  maintainability. Reviewer usefulness is a function of familiarity — a
+  maintainability. Reviewer usefulness is a function of familiarity. A
   reviewer new to the code averages 33% useful comments, rising to ~67% by
   their third review of the same area. Usefulness degrades with review size,
   noticeably from ~20 changed files.
@@ -279,11 +279,11 @@ the skill deliberately keeps out of scope.
   review ≤200–400 LOC at a time; defect density drops sharply above 500
   LOC/hour; 200–400 LOC over 60–90 minutes yields 70–90% defect discovery.
   These are human-cognition limits, but they double as an honest prior: on a
-  5,000-line PR, _any_ single pass — human or model — is operating past the
+  5,000-line PR, _any_ single pass, whether human or model, is operating past the
   regime where high discovery rates were ever measured.
 - **Mäntylä & Lassenius 2009**
   ([IEEE TSE](https://dl.acm.org/doi/10.1109/TSE.2008.71)): 75% of
-  review-found defects are evolvability, not functional — convergent with the
+  review-found defects are evolvability, not functional. This converges with the
   two Microsoft studies.
 - **Perspective-based reading** (Basili et al.,
   [PBR](https://www.cs.umd.edu/~mvz/handouts/emp_pbr.pdf)): assigning each
@@ -319,7 +319,7 @@ Techniques that recur among the strongest sources:
 Unique but compelling: model-diversity consensus as an orthogonal adversarial
 signal (cursor interrogate); reasoning-before-finding logs as a debuggability
 device (cubic); familiarity and size curves as quantified review-risk factors
-(Czerwonka, SmartBear); the Dismissed section as a trust mechanism (cursor —
+(Czerwonka, SmartBear); the Dismissed section as a trust mechanism (cursor;
 the skill already reports its dismissal ledger to the caller, which covers
 this).
 
@@ -334,9 +334,9 @@ top rejection cause). Change: add to the Contract (or Step 8) that a
 publishable defect must be introduced, activated, or materially worsened by
 the diff; a pre-existing defect the review happens to uncover goes to the
 caller report, never the publishable set. The consumer map already handles the
-subtle case (unchanged code whose requirements moved counts as activated —
+subtle case (unchanged code whose requirements moved counts as activated;
 that distinction needs stating so this rule doesn't gut the skill's best
-artifact). Cost: a few lines; closes a real gap — nothing currently stops a
+artifact). Cost: a few lines. This closes a real gap because nothing currently stops a
 Critical-severity pre-existing bug from being published onto an unrelated PR.
 
 **2. Shard the refuter: one validator per candidate.**
@@ -353,7 +353,7 @@ the single-refuter form as the degraded fallback when worker slots are scarce.
 **3. Trust-model precedents for the Security and Authorization lenses.**
 Source: claude-code-security-review's precedents and hard exclusions. Change:
 give the security specialist a compact precedent table (env vars/CLI flags are
-trusted; client-side code needs no auth checks — the server does; framework
+trusted; client-side code needs no auth checks when the server enforces them; framework
 auto-escaping counts as encoding unless bypassed; path-only SSRF is not a
 finding; memory-safety findings require a memory-unsafe language). Cost: ~10
 lines in the specialist brief; risk is over-exclusion in unusual threat models
@@ -364,8 +364,8 @@ be stated as rebuttable defaults the repo's own docs can override.
 Source: Anthropic code-review step 1 (check whether Claude already commented;
 never post duplicates). Change: Step 1 also fetches existing review threads;
 Step 9/10 must not re-publish a finding an existing open or resolved thread
-already covers — reference the thread instead — and repeated invocation on the
-same PR must not double-post. Cost: one fetch plus a dedup check; without it
+already covers. Reference the thread instead. Repeated invocation on the same
+PR must not double-post. Cost: one fetch plus a dedup check; without it
 the skill misbehaves on its most likely real usage pattern (run, push fixes,
 run again).
 
@@ -380,8 +380,8 @@ report from implying uniform confidence over a 10k-line diff.
 
 **6. Cross-model refutation for unresolved candidates.**
 Source: cursor interrogate (model diversity as adversarial signal; consensus
-weighting). Change: not a full multi-model fan-out — the skill's lens
-partition already buys coverage — but for candidates the refuter classifies
+weighting). Change: this is not a full multi-model fan-out because the skill's
+lens partition already buys coverage. For candidates the refuter classifies
 _unresolved_, offer a second opinion from an independent model as one of the
 "cheapest settling checks" (this environment already has an authenticated
 sol worker per user config). Cost: infra-dependent, so it must stay optional;

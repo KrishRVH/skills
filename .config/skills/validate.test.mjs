@@ -944,8 +944,8 @@ describe("repository path discovery", () => {
 
     // Stage the invalid path through the index rather than the working tree.
     // Git stores index paths as raw bytes, so `git ls-files -z` reports the
-    // 0xff without the name ever having to exist on disk — which APFS and
-    // NTFS both refuse to create.
+    // 0xff without the name ever having to exist on disk. APFS and NTFS both
+    // refuse to create it.
     const blob = Bun.spawnSync(["git", "hash-object", "-w", "--stdin"], {
       cwd: root,
       stdin: Buffer.from("invalid path\n"),

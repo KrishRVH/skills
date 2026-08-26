@@ -31,11 +31,11 @@ are not proof about an individual text.
   standalone evidence of misconduct. The sample and tools were limited to
   2023, so the result establishes risk, not a permanent ceiling.
   ([Weber-Wulff et al., 2023](https://link.springer.com/article/10.1007/s40979-023-00146-z))
-- The larger RAID benchmark—more than six million generations across 11
-  models, eight domains, 11 attacks, and four decoding strategies—found that
-  12 detectors were vulnerable to adversarial edits, decoding changes, and
-  unseen generators. This is evidence against carrying a detector’s benchmark
-  accuracy into an unmatched real-world setting.
+- The larger RAID benchmark covered more than six million generations across
+  11 models, eight domains, 11 attacks, and four decoding strategies. It found
+  that 12 detectors were vulnerable to adversarial edits, decoding changes,
+  and unseen generators. This is evidence against carrying a detector’s
+  benchmark accuracy into an unmatched real-world setting.
   ([Dugan et al., 2024](https://aclanthology.org/2024.acl-long.674/))
 - A peer-reviewed theoretical and empirical study showed that paraphrasing can
   sharply reduce several detector families’ performance and that, as human and
@@ -63,7 +63,7 @@ sample, not that any word, punctuation mark, or construction proves authorship.
 ([Russell et al., 2025](https://aclanthology.org/2025.acl-long.267/))
 
 **Supported inference:** use alleged “AI markers” only to locate prose worth
-reviewing—for example, vague claims, repetitive transitions, unsupported
+reviewing. Examples include vague claims, repetitive transitions, unsupported
 significance, or broken citations. Judge and edit the underlying defect. Do not
 emit an AI-likelihood score or an authorship verdict.
 

@@ -22,7 +22,7 @@ the last change tends to receive the thinnest pass.
 - Publish only defects the diff introduces, activates, or materially worsens. A
   pre-existing defect the review uncovers goes to the caller report, never the
   publishable set. Unchanged code counts as activated when the diff points a new
-  consumer at it or changes what it must satisfy — the consumer map decides.
+  consumer at it or changes what it must satisfy. The consumer map decides.
 - Publish only Critical, High, and the publishable tier of Medium defined in Step 8. Report everything else to the caller.
 - Write comments as a colleague's reading. Severity lives in the evidence, not
   in the tone.
@@ -59,7 +59,7 @@ git log -p <base>..<review-head> -- <path-of-interest>
 ```
 
 Note the diff's size against the regime where careful review was ever measured
-effective — roughly 400 changed lines or 20 files per sitting for human
+effective: roughly 400 changed lines or 20 files per sitting for human
 reviewers. Far past it, continue, but record the excess as a named evidence
 limit in the report, and offer the caller a partition by subsystem, one
 invocation each. If the diff is too large to read in full at all, stop and
@@ -77,7 +77,7 @@ and what newly calls it.
 Invert that into the **consumer map**: for each pre-existing query, function,
 column, config value, or contract the diff points a **new consumer** at, record
 what that consumer needs from it. This is the highest-yield artifact in the
-review — the defects that survive a careful read live in unchanged code whose
+review. The defects that survive a careful read live in unchanged code whose
 requirements moved.
 
 Then pin what the change was _asked_ for. Look for the originating issue or spec
@@ -92,9 +92,9 @@ thing; ranking the two together lets one hide the other.
 
 Maintain two ledgers from this point onward: defect candidates and spec
 observations. Give every candidate the same record: an id, its lens, the claim,
-the file and line, the reasoning that produced it, its status — open,
-confirmed, refuted, or unresolved — and the deciding evidence once the status
-is set. Spec observations never enter defect severity or publication.
+the file and line, the reasoning that produced it, its status of open,
+confirmed, refuted, or unresolved, and the deciding evidence once the status is
+set. Spec observations never enter defect severity or publication.
 
 **Complete when:** every changed behavior is inventoried, every new consumer of
 pre-existing code is in the consumer map, and the spec axis is populated in both
@@ -111,7 +111,7 @@ Where a query, filter, or predicate is involved, test its **satisfiability**:
 1. List every field in the `WHERE`, `JOIN`, filter, or match.
 2. Name the code that writes each one.
 3. Confirm it is written for **every class of record** the new consumer needs
-   back — not just the class that motivated the original query.
+   back, not just the class that motivated the original query.
 
 The shape this catches: a table written by both a local path and a webhook, where
 only the local write populates the filtered columns. A query on those columns
@@ -131,8 +131,8 @@ error, and side-effect paths in an isolated test environment; keep real external
 systems untouched. Record any check that cannot run, why, and how that limits the
 review.
 
-Where the change adds pure or near-pure logic — resolver, comparator, sort,
-parser, state machine, threshold, money calculation — exercise the actual
+Where the change adds pure or near-pure logic, such as a resolver, comparator,
+sort, parser, state machine, threshold, or money calculation, exercise the actual
 implementation through the repository's test or runtime entry points. If no
 entry point exists, use a scratch harness that imports the implementation and
 the repository's installed dependencies. Feed it inputs the real producer can
@@ -158,7 +158,7 @@ have also passed or are recorded as evidence limits.
 ### Step 5: Sweep the defect classes
 
 Walk every row. Each names a class whose evidence sits outside the changed lines,
-which is why a diff-focused read misses it. Record an outcome for every row —
+which is why a diff-focused read misses it. Record an outcome for every row,
 including "not applicable", which needs the same explicit note as a finding.
 
 The **Lens** column is also the partition Step 7 fans out along.
@@ -167,7 +167,7 @@ The **Lens** column is also the partition Step 7 fans out along.
 | ----------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Data reachability | Requirement drift       | For each consumer-map entry, what does the new consumer need from this unchanged code that the old one did not?                                                                                                            |
 | Data reachability | Field population        | Is every field the change filters, joins, matches, or reads populated for every record class it needs back?                                                                                                                |
-| Data reachability | Pre-change data         | Does this work for records written before the change — old shape, old defaults, a column made nullable since?                                                                                                              |
+| Data reachability | Pre-change data         | Does this work for records written before the change, including old shapes, old defaults, and columns made nullable since?                                                                                                 |
 | Silent failure    | Swallowed errors        | For every new or widened `catch`, what else can it swallow beyond the error it was written for? Then check every empty catch, catch-and-continue, error-swallowing default return, and retry that gives up quietly.        |
 | Silent failure    | Green on empty          | Which paths report a benign state when they actually have no data, or failed? A feature that renders fine because its query returned nothing reads as working software, and is the most expensive thing a review can miss. |
 | Silent failure    | Observability           | For an irreversible or externally-visible action, is there a record of who did it, and against what state?                                                                                                                 |
@@ -182,13 +182,13 @@ The **Lens** column is also the partition Step 7 fans out along.
 | Integrity         | Idempotency             | What happens when this runs twice, and which external side effect duplicates?                                                                                                                                              |
 | Integrity         | Transaction boundary    | What stays committed if this fails halfway, and does anything inside commit independently of the outer transaction?                                                                                                        |
 | Integrity         | Concurrency             | What does each lock actually protect, and which writes stay possible against it?                                                                                                                                           |
-| Deployment        | Rollout ordering        | In what order do the migration, the deploy, and the rollback run — and does old code meet new data, or new code meet old schema, at any point between them?                                                                |
+| Deployment        | Rollout ordering        | In what order do the migration, the deploy, and the rollback run? Does old code meet new data, or new code meet old schema, at any point between them?                                                                     |
 | Compatibility     | External contract       | Which endpoint, event, schema, or export that consumers outside this repository read does the diff change, and what breaks for a consumer that has not changed?                                                            |
 | Dependencies      | Dependency change       | For each dependency added or version-changed, what behavior shifted, and what newly executes at install or run time?                                                                                                       |
 | Authorization     | Gate parity             | Which roles reach this, and does every branch, redirect, and endpoint it leads to carry an equivalent gate?                                                                                                                |
 | Security          | Input trust             | Can untrusted input reach a query, command, path, template, parser, redirect, or interpreter without the encoding or validation that boundary requires?                                                                    |
 | Security          | Sensitive data          | Can credentials, tokens, personal data, or internal state newly reach logs, telemetry, errors, caches, or responses?                                                                                                       |
-| Arithmetic        | Clock and units         | Whose timezone, precision, and rounding — and does any money or threshold comparison turn on them?                                                                                                                         |
+| Arithmetic        | Clock and units         | Whose timezone, precision, and rounding apply? Does any money or threshold comparison turn on them?                                                                                                                        |
 | Arithmetic        | Growth                  | What is unbounded: rows returned, queries per row, payload serialized into the page?                                                                                                                                       |
 | Tests             | Test reachability       | Which branches, error paths, boundaries, and negative cases can the added, modified, or relied-upon tests not reach at all?                                                                                                |
 
@@ -203,7 +203,7 @@ they are why a careful pass still misses things.
 **Question substitution.** For every question raised and then closed in Steps
 2-5, write the question asked beside the question the evidence answered. Reopen
 any pair that does not match. The recurring form is answering "does path A behave
-like path B" when the question was "does either path work" — shared mechanism
+like path B" when the question was "does either path work." Shared mechanism
 never establishes correct mechanism.
 
 **Fixture shape.** For every added or modified test, and every existing test
@@ -226,7 +226,7 @@ fixture has a traced producer, and every dismissal cites its deciding evidence.
 
 **Give each specialist one lens in a clean context.** This is the load-bearing
 part. Two lenses and a specialist reverts to a generalist, whose attention goes
-uneven across the surface — the failure the shape exists to prevent. A single
+uneven across the surface. That is the failure the shape exists to prevent. A single
 narrow mandate lets independent workers search reliably while the primary
 reviewer retains reconciliation and final judgment.
 
@@ -234,7 +234,7 @@ Dispatch one specialist per lens holding at least one applicable row in Step 5's
 table. Its brief contains the review metadata and spec, repository path and head
 revision, canonical diff, applicable repository instructions, relevant
 consumer-map entries and producer traces, and only that lens's rows. Withhold
-the candidate list — a specialist that knows what has been found narrows to
+the candidate list. A specialist that knows what has been found narrows to
 confirming it.
 
 Brief the Security and Authorization specialists with rebuttable trust
@@ -254,9 +254,9 @@ from the code with a file and line, and nothing it would not defend under
 push-back. Fan-out without that filter trades one uneven pass for many noisy
 ones.
 
-Then run refutation, separately and last, over the merged candidate list — the
-primary reviewer's candidates from Steps 3-6 and every specialist's returns
-together.
+Then run refutation, separately and last, over the merged candidate list. Merge
+the primary reviewer's candidates from Steps 3-6 with every specialist's
+returns.
 Dispatch one refuter per candidate, in parallel, each briefed with that
 candidate and its evidence pack and nothing from the others: a single refuter
 over the whole list re-creates the thin-tail attention the one-PR rule exists
@@ -268,8 +268,8 @@ batches and say so in the report. Each refuter must:
 - cite the deciding evidence for a confirmed or refuted verdict
 - name the cheapest check that would settle an unresolved verdict
 
-Run every settling check within the review's means — a file read, a fixture
-query, a scratch execution — before letting a candidate stand as unresolved.
+Run every settling check within the review's means, including file reads,
+fixture queries, and scratch executions, before letting a candidate stand as unresolved.
 An independent model's reading of the deciding evidence, where available, is a
 legitimate settling check, though weaker than a code trace. Report as
 unresolved only what settling would require access the review lacks.
@@ -289,7 +289,7 @@ evidence or recorded as unresolved with the access that settling requires.
 ### Step 8: Reconcile and rate
 
 Reconcile the defect ledger across the primary pass, non-Spec specialists, and
-the refuters. Fan-out makes duplicates normal — several lenses reach one defect
+the refuters. Fan-out makes duplicates normal because several lenses reach one defect
 from different directions. Keep the finding with the wider blast radius, note
 the narrower one as subsumed, and carry the strongest evidence from either.
 
@@ -300,13 +300,13 @@ than as a defect.
 
 Rate confirmed defects from the top down and stop at the first matching tier:
 
-| Severity             | Test                                                                                                                                                                                                      |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Critical             | An exploitable security or authorization bypass; broad or irreversible data loss or corruption; materially wrong money across a nontrivial scope; a critical function that is structurally unable to work |
-| High                 | Materially incorrect behavior on a common or critical path, an ineffective safety guard, or a destructive side effect, when the consequence is neither Critical nor narrow and readily recoverable        |
-| Medium — publishable | A normal-use defect with narrow, recoverable monetary or data-integrity harm, or a duplicate external side effect, that does not meet a higher tier                                                       |
-| Medium — report only | A bounded defect without demonstrated operational harm: path disagreement, maintainability, duplicated rules, performance without a demonstrated ceiling, or missing logging                              |
-| Low                  | Everything else                                                                                                                                                                                           |
+| Severity            | Test                                                                                                                                                                                                      |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Critical            | An exploitable security or authorization bypass; broad or irreversible data loss or corruption; materially wrong money across a nontrivial scope; a critical function that is structurally unable to work |
+| High                | Materially incorrect behavior on a common or critical path, an ineffective safety guard, or a destructive side effect, when the consequence is neither Critical nor narrow and readily recoverable        |
+| Medium: publishable | A normal-use defect with narrow, recoverable monetary or data-integrity harm, or a duplicate external side effect, that does not meet a higher tier                                                       |
+| Medium: report only | A bounded defect without demonstrated operational harm: path disagreement, maintainability, duplicated rules, performance without a demonstrated ceiling, or missing logging                              |
+| Low                 | Everything else                                                                                                                                                                                           |
 
 Publish the first three tiers, rank them by consequence, and fold a child finding
 under the parent that subsumes it.
@@ -327,8 +327,9 @@ them, and a comment can overstate or vouch for something the review never
 established even when its finding holds.
 
 - **Claim matches evidence.** Every assertion traces to an already-verified file
-  and line. Anything that grew in the writing — a wider blast radius, an extra
-  affected path, a confident mechanism — returns to Step 3 or leaves the comment.
+  and line. Anything that grew in the writing, such as a wider blast radius, an
+  extra affected path, or a confident mechanism, returns to Step 3 or leaves the
+  comment.
 - **Soundness claims carry the findings bar.** Saying part of the change is
   correct, safe, or an improvement is a positive claim. Verify it as rigorously as
   a defect or drop it: vouching for code the review never established tells the
@@ -354,7 +355,7 @@ passed over the drafts.
 
 Build each comment from these parts, in order:
 
-1. The observation in one sentence, as your reading — "I don't think this branch
+1. The observation in one sentence, as your reading: "I don't think this branch
    can be reached", "I think this only fires for the primary recipient".
 2. The minimum evidence chain, with file and line references, adding to what the
    anchored line already shows rather than repeating it.
@@ -364,7 +365,7 @@ Build each comment from these parts, in order:
    the alternative that assumes it is.
 
 Keep each comment near 200 words or under. Let the comments in one review take
-different shapes — a shared skeleton reads as generated and buries the finding
+different shapes. A shared skeleton reads as generated and buries the finding
 that differs.
 
 Include a committable suggestion block only when applying it alone fully
@@ -407,16 +408,16 @@ Each of these is the sound of a check being skipped. Treat it as a stop, not a
 conclusion.
 
 - "This filter is pre-existing, so it works."
-- "The tests cover this" — about behavior whose inputs the tests construct.
+- "The tests cover this" about behavior whose inputs the tests construct.
 - "Same mechanism as the existing path, so it's fine."
-- "Obviously not applicable" — for a sweep row, without recording it.
+- "Obviously not applicable" for a sweep row, without recording it.
 - A dismissal whose evidence answers a narrower question than the one asked, or
   cites no deciding evidence.
 - A specialist holding more than one lens, a refuter holding more than one
   candidate, or either holding the full candidate list.
 - Specialist output merged without each having filtered its own.
 - An ambiguous candidate recorded as refuted rather than unresolved.
-- A candidate whose failing input no traced producer actually emits — "what if
+- A candidate whose failing input no traced producer actually emits, such as "what if
   this is null" without the call site that makes it null.
 - A pre-existing defect ranked into the publishable set.
 - A comment claiming more than the evidence gathered for it, or vouching for part
