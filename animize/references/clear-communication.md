@@ -18,7 +18,6 @@ sentence load, and ambiguity inside Animize. It does not select `job`,
 - [Dead prose](#dead-prose)
 - [Strict STE claims](#strict-ste-claims)
 - [Completion check](#completion-check)
-- [Sources](#sources)
 
 ## When the profile applies
 
@@ -290,14 +289,3 @@ Deliver only when all applicable checks pass:
 - No clarity edit loses precision, qualification, stance, or protected exact
   material.
 - Every retained exception follows the precedence and escape rule.
-
-## Sources
-
-- [Diataxis](https://diataxis.fr/) for documentation genres
-- [Developer documentation style guide](https://developers.google.com/style)
-  for reader address
-- [ASD-STE100](https://asd-ste100.org/) for the sentence-load baseline
-- John R. Kohl, _The Global English Style Guide_, for single-reading syntax
-- The MIT-licensed
-  [`technical-writing` skill](https://github.com/cursor/plugins/blob/46125561306434d8a1d7745d540d8932ab0cd2a2/pstack/skills/technical-writing/SKILL.md),
-  adapted here with Animize's fidelity, voice, and genre precedence

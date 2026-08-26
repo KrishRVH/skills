@@ -38,7 +38,6 @@ For each plausible cluster, choose `fix`, `retain`, or `flag`.
 - [Interchangeable blocks](#20-interchangeable-blocks)
 - [Distant semantic duplication](#21-distant-semantic-duplication)
 - [Cluster rule](#cluster-rule)
-- [Provenance and license](#provenance-and-license)
 
 ## Diagnostic controls
 
@@ -330,12 +329,3 @@ for example:
 
 When a cluster exists under `rewrite_depth: recompose`, rebuild the affected
 section from the content lock instead of patching each sentence.
-
-## Provenance and license
-
-This compact catalog adapts concepts from an earlier Animize pattern catalog,
-which in turn adapts taxonomy and examples from Wikipedia contributors,
-"Wikipedia:Signs of AI writing," revision 1365519760. Changes were made. The
-underlying reference is licensed under CC BY-SA 4.0. Later refinements draw on
-the independently reworded source set listed in
-[tells.md](tells.md#provenance-and-license).

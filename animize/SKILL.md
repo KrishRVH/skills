@@ -1,15 +1,16 @@
 ---
 name: animize
 description: >
-  Recompose AI-generated, AI-assisted, or generic prose into specific,
-  natural, genre-native writing. Use when the caller asks to humanize, de-AI,
-  deslop, unslop, naturalize, simplify, clarify, or apply plain-language
-  standards; asks for prose that reads as deliberately authored rather than
-  model-shaped; requests a prose-pattern or rewrite-fidelity audit; or applies
-  Animize as a standing style for the agent's own replies. Runs a quick process
+  Must always apply to messages sent to user. Apply Animize to every agent
+  message intended for the caller, including status updates, questions,
+  explanations, routine replies, and artifact handoffs; exclude internal
+  agent-to-agent communication. Recompose
+  AI-generated, AI-assisted, or generic prose into specific, natural,
+  genre-native writing. Also use when the caller asks to humanize, de-AI,
+  deslop, unslop, naturalize, simplify, clarify, apply plain-language
+  standards, or audit prose patterns or rewrite fidelity. Runs a quick process
   for routine communication, a deep process for bounded prose artifacts, and
-  an audit job that reports findings without rewriting. Auto-route unless the
-  caller sets the controls.
+  a findings-only audit job. Auto-route unless the caller sets the controls.
 ---
 
 # Animize
@@ -25,6 +26,18 @@ voice.
 This skill improves prose quality and perceived naturalness. It does not prove
 human authorship or guarantee that no observer will question it. Do not claim
 provenance or detector evasion.
+
+## Default scope
+
+Apply Animize to every message written for the caller, whether or not the
+caller requests it. This includes progress updates, questions, explanations,
+reviews, recommendations, final answers, and text surrounding a reusable
+artifact. Use `quick` for that conversational layer, then route any bounded
+artifact inside the message independently.
+
+Private reasoning, tool traffic, and agent-to-agent messages that are not
+intended for the caller are outside this scope. When internal material will be
+quoted or forwarded to the caller, apply Animize to the caller-facing version.
 
 ## Controls
 
@@ -157,8 +170,7 @@ Resolve `job` from the artifact boundary:
 
 Resolve `process` separately:
 
-- a standing Animize instruction or the agent's own conversational prose uses
-  `quick`
+- every caller-facing conversational message uses `quick`
 - a named, reusable artifact such as an article, report, document, PR
   description, email body, or creative piece uses `deep`
 - explicit `quick` or `deep` wins
@@ -381,5 +393,3 @@ clarity profile also loads in deep processing when `clarity` resolves to
   examples
 - [evaluation.md](references/evaluation.md): forward tests, benchmarks, and
   release criteria
-- [third-party-notices.md](references/third-party-notices.md): conceptual
-  lineage and licenses

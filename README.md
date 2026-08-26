@@ -60,15 +60,13 @@ link, spelling, and secret checks.
 
 ## Writing And Editing
 
-- **animize** - Combines clear communication with fidelity-safe prose
-  recomposition. Its quick processing keeps ordinary
-  replies direct, unambiguous, and ready for their destination. Explicit
-  writing and rewrite requests can use deep processing to rebuild standalone
-  artifacts such as PR descriptions, documentation, articles, and creative
-  prose. The audit job reports prose-pattern or rewrite-fidelity findings
-  without changing the source. Its clarity lineage includes Diátaxis, the
-  Google developer documentation style guide, ASD-STE100, Kohl's _Global
-  English Style Guide_, and Cursor's technical-writing skill.
+- **animize** - Applies clear, natural prose standards to every caller-facing
+  agent message. Its quick processing keeps status updates, questions,
+  explanations, and final replies direct and ready for their destination.
+  Explicit writing and rewrite requests can use deep processing to rebuild
+  standalone artifacts such as PR descriptions, documentation, articles, and
+  creative prose. The audit job reports prose-pattern or rewrite-fidelity
+  findings without changing the source.
 
   ```ruby
   npx skills@latest add KrishRVH/skills/animize

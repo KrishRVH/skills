@@ -17,7 +17,6 @@ sweep flatten the piece into a second house style. See
 - [Typography and formatting](#typography-and-formatting)
 - [Session residue](#session-residue)
 - [Overcorrection guard](#overcorrection-guard)
-- [Provenance and license](#provenance-and-license)
 
 ## Vocabulary
 
@@ -237,11 +236,3 @@ the apparent rule match, the function that makes it legitimate, and the source
 or genre evidence for that function. "It sounds human" is not a defense. Report
 defended false positives only in an audit or when notes would help the caller;
 do not turn them into rewrite commentary by default.
-
-## Provenance and license
-
-The catalog integrates the conceptual sources listed in
-[third-party notices and lineage](third-party-notices.md). Entries were
-selected, reorganized, independently reworded, and given fidelity and
-overcorrection guards. The sources are pattern leads, not evidence of authorship
-or detector reliability.

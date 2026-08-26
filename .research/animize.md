@@ -133,34 +133,3 @@ text appear “human.”
   descriptive rather than prescriptive, and says the indicators are not
   sufficient on their own.
   ([pinned revision](https://en.wikipedia.org/w/index.php?title=Wikipedia:Signs_of_AI_writing&oldid=1365519760))
-
-## Adapting Wikipedia’s “Signs of AI writing”
-
-The pinned revision is published under CC BY-SA 4.0.
-([page footer](https://en.wikipedia.org/w/index.php?title=Wikipedia:Signs_of_AI_writing&oldid=1365519760))
-If the skill copies or closely adapts the page’s expressive wording, examples,
-or distinctive organization, Wikimedia’s reuse terms require:
-
-1. Attribution, which may be a link to the reused page because its history
-   identifies contributors.
-2. A clear indication that changes were made.
-3. A CC BY-SA license notice and link (or a copy of the license).
-4. CC BY-SA 4.0 or later for the modified or added adapted content.
-
-([Wikimedia Terms of Use, §§7–8](https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use#7._Licensing_of_Content),
-[CC BY-SA 4.0 deed](https://creativecommons.org/licenses/by-sa/4.0/deed.en))
-
-A suitable notice is:
-
-> Adapted from Wikipedia contributors, “[Wikipedia:Signs of AI
-> writing](https://en.wikipedia.org/w/index.php?title=Wikipedia:Signs_of_AI_writing&oldid=1365519760),”
-> revision 1365519760. Changes were made. The adapted material is licensed
-> under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
-
-Facts and ideas are not protected by copyright, and Creative Commons states
-that its license conditions do not apply where copyright does not apply.
-([Creative Commons FAQ](https://creativecommons.org/faq/))
-The lowest-risk route is therefore to derive the skill’s rules independently
-from primary evidence, avoid tracking Wikipedia’s wording or organization, and
-link to the page only as acknowledged inspiration. This licensing summary is
-general information, not legal advice.
