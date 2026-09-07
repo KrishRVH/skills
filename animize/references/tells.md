@@ -80,9 +80,9 @@ important to note that" → delete. "There is/are … that" → recast around th
 real subject.
 
 **Empty significance adverbs.** `Significantly`, `meaningfully`, `dramatically`,
-`fundamentally`, and similar adverbs are defects when they supply importance
-without a supported measure, mechanism, comparison, or consequence. Remove the
-empty verdict or state the supported fact.
+`fundamentally`, `unusually`, and similar adverbs are defects when they supply
+importance without a supported measure, mechanism, comparison, or consequence.
+Remove the empty verdict or state the supported fact.
 
 **Factual adverbs.** Preserve adverbs that carry manner, degree, frequency, or
 scope and therefore change the proposition: `writes atomically`, `is nearly
