@@ -50,9 +50,9 @@ the surrounding relationships.
 Defend a false positive when the matched form performs an observable genre,
 logical, precision, safety, or source-voice function. Record the span, candidate
 pattern, function, and supporting evidence. A protected span is defended by its
-status, not by a claim that it sounds natural. The generated-output rule for
-`U+2013` and `U+2014` is separate from authorship diagnosis; neither character's
-presence or absence is authorship evidence.
+status, not by a claim that it sounds natural. The entry point's tier 8 dash
+default is a house-style preference, separate from authorship diagnosis;
+neither character's presence or absence is authorship evidence.
 
 ## 1. Generic runway
 
@@ -327,5 +327,5 @@ for example:
 - orphaned objections + coined labels + interchangeable paragraphs
 - distant semantic duplication + recap transitions + generic closure
 
-When a cluster exists under `rewrite_depth: recompose`, rebuild the affected
+When a cluster exists under the Recompose regime, rebuild the affected
 section from the content lock instead of patching each sentence.

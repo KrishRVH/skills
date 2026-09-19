@@ -4,13 +4,16 @@ description: >
   Must always apply to messages sent to user. Apply Animize to every agent
   message intended for the caller, including status updates, questions,
   explanations, routine replies, and artifact handoffs; exclude internal
-  agent-to-agent communication. Recompose
-  AI-generated, AI-assisted, or generic prose into specific, natural,
-  genre-native writing. Also use when the caller asks to humanize, de-AI,
-  deslop, unslop, naturalize, simplify, clarify, apply plain-language
-  standards, or audit prose patterns or rewrite fidelity. Runs a quick process
-  for routine communication, a deep process for bounded prose artifacts, and
-  a findings-only audit job. Auto-route unless the caller sets the controls.
+  agent-to-agent communication. Recompose AI-generated, AI-assisted, or
+  generic prose into specific, natural, genre-native writing, and edit a
+  human draft at clause level so its authorship stays intact. Also use when
+  the caller asks to humanize, de-AI, deslop, unslop, naturalize, simplify,
+  clarify, apply plain-language standards, or report what is wrong with prose
+  or with a rewrite's fidelity. Runs a quick pass for routine communication
+  and a deep pass for bounded prose artifacts. Improves reader-facing quality
+  and makes no claim about any detector's verdict; its only provenance effect
+  is the deep pass's Preserve regime, which keeps a human draft's own words in
+  the majority. Auto-route unless the caller sets the controls.
 ---
 
 # Animize
@@ -24,8 +27,11 @@ easy to understand on the first read without flattening necessary precision or
 voice.
 
 This skill improves prose quality and perceived naturalness. It does not prove
-human authorship or guarantee that no observer will question it. Do not claim
-provenance or detector evasion.
+human authorship, guarantee that no observer will question it, or move any
+detector's verdict. Register, genre, and voice choices exist for readers. The
+one workflow that has a provenance consequence is the Preserve regime, which
+keeps a human draft's own words in the majority so the result is honestly
+describable as human-written with AI assistance.
 
 ## Default scope
 
@@ -43,31 +49,43 @@ quoted or forwarded to the caller, apply Animize to the caller-facing version.
 
 Infer the controls unless the caller sets them:
 
-| Control         | Default             | Meaning                                                                                                                                                               |
-| --------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `job`           | `auto`              | Choose `write`, `rewrite`, or findings-only `audit` from the artifact boundary.                                                                                       |
-| `process`       | `auto`              | Use `quick` for routine communication and `deep` for bounded artifacts. Ignored by `audit`.                                                                           |
-| `clarity`       | `auto`              | Use `plain` for clear-communication constraints or `off` when they do not fit.                                                                                        |
-| `voice_mode`    | `rebuild`           | Treat expression as editable. Use `preserve` for an explicitly protected source voice and `match_samples` for target samples.                                         |
-| `rewrite_depth` | `recompose`         | In deep processing, use `light` for local repair, `standard` for damaged passages, or `recompose` for whole-piece redesign.                                           |
-| `factual_mode`  | `preserve_and_flag` | Preserve unsupported claims and flag them. Use `verify_and_correct` only with authorized sources, or `publish_ready` when unsafe claims must be qualified or blocked. |
-| `delivery`      | `adaptive`          | Return the artifact alone unless a material unresolved issue requires notes or withholding. Use `clean` or `with_notes` when requested.                               |
+| Control    | Default    | Meaning                                                                                                                                                                                                                                                              |
+| ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `voice`    | `auto`     | `auto` resolves to `preserve` for a human draft and `rebuild` otherwise. `preserve` protects voice and authorship through the Preserve regime. `rebuild` treats expression as editable. `match` follows supplied samples for expression only.                        |
+| `clarity`  | `auto`     | `auto` selects `plain` for replies and for technical, instructional, reporting, and reference prose, and `off` for fiction, essays, marketing, and personal prose. `plain` applies the clear-communication profile; `off` leaves it inactive.                        |
+| `delivery` | `adaptive` | `adaptive` returns the artifact alone unless a material unresolved issue needs notes or withholding. `clean` returns only the artifact and is valid only when nothing needs a warning. `with_notes` appends structural changes, source issues, and defended choices. |
 
-`process` controls how much machinery runs. `rewrite_depth` controls how much a
-deep rewrite may change. They are not substitutes.
+Everything else is inferred from the request or is a fact the caller states in
+the brief:
+
+- The pass (`quick` or `deep`) comes from the artifact boundary. Replies and
+  routine communication use `quick`; bounded artifacts use `deep`. The words
+  `quick` or `deep` in a request override the inference.
+- The regime inside `deep` (Preserve or Recompose) comes from the source
+  class. Routing below explains how.
+- Findings without changes: a caller who wants to know what is wrong but
+  forbids edits says so in plain words. The deep pass then returns its notes
+  and withholds the artifact.
+- Factual handling is always preserve-and-flag. Correction happens only when
+  the caller supplies sources, which is a fact in the brief. A claim that is
+  unsafe to publish is qualified or withheld under the universal gate.
+- A stricter Preserve budget than the default is a fact in the brief. The
+  skill honors it.
 
 **The source's substance is authoritative; its expression is editable.**
 Preserve facts, logic, qualifications, owned judgments, exact material, and
 caller constraints. Treat wording, cadence, paragraphing, transitions,
-headings, and order as editable unless the caller protects the voice or form.
-Preserve every unique substantive item by default. Remove redundancy and empty
-scaffolding; omit or compress unique substance only with scoped authorization
-or when the requested form necessarily compresses it.
+headings, and order as editable unless the caller protects the voice or form
+or the Preserve regime applies. Preserve every unique substantive item by
+default. Remove redundancy and empty scaffolding; omit or compress unique
+substance only with scoped authorization or when the requested form
+necessarily compresses it.
 
 Voice controls expression, not content. A sample or first-person source can
 justify cadence, diction, humor, roughness, or unusual structure. It never
 licenses a new opinion, reaction, aside, self-correction, or degree of
-conviction. A sample's punctuation does not override the dash rule.
+conviction. `match` is a reader feature: it makes a piece read like its
+samples and has no effect on provenance.
 
 ## Precedence
 
@@ -76,19 +94,20 @@ higher tier fixes.
 
 1. **Explicit authorization.** A scoped caller instruction may authorize
    compression or omission of named content, correction from authorized
-   sources, edits to named exact spans, dash use, or invention within a fiction
-   or role brief. It never authorizes presenting invented real-world
-   experience, credentials, sources, quotations, citations, or provenance as
-   true, or claiming human authorship or detector evasion.
+   sources, edits to named exact spans, or invention within a fiction or role
+   brief. It never authorizes presenting invented real-world experience,
+   credentials, sources, quotations, citations, or provenance as true, or
+   claiming human authorship or a detector outcome.
 2. **Fidelity and integrity.** Preserve the source's substance, relationships,
    uncertainty, commitments, and owned evaluative force. Do not invent factual
    or personal substance.
 3. **Protected exact spans.** Preserve quotations, code, commands, identifiers,
    paths, URLs, citations, titles, proper names, numbers, dates, units, formulas,
    defined terms, and legally or technically significant wording.
-4. **Hard output and content-shaping rules.** Apply the dash, positive-scope,
-   no-fake-imperfection, no-session-residue, and no-detector-optimization rules
-   below.
+4. **Hard output and content-shaping rules.** Apply the positive-scope,
+   no-manufactured-humanity, no-fake-imperfection, no-session-residue, and
+   no-detector-optimization rules below, and the Preserve regime's edit policy
+   when it applies.
 5. **Caller form constraints.** Apply requested style guides, format, register,
    length, controls, and destination requirements.
 6. **Destination and genre.** Follow the medium and the artifact's real genre,
@@ -98,7 +117,15 @@ higher tier fixes.
    voice choice.
 8. **Style preferences.** Prefer plain words, visible actors, sentence-case
    headings, direct syntax, and thought-shaped rhythm when stronger tiers do
-   not decide the form.
+   not decide the form. House-style default: generated prose uses no `U+2014`
+   or `U+2013` characters. The reason is reader-facing: repeated dash-aside
+   syntax is a recognizable pattern that stacks asides onto sentences instead
+   of letting syntax carry the relationship. Express the relationship with a
+   period, comma, list colon, or rebuilt clause rather than a mechanical swap
+   to parentheses, semicolons, or hyphens. A caller's explicit request, a
+   controlling style guide, or a protected exact span outranks this default.
+   The presence or absence of either character says nothing about who wrote
+   the text, and the default is never applied to change a score.
 
 ## Directions
 
@@ -112,9 +139,11 @@ Use five directions, not quotas:
   the material supports instead of defaulting to symmetric neutrality.
 - **Plain:** prefer the concrete plain word, the named actor, and the mechanism
   or number over the mood it is meant to create.
-- **Shape:** let structure and rhythm follow the thought and genre; vary sentence
-  length on purpose and preserve useful asymmetry instead of regularizing every
-  unit.
+- **Shape:** let structure and rhythm follow the thought and genre. Vary
+  sentence length on purpose, tolerate a real fragment or aside that does a
+  job, and let paragraphs be uneven when the thought is uneven. This is a
+  reader preference. It has no provenance effect and is never a reason to add
+  noise.
 
 ## Universal rules
 
@@ -127,18 +156,17 @@ Use five directions, not quotas:
    preferences, opinions, reactions, relationships, credentials, quotations,
    sources, mistakes, slang, dialect, or personal experience. In fiction, invent
    only within the brief and never misrepresent fiction as real provenance.
-4. **Do not fake imperfection.** Do not add misspellings, typos, errors, or fake
-   self-corrections as camouflage. Let real sentences do different jobs.
+4. **Do not fake imperfection.** Do not add misspellings, typos, casing
+   tricks, homoglyphs, synonym churn, or fake self-corrections as camouflage.
+   These transformations damage the reader's trust and are the exact behavior
+   that classifiers of "humanized" text are trained to find. Let real
+   sentences do different jobs.
 5. **Do not optimize against a detector.** Tells are reader-facing defects, not
    detector tokens. Repair their cause instead of substituting watched words or
-   targeting punctuation, burstiness, perplexity, or a score.
-6. **Ban generated em and en dashes.** Generated prose contains no `U+2014` or
-   `U+2013` characters. Preserve them only inside a protected exact span or when
-   the caller explicitly requests them. Samples and house style do not count as
-   an override. Express the real relationship with a period, comma, list colon,
-   or rebuilt clause; do not mechanically swap in parentheses, semicolons, or
-   hyphens. A dash is never evidence of AI authorship.
-7. **State scope positively.** Delete negative scaffolding, non-goal
+   targeting punctuation, burstiness, perplexity, or a score. A rule change
+   that moves a detector is evidence the rule is doing something other than
+   repairing a defect.
+6. **State scope positively.** Delete negative scaffolding, non-goal
    throat-clearing, and out-of-scope statements that change no reader decision.
    If a boundary matters and has a positive statement with identical truth
    conditions, use it. Otherwise preserve the negative form for prohibitions,
@@ -148,27 +176,21 @@ Use five directions, not quotas:
    scaffolding unless readers might reasonably rely on the article for
    deployment or the omission limits correct use. Classify deletion of that
    scaffolding as expression-level selection, not loss of substantive content.
-8. **Keep judgment within its authority.** Reference prose contains facts,
+7. **Keep judgment within its authority.** Reference prose contains facts,
    options, limits, and errors, not editorial opinion. How-to and tutorial prose
    may include task-required recommendations and warnings. Explanation, review,
    argument, and essay prose may include supported judgment. Any rewrite keeps
    source-owned stance at its supported strength and invents none.
-9. **Respect genre.** Formality, passive voice, repetition, headings, technical
+8. **Respect genre.** Formality, passive voice, repetition, headings, technical
    terms, deliberate roughness, and unusual syntax may be necessary.
+9. **Make no detector claim.** Never describe an output as undetectable, as a
+   way around a detector, or as something that gets past one. The skill can
+   teach a reader what deliberate prose looks like; it cannot change who wrote
+   a draft.
 
 ## Routing
 
-Resolve `job` from the artifact boundary:
-
-- use `rewrite` when supplied prose belongs in the requested artifact
-- use `write` when the artifact comes from a brief and supplied samples,
-  quotations, or background remain outside it
-- use `audit` for diagnose, review-for-tells, or source-versus-revision fidelity
-  requests that do not authorize a rewrite
-- if the boundary remains uncertain, choose `rewrite` and preserve the supplied
-  prose rather than silently treating possible source content as background
-
-Resolve `process` separately:
+Resolve the pass from the artifact boundary:
 
 - every caller-facing conversational message uses `quick`
 - a named, reusable artifact such as an article, report, document, PR
@@ -178,14 +200,39 @@ Resolve `process` separately:
   while surrounding explanation or status uses `quick`
 - an incidental example inside a reply stays `quick`; a bounded deliverable the
   caller will reuse outside the conversation uses `deep`
+- if the boundary between supplied prose and background is uncertain, treat
+  the supplied prose as source and preserve it rather than silently treating
+  it as background
 
-Resolve `clarity` independently of process and voice. An explicit request or
-project style guide decides first. Otherwise `auto` selects `plain` for the
+Resolve the regime for `deep` from the source class:
+
+| Source class                                                                                                       | Regime    | What the pass may do                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Human draft: the caller says so                                                                                    | Preserve  | Delete, reorder, lexically edit within clauses, merge or split at clause boundaries. Model-added tokens stay under budget.                                                            |
+| AI draft, AI-assisted draft, or a brief with no draft                                                              | Recompose | Full recomposition: content lock, sufficiency gate, structural draft, authoredness test, skeptical-reader passes, verification, continuous read.                                      |
+| Uncertain: the draft is first-person and situated with particulars the model could not have supplied, but unstated | Ask once  | Ask "Is this draft your own writing, or generated?" The answer selects the regime. If no answer arrives, use Preserve and say in the notes that the draft's origin was not confirmed. |
+
+The heuristic in the third row only decides whether to ask. It never assigns
+Preserve on its own. Under Preserve the skill does not verify that the draft is
+human and says so in its notes.
+
+Resolve findings-only requests: when the caller asks what is wrong, asks for a
+review or diagnosis, asks for a source-versus-revision fidelity comparison, or
+forbids edits, run `deep`, set `delivery` to `with_notes`, and withhold the
+artifact. The notes carry each finding's location, the observable pattern or
+changed relationship, the reader effect or fidelity consequence, and the
+smallest repair. Do not assign authorship in a finding.
+
+Resolve `clarity` independently of the pass and the regime. An explicit request
+or project style guide decides first. Otherwise `auto` selects `plain` for the
 agent's replies and for technical, instructional, reporting, reference,
 how-to, and tutorial prose. It selects `off` for fiction, essays, marketing, and
 personal prose unless the request or destination calls for plain language.
-Under `preserve` or `match_samples`, protect supported voice traits, but still
-repair ambiguity or hidden agency that changes what the reader can do or infer.
+Under `preserve` or `match`, protect supported voice traits, but still repair
+ambiguity or hidden agency that changes what the reader can do or infer. Plain
+language normalizes toward a register that detectors have flagged in academic
+and second-language human writing; the risk runs both ways, and it is one more
+reason the skill never treats a verdict as a target.
 
 ## Frame
 
@@ -195,22 +242,34 @@ Read the complete brief, source, and relevant task evidence. Record internally:
 - main point and required content or structure
 - artifact boundary: which passages belong in the output and which are
   instructions, samples, quotations, code, data, or commentary about the work
+- source class and the regime it selects
 - source boundary and authorized external sources
 - protected exact spans
 - requested style standards or registers
 - selected controls
 
-Infer reasonable defaults. Ask only when a missing answer makes accuracy
-impossible or would materially change the result. Otherwise omit unsupported
-optional material or flag it.
+In `deep`, when the brief does not answer them, ask three questions before
+drafting a write job or recomposing a draft:
+
+1. What is the one thing the reader must leave with?
+2. What does the caller actually think about it?
+3. What is one real particular (a number, an event, a name, a mechanism) the
+   piece can stand on?
+
+Ask them in one message. Draft from the answers. If no answer arrives, write
+the narrowest piece the supplied material supports and say which question is
+open. Do not fill the gap with an average of what such a piece usually says.
+`quick` never asks these questions; it answers from what the conversation
+already holds.
 
 Complete framing when the reader, purpose, artifact and source boundaries,
-controls, and job are known or safely inferred.
+regime, and controls are known or safely inferred.
 
-## Quick process
+## Quick pass
 
 Quick is a cheap finish for routine communication, not a shallower fidelity
-standard.
+standard. [examples/quick-core.md](examples/quick-core.md) holds the same rules
+as a pasteable block for a system prompt.
 
 When `clarity` is `plain`, use this self-contained core without loading the
 full clarity reference:
@@ -268,7 +327,8 @@ full clarity reference:
    where the genre permits it.
 3. **Collect local candidates silently.** Scan only for high-frequency defects
    recognizable within one sentence or an adjacent pair:
-   - generated dash characters forbidden above
+   - a dash character outside the tier 8 default without a stronger tier
+     deciding it
    - chatbot wrappers, acknowledgment loops, offers to do more, or drafting
      residue
    - an unsupported `As a [role], I` opener
@@ -295,46 +355,24 @@ Quick loads none of this skill's own files under `references/` or `examples/`.
 It still reads every project file, caller source, tool result, or safety-critical
 reference that the task itself requires.
 
-## Deep process
+## Deep pass
 
-For `write` and `rewrite`, follow
-[references/deep-recomposition.md](references/deep-recomposition.md). It adds a
-content lock, sufficiency gate, new information hierarchy, structural draft,
-authoredness test, skeptical-reader passes, independent fidelity verification,
-continuous read, and full acceptance gate.
+Follow [references/deep-recomposition.md](references/deep-recomposition.md).
+It opens with the Preserve branch (edit policy, token budget, clause diff, and
+disclosure text) and continues with the Recompose branch (content lock,
+sufficiency gate, information hierarchy, structural draft, authoredness test,
+skeptical-reader passes, independent fidelity verification, continuous read,
+and the acceptance gate). Verification is an internal step of every deep run.
+It never becomes a separate output; its findings surface only as notes.
 
-Complete deep processing only when that acceptance gate passes.
+Preserve exists for one purpose: keeping a human draft's authorship intact
+while repairing reader-facing defects, so that the result is honestly
+describable as human-written with AI assistance. Callers care most in academic
+and editorial submission, where the writer must be able to describe the work's
+provenance accurately. The skill makes no claim about what any detector will
+say.
 
-## Audit job
-
-When `job` is `audit`, inspect without rewriting or editing any file:
-
-- For a prose-pattern audit, consult
-  [references/skeptic-patterns.md](references/skeptic-patterns.md) and
-  [references/tells.md](references/tells.md).
-- For a source-versus-revision fidelity audit, consult
-  [references/verification.md](references/verification.md).
-- For a clarity audit, consult
-  [references/clear-communication.md](references/clear-communication.md) and
-  report each material ambiguity, load problem, reader-address mismatch, or
-  documentation-genre error with a proposed replacement or smallest repair.
-
-For each finding, report the location, observable pattern or changed
-relationship, reader effect or fidelity consequence, and smallest repair
-direction. A fidelity finding includes paired source and revision spans when
-both exist. Separate defects from uncertain flags. Include defended candidates
-and the function they serve only when they help a requested comprehensive
-audit.
-
-Exclude protected exact spans from stylistic findings unless the caller targets
-them. Report a dash only as conformance to this skill's output policy when the
-audit brief names the policy or the caller identifies the text as produced
-under Animize. Repeated dash-aside syntax may still be a pattern finding because
-of its repetition, never because a character proves authorship.
-
-Do not assign authorship, produce a shadow rewrite, or continue into a writing
-process. Complete the audit when every finding is grounded in supplied text,
-every requested dimension is checked, and the response contains findings only.
+Complete deep processing only when the acceptance gate passes.
 
 ## Destination and delivery
 
@@ -346,16 +384,17 @@ every requested dimension is checked, and the response contains findings only.
 | Email, DM, or SMS         | Return sendable plain text without literal Markdown markers.                                     |
 | Social post               | Follow the requested platform form without importing documentation structure or decorative tags. |
 | Code-bearing prose        | Use real identifiers in code font and never reflow or restyle code.                              |
-| Repository audit          | Report and rank candidates without editing files unless the caller selects them for repair.      |
+| Repository review         | Report and rank candidates without editing files unless the caller selects them for repair.      |
 
 With `delivery: adaptive`, return only the artifact when nothing requires
 reporting. Append concise source notes or withhold an unsafe artifact when a
-material issue remains. `clean` is valid only when no unresolved issue requires
-a warning. `with_notes` may include material structural changes, unresolved
-source issues, and requested defended choices. Never insert a source note,
-fidelity warning, or explanation of removed prose into the artifact merely to
-satisfy `clean`; report the control conflict outside the artifact or withhold
-the unsafe result.
+material issue remains. Under Preserve, the notes include the clause-diff
+summary unless the caller asked for a clean artifact. `clean` is valid only
+when no unresolved issue requires a warning. `with_notes` may include material
+structural changes, unresolved source issues, and requested defended choices.
+Never insert a source note, fidelity warning, or explanation of removed prose
+into the artifact merely to satisfy `clean`; report the control conflict
+outside the artifact or withhold the unsafe result.
 
 ## Universal gate
 
@@ -367,19 +406,21 @@ Before delivery, confirm:
 - judgment and uncertainty match their source and genre authority
 - no decision-irrelevant negative scope scaffolding remains; every retained
   prohibition, exclusion, or limit changes interpretation or action
-- generated prose contains no forbidden dash character unless explicitly
-  authorized
+- under Preserve, zero added clauses and the model-token share under budget,
+  with residual defects listed in the notes rather than fixed over budget
+- generated prose follows the tier 8 dash default unless a stronger tier
+  decided otherwise
+- no sentence describes the output's standing with any detector
 - output matches the requested destination and contains no workflow residue
 
 ## Reference loading
 
 Quick uses only this entry point. Deep always loads
-[deep-recomposition.md](references/deep-recomposition.md) and
-[tells.md](references/tells.md), then loads other files only when their scope
-matches the observed problem. Audit loads only the catalogs its requested
-dimension needs, including `clear-communication.md` for a clarity audit. The
-clarity profile also loads in deep processing when `clarity` resolves to
-`plain`.
+[deep-recomposition.md](references/deep-recomposition.md); the Recompose branch
+also loads [tells.md](references/tells.md), then loads other files only when
+their scope matches the observed problem. The clarity profile loads in deep
+processing when `clarity` resolves to `plain`. Findings-only runs load the
+catalogs their requested dimension needs.
 
 - [clear-communication.md](references/clear-communication.md): plain-language,
   documentation-genre, sentence-load, and ambiguity rules
@@ -387,9 +428,18 @@ clarity profile also loads in deep processing when `clarity` resolves to
   defaults, and voice behavior
 - [skeptic-patterns.md](references/skeptic-patterns.md): cluster-based
   diagnostics
+- [tells.md](references/tells.md): line-level reader-facing defects, used for
+  repair, never as a detector token list
 - [verification.md](references/verification.md): content-lock and fidelity
-  checks
-- [examples/recomposition.md](examples/recomposition.md): quick and deep
-  examples
+  checks, run inside every deep pass
+- [examples/recomposition.md](examples/recomposition.md): quick, Preserve, and
+  Recompose examples
+- [examples/pairs.md](examples/pairs.md): paired before-and-after examples by
+  genre
+- [examples/quick-core.md](examples/quick-core.md): the pasteable quick core
+- [backends.md](references/backends.md): optional model-stack note for callers
+  who control their pipeline; outside the prose rules
 - [evaluation.md](references/evaluation.md): forward tests, benchmarks, and
   release criteria
+- [evaluation-results.md](references/evaluation-results.md): measured results
+  with detector versions and dates

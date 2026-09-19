@@ -77,7 +77,8 @@ Remove or repair every unauthorized `added` or `changed` claim.
 
 ### Paired source/revision finding
 
-For a fidelity audit, report each material issue as a source and revision pair:
+For a findings-only fidelity review, report each material issue as a source
+and revision pair:
 
 ```text
 Source: <exact span, claim ID, or [absent]>
@@ -162,10 +163,10 @@ point, and never silently normalize a protected span. Defend language-required
 joiners, intentional typesetting spaces, and exact characters in names, code,
 identifiers, or quotations.
 
-Generated prose must contain no `U+2013` or `U+2014` outside a protected exact
-span unless the caller explicitly authorizes the named character. A supplied
-sample or house style is not authorization. Verify this as an output invariant,
-not as evidence about authorship.
+Generated prose follows the entry point's tier 8 dash default unless a
+protected exact span, an explicit caller request, or a controlling style
+guide or sample set decides otherwise. Verify this as an output preference,
+never as evidence about authorship.
 
 ## 5. High-risk semantic checks
 
@@ -239,7 +240,7 @@ omit it. Do not simulate it.
 
 ## 7. Structural verification
 
-For `rewrite_depth: recompose`, check that the result is not merely a lexical
+Under the Recompose regime, check that the result is not merely a lexical
 paraphrase:
 
 - the information hierarchy reflects the reader's needs
@@ -253,6 +254,10 @@ paraphrase:
 
 Structural independence is not a license to reorder chronology, logic, or
 procedural steps incorrectly.
+
+Under the Preserve regime, structural independence is not the goal. Run the
+clause diff from [the deep pass](deep-recomposition.md#p3-clause-diff) instead
+and confirm zero added clauses and a model-token share under budget.
 
 ## 8. Skeptical-reader red team
 
@@ -276,7 +281,8 @@ problem does not justify random change.
 
 For every candidate retained as a false positive, record the exact span, the
 apparent pattern, its legitimate function, and the evidence for that function.
-Do not count defended false positives as defects. In a fidelity audit, report a
+Do not count defended false positives as defects. In a findings-only fidelity
+review, report a
 defense only when exhaustive accounting is requested or the defense explains a
 material decision.
 
@@ -291,8 +297,8 @@ Reject or revise the artifact when any of these remain:
 - invented commitment, obligation, permission, owner, deadline, or guarantee
 - leaked brief material or a hypothetical presented as fact
 - corrupted quotation, citation, URL, code, or exact value
-- generated `U+2013` or `U+2014` outside a protected span without explicit
-  caller authorization
+- a dash character outside the tier 8 default without a stronger tier
+  deciding it
 - unsupported Unicode residue introduced by the revision
 - central generic scaffolding that survives a requested recompose
 - unresolved material claim that makes publication unsafe

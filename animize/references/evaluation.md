@@ -1,9 +1,13 @@
 # Evaluation protocol
 
 No evaluation can prove that a text was written by a person. The useful
-question is whether the skill produces prose that is as natural, deliberate,
-reader-specific, and publication-ready as a matched human edit while preserving
-substance.
+questions are whether the skill produces prose that is as natural, deliberate,
+reader-specific, and publication-ready as a matched human edit while
+preserving substance, and whether its two regimes behave as documented: the
+Recompose regime leaves a trained classifier's verdict where it found it, and
+the Preserve regime produces the label its workflow honestly earns.
+
+Measured results live in [evaluation-results.md](evaluation-results.md).
 
 ## Contents
 
@@ -14,9 +18,12 @@ substance.
 - [Blind human evaluation](#5-blind-human-evaluation)
 - [Skeptical-observer test](#6-skeptical-observer-test)
 - [Automated checks](#7-automated-checks)
-- [Primary metrics](#8-primary-metrics)
-- [Acceptance criteria](#9-acceptance-criteria)
-- [Failure analysis](#10-failure-analysis)
+- [Detector columns](#8-detector-columns)
+- [Primary metrics](#9-primary-metrics)
+- [Acceptance criteria](#10-acceptance-criteria)
+- [What not to do](#11-what-not-to-do)
+- [Local detector setup](#12-local-detector-setup)
+- [Failure analysis](#13-failure-analysis)
 
 ## 1. Systems to compare
 
@@ -25,10 +32,11 @@ Evaluate at least:
 1. Original draft
 2. Generic prompt: `Make this sound more human`
 3. Line-edit-only version of the skill
-4. Recomposition core without references
-5. Full skill with authoredness and skeptical-reader passes
-6. Full skill plus an independent verifier
-7. Professional human edit
+4. The quick core alone ([examples/quick-core.md](../examples/quick-core.md))
+5. Recompose core without references
+6. Full skill with authoredness and skeptical-reader passes
+7. Full skill plus an independent verifier
+8. Professional human edit
 
 Use identical source boundaries and caller briefs.
 
@@ -36,20 +44,23 @@ Use identical source boundaries and caller briefs.
 
 Exercise every applicable combination of:
 
-- `job: auto | write | rewrite | audit`
-- `process: auto | quick | deep`, with `audit` explicitly ignoring `process`
+- `voice: auto | preserve | rebuild | match`
 - `clarity: auto | plain | off`
+- `delivery: adaptive | clean | with_notes`
+- regime: Preserve or Recompose, as routed from the source class, plus the
+  explicit `quick` and `deep` overrides and a findings-only request
 
 Test `auto` values against requests whose correct resolution is unambiguous,
-then test each explicit value against the same material. For deep write and
-rewrite cases, also cross `light`/`preserve`, `standard`/`rebuild`,
-`recompose`/`rebuild`, and `match_samples`. Record invalid or inapplicable
-combinations instead of silently treating them as another setting.
+then test each explicit value against the same material. `voice: preserve` on
+a source the caller has not called their own, and `voice: rebuild` on a source
+the caller has called their own, are conflicts the skill must report rather
+than resolve silently. Record invalid or inapplicable combinations instead of
+treating them as another setting.
 
-Instrument file reads. A `process: quick` run must load no file under
-`animize/references/`; all required quick behavior must come from the entry
-point. Measure its output quality and fidelity separately so a cheap run cannot
-pass merely because it skipped work.
+Instrument file reads. A `quick` run must load no file under
+`animize/references/` or `animize/examples/`; all required quick behavior must
+come from the entry point. Measure its output quality and fidelity separately
+so a cheap run cannot pass merely because it skipped work.
 
 ## 2. Test corpus
 
@@ -71,6 +82,24 @@ Include four source classes:
 - genuine human prose that is already strong and should change little
 
 The last class measures over-editing.
+
+Add these cells for the regime work:
+
+- human drafts with known reader-facing defects, run through `deep` under the
+  Preserve regime at budgets 0.05, 0.15, and 0.30 (vary the constant for the
+  experiment only)
+- the same drafts run through `deep` under the Recompose regime, to measure
+  what routing gets wrong when a human draft is misclassified
+- matched pairs produced by synthetic mirroring of a human document (ask a
+  model for the topic, then for an article on that topic at the same length
+  and register), so the skill's treatment of a mirror can be compared with its
+  treatment of the original
+- academic and second-language human samples with no edits, to measure
+  whether `clarity: plain` output moves human text toward registers that
+  detectors have flagged in human writing
+
+Use at least 100 documents per cell and at least 200 words each. Detectors
+need 50 words; longer documents give more precise estimates.
 
 ## 3. Controlled defect suite
 
@@ -106,15 +135,14 @@ negative prohibition, a source-supported how-to recommendation, and a sentence
 longer than 30 words that carries one coherent relationship bundle. Require the
 system to name the function that defends each retained candidate.
 
-Test the dash invariant with four separate controls:
+Test the tier 8 dash default with four separate controls:
 
 1. Preserve `U+2013` and `U+2014` inside protected exact spans.
 2. Rebuild unprotected source sentences that contain either character without a
    mechanical punctuation swap.
-3. Reject samples, house style, and destination typography as implicit
-   authorization.
-4. Permit generation only when the caller explicitly authorizes the named code
-   point.
+3. Honor a caller request, a controlling style guide, or a consistent sample
+   habit as a stronger tier.
+4. Apply the default when no stronger tier decides.
 
 Raters and automated checks must not use the presence or absence of either
 character as authorship evidence.
@@ -144,9 +172,9 @@ Construct passages containing:
 - source-supplied versus revision-introduced Unicode candidates
 
 Independently label every proposition and protected exact element.
-For fidelity-audit cases, require each material result to pair the source and
-revision spans, classify the changed relationship, state the consequence, and
-give the smallest repair.
+For findings-only fidelity cases, require each material result to pair the
+source and revision spans, classify the changed relationship, state the
+consequence, and give the smallest repair.
 
 Create destination pairs that hold content constant while changing the medium:
 plain-text email, rendered Markdown, reference documentation, a tutorial,
@@ -179,11 +207,15 @@ Ask pairwise questions as well:
 Require raters to highlight any span that feels generic, assembled, inflated,
 or unnatural and to name the reason. This produces actionable diagnostics.
 
-For `preserve` and `match_samples`, give raters the source samples separately.
+For `preserve` and `match`, give raters the source samples separately.
 Require the system to identify three to five observable voice signals before
 rewriting, then ask raters whether the revision remains recognizable as the same
 writer without relying on topic vocabulary, copied catchphrases, or invented
 biography. Score signal accuracy and recognition separately.
+
+For Preserve cells, also ask raters to choose between the unedited human draft
+and the Preserve output. This is the over-edit guard: on strong drafts the
+output should not win by much, and on defect-injected drafts it should.
 
 ## 6. Skeptical-observer test
 
@@ -215,18 +247,49 @@ Use automation for hard invariants, not for final naturalness judgments:
 - unresolved placeholders and session residue
 - brief-to-artifact leakage and hypothetical-to-actual drift
 - added promises, ownership, deadlines, permissions, or guarantees
-- generated `U+2013` or `U+2014` outside protected spans without explicit
-  caller authorization
+- a dash character outside the tier 8 default without a stronger tier
+  deciding it
 - exact restoration of protected spans that contain either dash character
 - introduced zero-width characters, `U+00AD`, `U+00A0`, and mixed-script
   confusables, with source provenance recorded for retained candidates
 - paired source/revision fidelity-finding fields
-- file-read traces proving `process: quick` loaded no Animize reference
+- file-read traces proving a `quick` run loaded no Animize reference
+- the Preserve clause diff: added clauses, model-token share, and the
+  budget check, computed by the procedure in
+  [the deep pass](deep-recomposition.md#p3-clause-diff)
+- any sentence in an output that describes the output's standing with a
+  detector
 
-Detector scores may be recorded as a secondary robustness diagnostic, never as
-the optimization target or release criterion.
+## 8. Detector columns
 
-## 8. Primary metrics
+Detector scores are a diagnostic with two purposes. The negative: prove that
+the Recompose regime does not move a trained classifier's verdict. The
+positive: prove that the Preserve regime's output carries the label its
+workflow earns. Never use a score as an optimization target or a release
+criterion for prose quality.
+
+Record three columns:
+
+- **A trained classifier of the target family.** The Open Pangram release
+  (two EditLens models: a LoRA adapter on `meta-llama/Llama-3.2-3B` and a
+  `roberta-large` classifier, CC BY-NC-SA 4.0, noncommercial only) runs on one
+  24 GB consumer GPU. Both are Pangram 3 lineage, trained on a peer-review
+  edit dataset, with no humanizer head, no tokenwise decoding, and narrower
+  domain coverage than the production model. Use them for the negative check
+  and for AI-fraction estimates on Preserve output. Report their verdicts as
+  EditLens verdicts, never as production verdicts. The vendor's free web
+  checker can spot-check up to twenty final documents against the production
+  model by hand; record those separately.
+- **A perplexity-family detector** (Binoculars, open source) to show that the
+  skill does move naive detectors and does not move trained classifiers. The
+  contrast is the clearest way to explain the skill's limits.
+- **An optional second trained classifier** from another lineage, as another
+  "does not move" check on Recompose. Never a verdict source.
+
+Record detector names, revisions, calibration files, and dates. Results are
+comparable only within a version.
+
+## 9. Primary metrics
 
 | Dimension              | Metric                                                           |
 | ---------------------- | ---------------------------------------------------------------- |
@@ -238,15 +301,23 @@ the optimization target or release criterion.
 | Deliberateness         | Blind rating plus highlighted generic spans                      |
 | Publication readiness  | Pairwise preference against baseline and human edit              |
 | Over-editing           | Unnecessary-change rate on strong human controls                 |
-| Control conformance    | Correct `job`, `process`, `clarity`, depth, and voice behavior   |
+| Control conformance    | Correct pass, regime, `voice`, `clarity`, and delivery behavior  |
+| Routing accuracy       | Correct regime without asking; question asked when it should be  |
 | Voice recognition      | Signal accuracy and blinded same-writer recognition              |
 | False-positive defense | Correct retains with an evidence-backed functional reason        |
 | Destination fit        | Correct medium, formatting, stance, and explanation behavior     |
-| Quick isolation        | Reference loads during `process: quick`; target: 0               |
+| Quick isolation        | Reference loads during a `quick` run; target: 0                  |
+| Verdict distribution   | Human / AI-assisted / AI-generated / humanized per cell          |
+| Humanizer positives    | Rate above baseline on any cell; target: 0                       |
+| Preserve accounting    | Added clauses (target: 0) and model-token share under budget     |
 | Reliability            | Variance across genres, lengths, models, and repeated runs       |
 | Efficiency             | Tokens, latency, and number of passes                            |
 
-## 9. Acceptance criteria
+Report the over-edit rate on strong human prose beside the verdict shift on
+the same cell. The two failure modes trade off, and a run that wins one by
+losing the other has not improved.
+
+## 10. Acceptance criteria
 
 A production candidate should meet all of these:
 
@@ -258,21 +329,56 @@ A production candidate should meet all of these:
 - materially fewer highlighted generic spans than both the original draft and
   generic-prompt baseline
 - low unnecessary-change rate on already strong human prose
-- zero material control, depth, or voice conformance failures on the matrix
-- zero unauthorized generated `U+2013` or `U+2014` characters
+- zero material control, regime, or voice conformance failures on the matrix
+- the tier 8 dash default applied unless a stronger tier decided
 - exact preservation of protected dash and Unicode spans
-- zero Animize reference loads during `process: quick`
+- zero Animize reference loads during a `quick` run
 - defended false positives remain intact, including real prohibitions,
   supported recommendations, and coherent long sentences
 - material distant duplication is removed without damaging legitimate
   repetition
 - destination and writer-recognition cases meet their predeclared thresholds
 - stable performance across repeated runs and major genres
+- Recompose regime: verdict distribution statistically indistinguishable from
+  the original AI draft on trained classifiers
+- Preserve regime at the default budget: at least 95% of outputs labeled
+  human or AI-assisted, zero humanizer-head positives where a head exists,
+  and a fidelity pass rate at or above Recompose's
+- human preference for Preserve output over the unedited draft at or above
+  60% on defect-injected drafts and no higher than 45% on strong drafts
+- routing accuracy at or above 90% on the labeled corpus, with the remaining
+  cases resolved by the single question rather than a wrong guess
+- the quick core alone matches the full skill's rate on the controlled defect
+  suite for routine communication
 
 Do not declare the skill perfected from a single model, genre, evaluator group,
 or detector.
 
-## 10. Failure analysis
+## 11. What not to do
+
+- Do not iterate prose rules against a detector score. If a rule change moves
+  a verdict, treat it as a signal that the rule is doing something other than
+  repairing reader-facing defects, and investigate the rule.
+- Do not submit user or customer text to any detector service.
+- Do not train, fine-tune, or run reinforcement learning against a detector
+  inside this repository. Model-stack notes belong in
+  [backends.md](backends.md) only.
+- Do not report any figure framed as a bypass rate.
+
+## 12. Local detector setup
+
+The scoring harness lives in the repository's `.eval/animize/` folder, outside
+the skill package. Its README gives the setup: a Python environment with CUDA
+torch, a Hugging Face login with the Open Pangram and Llama terms accepted,
+label inspection before any scoring, a five-document smoke test, threshold
+calibration on a held-out split at 1% and 0.5% false positive rates, and the
+run order for corpus build, scoring, clause diff, and report. Every result
+table cites the calibration file it used.
+
+Keep model caches and the working tree on the Linux filesystem when running
+under a Windows subsystem; cross-filesystem reads dominate scoring time.
+
+## 13. Failure analysis
 
 For every failed item, classify the root cause:
 
@@ -287,10 +393,12 @@ For every failed item, classify the root cause:
 - distant-duplication miss or legitimate-repetition damage
 - unsupported persona or voice-recognition failure
 - destination mismatch
-- control-routing or quick-reference-load failure
+- regime-routing or quick-reference-load failure
+- Preserve edit-policy violation (added clause or budget overrun)
 - undefended false positive
 - genre mismatch
 - verifier miss
 
 Update the smallest relevant instruction or example. Do not expand a word
-blacklist in response to isolated failures.
+blacklist in response to isolated failures, and do not change a rule because
+a detector moved.

@@ -142,17 +142,15 @@ rewriting the protected contents.
 
 ## Typography and formatting
 
-**Generated dash characters.** Generated output contains no `U+2013` or
-`U+2014` characters. The only exceptions are a protected exact span restored
-unchanged and an explicit caller instruction authorizing generation of the
-named character. Supplied samples, house style, genre conventions, and
-destination typography do not grant that authorization.
-
-When unprotected source prose uses either character structurally, rebuild the
-sentence so its syntax carries the relationship. Do not mechanically exchange
-the character for a comma, colon, parenthesis, or hyphen. The presence or
-absence of either character is never evidence of human or machine authorship;
-the rule governs generated output only.
+**Dash characters.** The entry point's tier 8 house-style default is that
+generated output contains no `U+2013` or `U+2014`. A protected exact span, an
+explicit caller request, or a controlling style guide or sample set outranks
+the default. When unprotected source prose uses either character structurally,
+rebuild the sentence so its syntax carries the relationship. Do not
+mechanically exchange the character for a comma, colon, parenthesis, or
+hyphen. The default is a reader-facing preference about stacked asides. The
+presence or absence of either character is never evidence of human or machine
+authorship, and the default is never applied to change a score.
 
 **Colon as mid-sentence connector.** Colons belong before a list, example, or
 quotation, not as glue between clauses that could stand as their own sentences.
@@ -182,7 +180,7 @@ register expose the wrong delivery convention. Match the actual medium and
 supplied samples; do not enforce punctuation quotas.
 
 **Quotation marks and apostrophes.** Under `rebuild`, default to straight marks.
-Under `preserve` or `match_samples`, follow the supplied pattern; a single new
+Under `preserve` or `match`, follow the supplied pattern; a single new
 curly apostrophe in otherwise straight-punctuated prose is an integration seam.
 Do not normalize protected quoted material. Before delivery, scan for U+2018,
 U+2019, U+201C, and U+201D when straight marks are selected.
@@ -234,5 +232,5 @@ new reaction.
 For every `retain` decision in a deep diagnostic, record the exact candidate,
 the apparent rule match, the function that makes it legitimate, and the source
 or genre evidence for that function. "It sounds human" is not a defense. Report
-defended false positives only in an audit or when notes would help the caller;
+defended false positives only in a findings-only run or when notes would help the caller;
 do not turn them into rewrite commentary by default.

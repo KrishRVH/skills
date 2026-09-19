@@ -2,8 +2,8 @@
 
 Use this profile to make prose understandable on the first read without
 simplifying away precision. It governs document shape, reader address,
-sentence load, and ambiguity inside Animize. It does not select `job`,
-`process`, or `voice_mode`.
+sentence load, and ambiguity inside Animize. It does not select the pass,
+the regime, or `voice`.
 
 ## Contents
 
@@ -21,7 +21,7 @@ sentence load, and ambiguity inside Animize. It does not select `job`,
 
 ## When the profile applies
 
-Treat `clarity` as independent of `process` and `voice_mode`:
+Treat `clarity` as independent of the pass and `voice`:
 
 - `plain` applies this profile.
 - `off` leaves its preferences inactive. Animize's fidelity and integrity
@@ -34,9 +34,11 @@ instructional, reporting, reference, how-to, and tutorial prose. Leave it off
 for essays, fiction, marketing, and personal prose unless the caller or a
 controlling style guide requests plain language.
 
-Use the same profile under `quick` and `deep`; the process changes the amount
-of work, not the clarity standard. For a clarity audit, inspect and report
-without rewriting.
+Use the same profile under `quick` and `deep`; the pass changes the amount
+of work, not the clarity standard. For a findings-only clarity review, inspect
+and report without rewriting. Under the Preserve regime, repair a clarity
+defect only within the clause-level edit policy and list the rest in the
+notes.
 
 Complete routing when `clarity` is resolved and the applicable destination and
 genre are known or can be inferred safely.
@@ -49,7 +51,7 @@ Apply clarity rules in this order:
    [verification](verification.md) for fact-bearing rewrites.
 2. Follow the caller's explicit constraints and the caller or project style
    guide.
-3. Under `preserve` or `match_samples`, retain evidence-backed voice traits.
+3. Under `preserve` or `match`, retain evidence-backed voice traits.
 4. Apply destination and genre conventions.
 5. Apply this profile's house preferences.
 
@@ -84,7 +86,7 @@ materially change the result.
   detail to fulfill the brief.
 - For a rewrite, improve clarity and concision while preserving supported
   claims, exact material, and intentional voice.
-- For a clarity review or audit, keep the source unchanged. Report each
+- For a findings-only clarity review, keep the source unchanged. Report each
   material problem with its location, reason, and a proposed replacement or
   smallest repair direction.
 
@@ -209,10 +211,9 @@ moves the runtime`, not a construction that leaves the second action
 client and the host`.
 7. Make the grouping of `and` and `or` explicit. Use constructions such as
    `both ... and`, `either ... or`, and `if ... then` when they remove doubt.
-8. Prefer a period to a semicolon. Apply Animize's universal dash rule even
-   when a sample or house style uses dashes; only a protected exact span or an
-   explicit caller override permits one. Rebuild the relationship instead of
-   swapping punctuation mechanically. See
+8. Prefer a period to a semicolon. Follow the entry point's tier 8 dash
+   default unless a stronger tier decides, and rebuild the relationship
+   instead of swapping punctuation mechanically. See
    [typography and formatting](tells.md#typography-and-formatting).
 9. Make parenthetical text a complete grammatical unit or its own sentence.
    Form plurals directly instead of using `(s)`.

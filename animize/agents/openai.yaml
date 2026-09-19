@@ -1,3 +1,6 @@
 interface:
   display_name: "Animize"
   short_description: "Clear replies through deep, fidelity-safe rewrites"
+# Model-stack notes for callers who control their pipeline live in
+# references/backends.md. The validator allows only interface and policy keys
+# here, so this comment is the pointer.

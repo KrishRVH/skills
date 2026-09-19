@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.23.1/schema/markdownlint-cli2-config-schema.json",
   "globs": ["**/*.md"],
   "gitignore": true,
+  "ignores": [".eval/animize/pilot_summary.md"],
   "frontMatter": "^---\\s*\\n[\\s\\S]*?\\n---\\s*",
   "config": {
     "MD003": {

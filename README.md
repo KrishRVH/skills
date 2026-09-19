@@ -61,12 +61,12 @@ link, spelling, and secret checks.
 ## Writing And Editing
 
 - **animize** - Applies clear, natural prose standards to every caller-facing
-  agent message. Its quick processing keeps status updates, questions,
+  agent message. Its quick pass keeps status updates, questions,
   explanations, and final replies direct and ready for their destination.
-  Explicit writing and rewrite requests can use deep processing to rebuild
-  standalone artifacts such as PR descriptions, documentation, articles, and
-  creative prose. The audit job reports prose-pattern or rewrite-fidelity
-  findings without changing the source.
+  Writing and rewrite requests use the deep pass, which recomposes generated
+  or generic drafts and edits a human draft at clause level so its authorship
+  stays intact. Findings-only requests return notes and withhold the
+  artifact.
 
   ```ruby
   npx skills@latest add KrishRVH/skills/animize

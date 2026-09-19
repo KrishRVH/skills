@@ -207,7 +207,7 @@ constraints. Invention is permitted only within the creative brief.
 
 ## 11. Voice modes
 
-For `preserve` and `match_samples`, complete a voice record before drafting.
+For `preserve` and `match`, complete a voice record before drafting.
 Record three to five observable signals, each tied to source evidence, such as
 sentence movement, density, register, stance, vocabulary, paragraph shape,
 humor, qualification, or deliberate roughness. Exclude topic vocabulary,
@@ -222,7 +222,7 @@ writer could recognize the same decision-making habits after topic words and
 protected phrases are removed. Recognition is a voice-fidelity test, not proof
 of authorship.
 
-### Rebuild: default
+### Rebuild: default for generated drafts and briefs
 
 Treat source cadence, sentence shapes, transitions, headings, and lexical habits
 as editable rather than protected. Use a direct, unshowy register suited to the
@@ -232,21 +232,28 @@ Rebuilding is permission to change the structure, not a quota for change. Leave
 an exact, deliberate, genre-native passage intact when a rewrite would serve no
 reader-facing purpose.
 
-### Preserve: explicit request only
+### Preserve: human drafts
 
-Use the completed voice record to protect source-owned unusual details, mixed
-feelings, asides, fragments, and self-corrections when they are clear and
-functional. Apply those traits to locked content, never to generate a new
-reaction or mannerism. Repair material defects without regularizing them.
+`voice: auto` resolves to `preserve` when the caller says the draft is their
+own writing, and the deep pass then runs the Preserve regime described in
+[the deep pass](deep-recomposition.md#preserve-branch). Use the completed
+voice record to protect source-owned unusual details, mixed feelings, asides,
+fragments, and self-corrections when they are clear and functional. Every
+change is a deletion, a reorder, an edit within a clause, or a merge or split
+at a clause boundary. Never generate a new reaction or mannerism, and never
+regenerate a sentence from its meaning. Repair material defects within that
+policy and list the rest in the notes.
 
-### Match samples: explicit or sample-led request
+### Match: explicit or sample-led request
 
 Infer durable traits from more than one passage when possible. Separate writer
 traits from topic vocabulary and genre requirements. Match functional
 properties rather than memorable phrasing. Supplied samples and destination
 style outrank discretionary tell heuristics when they show a consistent
-deliberate choice; they do not override hard generated-output invariants,
-including the `U+2013` and `U+2014` rule. Record both positive habits and
+deliberate choice; they do not override fidelity, integrity, or protected
+exact spans. A consistent punctuation habit in the samples, including dash
+use, counts as a controlling style for the tier 8 default. Record both
+positive habits and
 evidence-backed negative boundaries: registers, phrases, or mannerisms the
 samples consistently avoid. Do not infer an absence from a single short sample
 or from demographic stereotypes.
@@ -278,7 +285,7 @@ Use these after drafting:
 - **Necessity:** What can be removed without loss?
 - **Defensibility:** Does an unusual phrase, fragment, aside, or rhetorical
   device perform an identifiable job, or is a formula supplying the effect?
-- **Recognition:** Under `preserve` or `match_samples`, do the recorded voice
+- **Recognition:** Under `preserve` or `match`, do the recorded voice
   signals remain observable without copied catchphrases or invented biography?
 - **Template:** Do several paragraphs move in the same prebuilt pattern?
 - **Ending:** Did the piece finish its job, or merely announce that it is done?
