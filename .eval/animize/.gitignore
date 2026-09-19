@@ -1,0 +1,4 @@
+# Generated scratch only; pilot corpus, outputs, scores, and diffs are tracked as evidence
+missing_jobs.txt
+report.md
+__pycache__/
