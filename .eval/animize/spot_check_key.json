@@ -1,0 +1,102 @@
+[
+ {
+  "n": 1,
+  "regime": "Recompose",
+  "job_id": "pilot/human_defect/douglass-narrative__deep__recompose__0.15"
+ },
+ {
+  "n": 2,
+  "regime": "Recompose",
+  "job_id": "pilot/ai/twain-mississippi__deep__recompose__0.15"
+ },
+ {
+  "n": 3,
+  "regime": "Recompose",
+  "job_id": "pilot/ai/douglass-narrative__deep__recompose__0.15"
+ },
+ {
+  "n": 4,
+  "regime": "Recompose",
+  "job_id": "pilot/human_defect/franklin-autobiography__deep__recompose__0.15"
+ },
+ {
+  "n": 5,
+  "regime": "Preserve",
+  "job_id": "pilot/human/douglass-narrative__deep__preserve__0.15"
+ },
+ {
+  "n": 6,
+  "regime": "Preserve",
+  "job_id": "pilot/human/darwin-origin__deep__preserve__0.15"
+ },
+ {
+  "n": 7,
+  "regime": "Recompose",
+  "job_id": "pilot/human_defect/paine-common-sense__deep__recompose__0.15"
+ },
+ {
+  "n": 8,
+  "regime": "Preserve",
+  "job_id": "pilot/human_defect/paine-common-sense__deep__preserve__0.15"
+ },
+ {
+  "n": 9,
+  "regime": "Recompose",
+  "job_id": "pilot/ai/thoreau-walden__deep__recompose__0.15"
+ },
+ {
+  "n": 10,
+  "regime": "Preserve",
+  "job_id": "pilot/human_defect/darwin-origin__deep__preserve__0.15"
+ },
+ {
+  "n": 11,
+  "regime": "Preserve",
+  "job_id": "pilot/human/paine-common-sense__deep__preserve__0.15"
+ },
+ {
+  "n": 12,
+  "regime": "Preserve",
+  "job_id": "pilot/human_defect/twain-mississippi__deep__preserve__0.15"
+ },
+ {
+  "n": 13,
+  "regime": "Recompose",
+  "job_id": "pilot/human_defect/darwin-origin__deep__recompose__0.15"
+ },
+ {
+  "n": 14,
+  "regime": "Preserve",
+  "job_id": "pilot/human/franklin-autobiography__deep__preserve__0.15"
+ },
+ {
+  "n": 15,
+  "regime": "Recompose",
+  "job_id": "pilot/ai/paine-common-sense__deep__recompose__0.15"
+ },
+ {
+  "n": 16,
+  "regime": "Preserve",
+  "job_id": "pilot/human_defect/franklin-autobiography__deep__preserve__0.15"
+ },
+ {
+  "n": 17,
+  "regime": "Preserve",
+  "job_id": "pilot/human_defect/douglass-narrative__deep__preserve__0.15"
+ },
+ {
+  "n": 18,
+  "regime": "Recompose",
+  "job_id": "pilot/ai/franklin-autobiography__deep__recompose__0.15"
+ },
+ {
+  "n": 19,
+  "regime": "Preserve",
+  "job_id": "pilot/human_defect/thoreau-walden__deep__preserve__0.15"
+ },
+ {
+  "n": 20,
+  "regime": "Recompose",
+  "job_id": "pilot/ai/darwin-origin__deep__recompose__0.15"
+ }
+]

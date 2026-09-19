@@ -75,5 +75,9 @@ Pilot run, 2026-09-19, 6 documents per cell; full tables in
   passages at this size. The trained-classifier column, calibration, and
   humanizer-head metric are blocked on gated weights until the maintainer logs
   in to Hugging Face.
+- Production spot check, twenty documents by hand: Preserve outputs read as
+  Human 10 of 10 (famous-source caveat applies); Recompose on fresh AI
+  mirrors read as AI-generated 6 of 6; Recompose on human drafts read Human
+  3 of 4 and AI-assisted 1 of 4.
 - Quick core alone versus full skill on six routine replies: 25 of 25 injected
   defects repaired by each; the full skill read only `SKILL.md`.

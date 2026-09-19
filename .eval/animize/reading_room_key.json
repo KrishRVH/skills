@@ -1,0 +1,50 @@
+{
+ "read": [
+  {
+   "n": 1,
+   "class": "human_source",
+   "ref": "pilot/human/darwin-origin"
+  },
+  {
+   "n": 2,
+   "class": "recompose_ai",
+   "ref": "pilot/ai/darwin-origin__deep__recompose__0.15"
+  },
+  {
+   "n": 3,
+   "class": "preserve_strong",
+   "ref": "pilot/human/franklin-autobiography__deep__preserve__0.15"
+  },
+  {
+   "n": 4,
+   "class": "preserve_strong",
+   "ref": "pilot/human/douglass-narrative__deep__preserve__0.15"
+  },
+  {
+   "n": 5,
+   "class": "human_source",
+   "ref": "pilot/human/thoreau-walden"
+  },
+  {
+   "n": 6,
+   "class": "recompose_ai",
+   "ref": "pilot/ai/paine-common-sense__deep__recompose__0.15"
+  },
+  {
+   "n": 7,
+   "class": "recompose_ai",
+   "ref": "pilot/ai/thoreau-walden__deep__recompose__0.15"
+  },
+  {
+   "n": 8,
+   "class": "preserve_strong",
+   "ref": "pilot/human/twain-mississippi__deep__preserve__0.15"
+  },
+  {
+   "n": 9,
+   "class": "human_source",
+   "ref": "pilot/human/paine-common-sense"
+  }
+ ],
+ "edit": "pilot/human_defect/douglass-narrative"
+}

@@ -1,0 +1,128 @@
+[
+ {
+  "item": 1,
+  "job_id": "pilot/human_defect/franklin-autobiography__deep__preserve__0.15",
+  "cell": "defect draft vs Preserve",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 2,
+  "job_id": "pilot/ai/franklin-autobiography__deep__recompose__0.15",
+  "cell": "generated draft vs Recompose",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 3,
+  "job_id": "pilot/human_defect/douglass-narrative__deep__preserve__0.15",
+  "cell": "defect draft vs Preserve",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 4,
+  "job_id": "pilot/human/paine-common-sense__deep__preserve__0.15",
+  "cell": "strong draft vs Preserve",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 5,
+  "job_id": "pilot/ai/douglass-narrative__deep__recompose__0.15",
+  "cell": "generated draft vs Recompose",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 6,
+  "job_id": "pilot/ai/twain-mississippi__deep__recompose__0.15",
+  "cell": "generated draft vs Recompose",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 7,
+  "job_id": "pilot/human/douglass-narrative__deep__preserve__0.15",
+  "cell": "strong draft vs Preserve",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 8,
+  "job_id": "pilot/human_defect/darwin-origin__deep__preserve__0.15",
+  "cell": "defect draft vs Preserve",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 9,
+  "job_id": "pilot/ai/paine-common-sense__deep__recompose__0.15",
+  "cell": "generated draft vs Recompose",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 10,
+  "job_id": "pilot/human/franklin-autobiography__deep__preserve__0.15",
+  "cell": "strong draft vs Preserve",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 11,
+  "job_id": "pilot/human/darwin-origin__deep__preserve__0.15",
+  "cell": "strong draft vs Preserve",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 12,
+  "job_id": "pilot/human_defect/twain-mississippi__deep__preserve__0.15",
+  "cell": "defect draft vs Preserve",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 13,
+  "job_id": "pilot/ai/thoreau-walden__deep__recompose__0.15",
+  "cell": "generated draft vs Recompose",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 14,
+  "job_id": "pilot/human/thoreau-walden__deep__preserve__0.15",
+  "cell": "strong draft vs Preserve",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 15,
+  "job_id": "pilot/ai/darwin-origin__deep__recompose__0.15",
+  "cell": "generated draft vs Recompose",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 16,
+  "job_id": "pilot/human_defect/thoreau-walden__deep__preserve__0.15",
+  "cell": "defect draft vs Preserve",
+  "A": "output",
+  "B": "source"
+ },
+ {
+  "item": 17,
+  "job_id": "pilot/human/twain-mississippi__deep__preserve__0.15",
+  "cell": "strong draft vs Preserve",
+  "A": "source",
+  "B": "output"
+ },
+ {
+  "item": 18,
+  "job_id": "pilot/human_defect/paine-common-sense__deep__preserve__0.15",
+  "cell": "defect draft vs Preserve",
+  "A": "source",
+  "B": "output"
+ }
+]

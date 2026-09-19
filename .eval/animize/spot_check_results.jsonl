@@ -1,0 +1,20 @@
+{"item":1,"verdict":"Human","percent":"100"}
+{"item":2,"verdict":"AI-generated","percent":"100"}
+{"item":3,"verdict":"AI-generated","percent":"100"}
+{"item":4,"verdict":"Human","percent":"100"}
+{"item":5,"verdict":"Human","percent":"100"}
+{"item":6,"verdict":"Human","percent":"100"}
+{"item":7,"verdict":"Human","percent":"100"}
+{"item":8,"verdict":"Human","percent":"100"}
+{"item":9,"verdict":"AI-generated","percent":"100"}
+{"item":10,"verdict":"Human","percent":"100"}
+{"item":11,"verdict":"Human","percent":"100"}
+{"item":12,"verdict":"Human","percent":"100"}
+{"item":13,"verdict":"AI-assisted","percent":"18","note":"Mix of AI-assisted and human-written; AI-assisted limited to one area (the 'I think we are driven to conclude' sentence)"}
+{"item":14,"verdict":"Human","percent":"100"}
+{"item":15,"verdict":"AI-generated","percent":"100"}
+{"item":16,"verdict":"Human","percent":"100"}
+{"item":17,"verdict":"Human","percent":"100"}
+{"item":18,"verdict":"AI-generated","percent":"81","note":"Majority AI-generated; human portion at the beginning ('Since I have brought up my father...He could sketch well.')"}
+{"item":19,"verdict":"Human","percent":"100"}
+{"item":20,"verdict":"AI-generated","percent":"100"}

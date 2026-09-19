@@ -56,7 +56,6 @@ do not establish the population rates the acceptance criteria ask for.
   Llama model behind Meta's license; this machine had no Hugging Face login.
   The scripts exist and fail with a message naming the missing step.
 - The blind human-preference and skeptical-observer suites. They need raters.
-- The production spot check. See the last section.
 - The protocol's synthetic-mirror comparison at scale, the academic and
   second-language `clarity: plain` cell, and the 100-per-cell corpus.
 
@@ -194,22 +193,57 @@ quick isolation invariant held.
 
 ## Acceptance criteria, pass or fail
 
-| Criterion                                                            | Result at pilot scale                                                      |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Preserve: zero added clauses, share under budget                     | Pass: 0 added clauses in 24 outputs, max share 0.032                       |
-| Preserve: at least 95% labeled human or AI-assisted                  | Not measurable; trained classifier blocked                                 |
-| Preserve: zero humanizer-head positives                              | Not measurable; the open models have no such head                          |
-| Preserve fidelity at or above Recompose                              | Pass: 0 number losses, 0 added clauses, 2 flagged inferences, all in notes |
-| Recompose: verdict distribution unchanged on trained classifiers     | Not measurable; Binoculars deltas within cell spread                       |
-| Human preference, 60% and 45% thresholds                             | Not run                                                                    |
-| Routing accuracy at or above 90%, remainder resolved by the question | Pass: 0 wrong guesses in 18, 6 questions                                   |
-| Quick pass loads no references                                       | Pass                                                                       |
-| Quick core matches full skill on routine communication               | Pass on defect repair (25/25 each); one stance drift in the core           |
+| Criterion                                                            | Result at pilot scale                                                                               |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Preserve: zero added clauses, share under budget                     | Pass: 0 added clauses in 24 outputs, max share 0.032                                                |
+| Preserve: at least 95% labeled human or AI-assisted                  | 10 of 10 Human on the production spot check, with the famous-text caveat; open-model column blocked |
+| Preserve: zero humanizer-head positives                              | Not measurable; the open models have no such head                                                   |
+| Preserve fidelity at or above Recompose                              | Pass: 0 number losses, 0 added clauses, 2 flagged inferences, all in notes                          |
+| Recompose: verdict distribution unchanged on trained classifiers     | Pass on the production spot check (6 of 6 mirrors still AI-generated); open-model column blocked    |
+| Human preference, 60% and 45% thresholds                             | Not run                                                                                             |
+| Routing accuracy at or above 90%, remainder resolved by the question | Pass: 0 wrong guesses in 18, 6 questions                                                            |
+| Quick pass loads no references                                       | Pass                                                                                                |
+| Quick core matches full skill on routine communication               | Pass on defect repair (25/25 each); one stance drift in the core                                    |
 
 ## Manual production spot check
 
-Not performed. The protocol allows up to twenty final documents to be checked
-by hand on the vendor's free web checker. That step needs a person at a
-browser and is left for the maintainer, with the same rule as the rest of
-the protocol: record the verdicts here under this heading, never frame one
-as a bypass rate, and paste no user or customer text.
+Performed 2026-09-19 by the maintainer on the vendor's free web checker,
+twenty pilot outputs pasted by hand, blind to regime (the numbering key was
+held by the session, not the checker). Verdicts and percentages are the
+checker's own wording. Raw rows: `spot_check_results.jsonl` and
+`spot_check_key.json` in the harness folder.
+
+| Regime    | Source cell  | n   | Human | AI-assisted | AI-generated |
+| --------- | ------------ | --- | ----- | ----------- | ------------ |
+| Preserve  | human_defect | 6   | 6     | 0           | 0            |
+| Preserve  | human        | 4   | 4     | 0           | 0            |
+| Recompose | ai           | 6   | 0     | 0           | 6            |
+| Recompose | human_defect | 4   | 3     | 1           | 0            |
+
+Every Human verdict showed 100%. Five of the six AI-generated verdicts
+showed 100%; the sixth (the Franklin mirror) showed 81% with the checker
+noting a human-written portion at the opening. The one AI-assisted verdict
+(Recompose on the Darwin draft) showed 18% and named a single rewritten
+sentence as the assisted span.
+
+Reading:
+
+- **Recompose does not move the production verdict.** The six mirrors were
+  written fresh by an agent session, went through the full recomposition
+  with every reference loaded, and still read as AI-generated. This is the
+  result the skill's scope statement predicts and is the one row of the
+  table free of the caveat below.
+- **Preserve output carries the label its workflow earns.** Ten of ten read
+  as Human. The caveat: the sources are famous pre-1927 books, which are
+  inside the window the detector trains its human class on, so a Human
+  verdict on a lightly edited Thoreau passage may reflect recognition of
+  the text as much as the regime's token budget. A Preserve result on
+  unpublished human drafts is still needed before the 95% criterion can be
+  called met.
+- **Recompose on a human draft mostly still reads Human.** Three of four
+  did, and the fourth was labeled assisted with the exact regenerated
+  sentence identified. Under the vendor's own scope rule (the model's added
+  tokens stayed below the human's), that is the expected label, not an
+  evasion; the drafts were human. It also shows what the routing question
+  protects: the checker found the one rewritten sentence, and the author's
+  wording it did not find had been discarded.
