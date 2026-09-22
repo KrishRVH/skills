@@ -14,12 +14,9 @@ top-level folder so discovery and install paths stay predictable.
 
 ## Invocation
 
-User-invoked skills run only when the caller names them: [ocd](ocd/SKILL.md),
-[polish](polish/SKILL.md), and
+User-invoked skills run only when the caller names them: [animize](animize/SKILL.md),
+[ocd](ocd/SKILL.md), [polish](polish/SKILL.md), and
 [thorough-pr-review](thorough-pr-review/SKILL.md).
-
-Model-invoked skills can also be selected automatically when the task matches:
-[animize](animize/SKILL.md).
 
 ## Project Commands
 
@@ -60,13 +57,11 @@ link, spelling, and secret checks.
 
 ## Writing And Editing
 
-- **animize** - Applies clear, natural prose standards to every caller-facing
-  agent message. Its quick pass keeps status updates, questions,
-  explanations, and final replies direct and ready for their destination.
-  Writing and rewrite requests use the deep pass, which recomposes generated
-  or generic drafts and edits a human draft at clause level so its authorship
-  stays intact. Findings-only requests return notes and withhold the
-  artifact.
+- **animize** - Writes, revises, or assesses lasting prose artifacts such as PR
+  descriptions, comments, documents, and messages to be sent or published. A
+  quick pass handles short artifacts; the deep pass recomposes generated drafts
+  or edits a human draft at clause level so its authorship stays intact.
+  Findings-only requests return notes and withhold the artifact.
 
   ```ruby
   npx skills@latest add KrishRVH/skills/animize

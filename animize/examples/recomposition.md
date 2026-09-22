@@ -12,7 +12,7 @@ within a clause, or merging and splitting at clause boundaries.
 - [2. Thin source material](#2-thin-source-material)
 - [3. Recompose versus Preserve on a personal draft](#3-recompose-versus-preserve-on-a-personal-draft)
 - [4. Ending without a manufactured moral](#4-ending-without-a-manufactured-moral)
-- [5. Quick reply](#5-quick-reply)
+- [5. Quick issue comment](#5-quick-issue-comment)
 - [6. Negative scope and a real prohibition](#6-negative-scope-and-a-real-prohibition)
 - [7. Human draft under Preserve with the diff summary](#7-human-draft-under-preserve-with-the-diff-summary)
 - [8. A missing opening becomes a note, not a clause](#8-a-missing-opening-becomes-a-note-not-a-clause)
@@ -129,7 +129,7 @@ and "The good news is that" became "At least". Zero clauses were added.
 
 The supported result and remaining limit provide their own ending.
 
-## 5. Quick reply
+## 5. Quick issue comment
 
 ### Available evidence
 
@@ -138,17 +138,17 @@ The supported result and remaining limit provide their own ending.
 - The responding agent set the debounce to zero in `setup.ts:12`.
 - All 34 tests pass.
 
-### User question
+### Caller request
 
-> Did you fix the flaky checkout test?
+> Write a short issue comment reporting the flaky checkout test fix.
 
-### Quick response
+### Quick comment
 
-> Yes. `checkout.test.ts` was flaky because its mock clock never advanced past
+> Fixed the flaky `checkout.test.ts` test. Its mock clock never advanced past
 > the 300 ms debounce window. I set the debounce to zero in `setup.ts:12`. All
 > 34 tests pass.
 
-The quick path answers in the destination's form. It uses the real identifiers,
+The quick path writes in the destination's form. It uses the real identifiers,
 cause, change, and result without exposing its checks or invoking deep
 recomposition.
 

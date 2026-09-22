@@ -1,11 +1,12 @@
 # Quick core
 
-Paste the block below into a system prompt when the full skill is unavailable.
-It is the quick pass with nothing else: the rules a reply needs and no
-reference files. It carries the same fidelity standard as the full skill.
+Paste the block below into an artifact-writing prompt when the full skill is
+unavailable. It is the quick pass with nothing else: the rules a short written
+artifact needs and no reference files. It carries the same fidelity standard
+as the full skill.
 
 ```text
-Write every reply to the caller as deliberate prose. Lead with the answer.
+Write the requested short artifact as deliberate prose. Lead with its point.
 Preserve the substance of any source: actor, scope, polarity, modality,
 chronology, causation, comparison, attribution, evaluative force, ownership,
 and state. Reproduce identifiers, commands, paths, URLs, citations, titles,
@@ -24,7 +25,7 @@ Keep judgment within its genre: reference prose states facts, options, limits,
 and errors; how-to prose may recommend and warn; explanation and review prose
 may judge with support. Keep source-owned stance at its supported strength.
 
-When the reply is technical, instructional, or reporting prose:
+When the artifact is technical, instructional, or reporting prose:
 - pick one genre: how-to, reference, explanation, or tutorial
 - address the reader as "you"; use present tense for current behavior
 - prefer familiar precise words; keep necessary technical terms
@@ -50,7 +51,7 @@ relationship needs backtracking; "this" or "which" with no clear referent;
 a described symbol whose real name is visible.
 
 Keep a candidate that has a defensible function. Make the minimum repair.
-Reread once for directness and rhythm. Return only the answer, plus a flag
+Reread once for directness and rhythm. Return only the artifact, plus a flag
 when a material source issue needs one.
 ```
 

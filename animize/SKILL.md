@@ -1,19 +1,9 @@
 ---
 name: animize
 description: >
-  Must always apply to messages sent to user. Apply Animize to every agent
-  message intended for the caller, including status updates, questions,
-  explanations, routine replies, and artifact handoffs; exclude internal
-  agent-to-agent communication. Recompose AI-generated, AI-assisted, or
-  generic prose into specific, natural, genre-native writing, and edit a
-  human draft at clause level so its authorship stays intact. Also use when
-  the caller asks to humanize, de-AI, deslop, unslop, naturalize, simplify,
-  clarify, apply plain-language standards, or report what is wrong with prose
-  or with a rewrite's fidelity. Runs a quick pass for routine communication
-  and a deep pass for bounded prose artifacts. Improves reader-facing quality
-  and makes no claim about any detector's verdict; its only provenance effect
-  is the deep pass's Preserve regime, which keeps a human draft's own words in
-  the majority. Auto-route unless the caller sets the controls.
+  Write, revise, or assess lasting prose artifacts such as PR descriptions,
+  comments, documents, and messages intended to be sent or published.
+disable-model-invocation: true
 ---
 
 # Animize
@@ -33,17 +23,14 @@ one workflow that has a provenance consequence is the Preserve regime, which
 keeps a human draft's own words in the majority so the result is honestly
 describable as human-written with AI assistance.
 
-## Default scope
+## Scope
 
-Apply Animize to every message written for the caller, whether or not the
-caller requests it. This includes progress updates, questions, explanations,
-reviews, recommendations, final answers, and text surrounding a reusable
-artifact. Use `quick` for that conversational layer, then route any bounded
-artifact inside the message independently.
-
-Private reasoning, tool traffic, and agent-to-agent messages that are not
-intended for the caller are outside this scope. When internal material will be
-quoted or forwarded to the caller, apply Animize to the caller-facing version.
+Use Animize when the caller invokes it for a lasting piece of writing: a PR
+description, review or issue comment, document, article, email, post, or other
+text intended to be saved, sent, or published. Apply the pass to that artifact.
+Keep surrounding conversation in the agent's ordinary voice. If the caller
+explicitly asks to apply Animize to a conversational reply, treat the requested
+reply as the artifact.
 
 ## Controls
 
@@ -52,15 +39,16 @@ Infer the controls unless the caller sets them:
 | Control    | Default    | Meaning                                                                                                                                                                                                                                                              |
 | ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `voice`    | `auto`     | `auto` resolves to `preserve` for a human draft and `rebuild` otherwise. `preserve` protects voice and authorship through the Preserve regime. `rebuild` treats expression as editable. `match` follows supplied samples for expression only.                        |
-| `clarity`  | `auto`     | `auto` selects `plain` for replies and for technical, instructional, reporting, and reference prose, and `off` for fiction, essays, marketing, and personal prose. `plain` applies the clear-communication profile; `off` leaves it inactive.                        |
+| `clarity`  | `auto`     | `auto` selects `plain` for technical, instructional, reporting, and reference prose, and `off` for fiction, essays, marketing, and personal prose. `plain` applies the clear-communication profile; `off` leaves it inactive.                                        |
 | `delivery` | `adaptive` | `adaptive` returns the artifact alone unless a material unresolved issue needs notes or withholding. `clean` returns only the artifact and is valid only when nothing needs a warning. `with_notes` appends structural changes, source issues, and defended choices. |
 
 Everything else is inferred from the request or is a fact the caller states in
 the brief:
 
-- The pass (`quick` or `deep`) comes from the artifact boundary. Replies and
-  routine communication use `quick`; bounded artifacts use `deep`. The words
-  `quick` or `deep` in a request override the inference.
+- The pass (`quick` or `deep`) comes from the artifact's needs. Use `quick` for
+  short, self-contained artifacts and `deep` for substantial writing, source
+  rewrites, or findings-only reviews. The words `quick` or `deep` in a request
+  override the inference.
 - The regime inside `deep` (Preserve or Recompose) comes from the source
   class. Routing below explains how.
 - Findings without changes: a caller who wants to know what is wrong but
@@ -190,16 +178,15 @@ Use five directions, not quotas:
 
 ## Routing
 
-Resolve the pass from the artifact boundary:
+Resolve the pass for the invoked artifact:
 
-- every caller-facing conversational message uses `quick`
-- a named, reusable artifact such as an article, report, document, PR
-  description, email body, or creative piece uses `deep`
+- a short, self-contained artifact such as a brief comment or message uses
+  `quick` when it needs only a local writing pass
+- a substantial artifact such as an article, report, document, or PR
+  description uses `deep`; so does a source rewrite or findings-only review
 - explicit `quick` or `deep` wins
-- mixed output is segmented at the artifact boundary: the artifact uses `deep`,
-  while surrounding explanation or status uses `quick`
-- an incidental example inside a reply stays `quick`; a bounded deliverable the
-  caller will reuse outside the conversation uses `deep`
+- surrounding explanation or status stays outside the pass unless the caller
+  explicitly includes it
 - if the boundary between supplied prose and background is uncertain, treat
   the supplied prose as source and preserve it rather than silently treating
   it as background
@@ -224,8 +211,8 @@ changed relationship, the reader effect or fidelity consequence, and the
 smallest repair. Do not assign authorship in a finding.
 
 Resolve `clarity` independently of the pass and the regime. An explicit request
-or project style guide decides first. Otherwise `auto` selects `plain` for the
-agent's replies and for technical, instructional, reporting, reference,
+or project style guide decides first. Otherwise `auto` selects `plain` for
+technical, instructional, reporting, reference,
 how-to, and tutorial prose. It selects `off` for fiction, essays, marketing, and
 personal prose unless the request or destination calls for plain language.
 Under `preserve` or `match`, protect supported voice traits, but still repair
@@ -259,17 +246,16 @@ drafting a write job or recomposing a draft:
 Ask them in one message. Draft from the answers. If no answer arrives, write
 the narrowest piece the supplied material supports and say which question is
 open. Do not fill the gap with an average of what such a piece usually says.
-`quick` never asks these questions; it answers from what the conversation
-already holds.
+`quick` never asks these questions; it writes from the material already held.
 
 Complete framing when the reader, purpose, artifact and source boundaries,
 regime, and controls are known or safely inferred.
 
 ## Quick pass
 
-Quick is a cheap finish for routine communication, not a shallower fidelity
-standard. [examples/quick-core.md](examples/quick-core.md) holds the same rules
-as a pasteable block for a system prompt.
+Quick is a light finish for a short artifact, with the same fidelity standard.
+[examples/quick-core.md](examples/quick-core.md) holds the same rules as a
+pasteable block for an artifact-writing prompt.
 
 When `clarity` is `plain`, use this self-contained core without loading the
 full clarity reference:
@@ -321,7 +307,7 @@ full clarity reference:
    number, date, unit, and other literal exactly. A requested summary may omit
    authorized detail or paraphrase a proposition, but it must not alter an exact
    token or present changed wording as a quotation.
-2. **Draft once.** Lead with the answer. Use one name per thing, real visible
+2. **Draft once.** Lead with the artifact's point. Use one name per thing, real visible
    symbols in code font, conditions before instructions, and the uncertainty
    the evidence supports. Write no negative scaffolding. Add judgment only
    where the genre permits it.
@@ -348,7 +334,7 @@ full clarity reference:
    directness, reader trust, density, and natural rhythm. Ask whether the words
    put the reader in the room or hold them at a generic distance. Compare every
    included protected item with its source placeholder. Stop when the remaining
-   choices serve the answer. Return only the answer unless a material source
+   choices serve the artifact. Return only the artifact unless a material source
    issue needs a flag.
 
 Quick loads none of this skill's own files under `references/` or `examples/`.
@@ -376,15 +362,15 @@ Complete deep processing only when the acceptance gate passes.
 
 ## Destination and delivery
 
-| Destination               | Rule                                                                                             |
-| ------------------------- | ------------------------------------------------------------------------------------------------ |
-| Conversational reply      | Return the answer without a change log or self-review.                                           |
-| Artifact embedded in chat | Keep surrounding explanation separate and return clean artifact text.                            |
-| File target               | Edit only bounded prose; preserve frontmatter, code, data, and link targets outside scope.       |
-| Email, DM, or SMS         | Return sendable plain text without literal Markdown markers.                                     |
-| Social post               | Follow the requested platform form without importing documentation structure or decorative tags. |
-| Code-bearing prose        | Use real identifiers in code font and never reflow or restyle code.                              |
-| Repository review         | Report and rank candidates without editing files unless the caller selects them for repair.      |
+| Destination                  | Rule                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| Invoked conversational reply | Return the answer without a change log or self-review.                                           |
+| Artifact embedded in chat    | Keep surrounding explanation separate and return clean artifact text.                            |
+| File target                  | Edit only bounded prose; preserve frontmatter, code, data, and link targets outside scope.       |
+| Email, DM, or SMS            | Return sendable plain text without literal Markdown markers.                                     |
+| Social post                  | Follow the requested platform form without importing documentation structure or decorative tags. |
+| Code-bearing prose           | Use real identifiers in code font and never reflow or restyle code.                              |
+| Repository review            | Report and rank candidates without editing files unless the caller selects them for repair.      |
 
 With `delivery: adaptive`, return only the artifact when nothing requires
 reporting. Append concise source notes or withhold an unsafe artifact when a

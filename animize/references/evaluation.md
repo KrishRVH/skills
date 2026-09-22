@@ -39,6 +39,9 @@ Evaluate at least:
 8. Professional human edit
 
 Use identical source boundaries and caller briefs.
+Include ordinary agent replies without an explicit Animize invocation. They
+should remain outside the skill. For invoked cases, evaluate only the writing
+the caller selected.
 
 ### Control matrix
 
@@ -349,7 +352,7 @@ A production candidate should meet all of these:
 - routing accuracy at or above 90% on the labeled corpus, with the remaining
   cases resolved by the single question rather than a wrong guess
 - the quick core alone matches the full skill's rate on the controlled defect
-  suite for routine communication
+  suite for short written artifacts
 
 Do not declare the skill perfected from a single model, genre, evaluator group,
 or detector.
