@@ -37,7 +37,10 @@ link, spelling, and secret checks.
 - **polish** - Exhaustive pre-commit code and documentation finishing pass.
   Defaults to current branch changes and pursues idiomatic elegance while
   preserving intended contracts, applying proportionate verification, and
-  removing unwarranted ceremony from code and current documentation.
+  removing unwarranted ceremony and sediment: compatibility residue, version
+  theater, provenance narration, and dead weight. Branch passes also trace the
+  change's ripple across the repository for stale references and orphaned
+  definitions, and pre-release projects keep no compatibility at all.
 
   ```ruby
   npx skills@latest add KrishRVH/skills/polish
