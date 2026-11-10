@@ -151,9 +151,9 @@ Use five directions, not quotas:
    sentences do different jobs.
 5. **Do not optimize against a detector.** Tells are reader-facing defects, not
    detector tokens. Repair their cause instead of substituting watched words or
-   targeting punctuation, burstiness, perplexity, or a score. A rule change
-   that moves a detector is evidence the rule is doing something other than
-   repairing a defect.
+   targeting punctuation, burstiness, perplexity, or a score. Detector scores
+   are read in evaluation, where every rule still has to earn its place with
+   a reader-facing reason.
 6. **State scope positively.** Delete negative scaffolding, non-goal
    throat-clearing, and out-of-scope statements that change no reader decision.
    If a boundary matters and has a positive statement with identical truth

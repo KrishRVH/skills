@@ -13,6 +13,13 @@ Changes:
   corpus's own source classes before reading anything into an unchanged
   verdict, and describes the open models' training data and miss rate
   correctly.
+- Detector scores became a bounded guardrail on rule changes. The protocol
+  scores every cell before and after a change and flags one that makes
+  output read as more machine-written. A rule still needs a reader-facing
+  reason that stands without the detector, the trick family stays banned,
+  and the skill still makes no claim about any detector's verdict. The
+  Recompose criterion changed from "verdict unchanged" to "no more
+  machine-written than the source."
 - The harness scores with both open EditLens models the way the vendor's
   reference script does, checks its scores against the vendor's published
   ones, calibrates on one dataset split and verifies on another, samples a

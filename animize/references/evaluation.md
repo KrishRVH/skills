@@ -265,13 +265,38 @@ Use automation for hard invariants, not for final naturalness judgments:
 
 ## 8. Detector columns
 
-Detector scores are a diagnostic with two purposes. The negative: test
-whether the Recompose regime moves a trained classifier's verdict. The
-positive: test whether the Preserve regime's output carries the label its
-workflow earns. First show that the detector separates the corpus's own
+Detector scores are a diagnostic with three purposes. The first: measure what
+the Recompose regime does to a trained classifier's reading of a generated
+draft. The second: test whether the Preserve regime's output carries the label
+its workflow earns. The third is a guardrail: catch a rule change that makes
+output read as more machine-written, and point to passages that deserve a
+reader's second look. First show that the detector separates the corpus's own
 source classes; an unchanged verdict on an output means nothing when the
-source was never detected. Never use a score as an optimization target or a release
-criterion for prose quality.
+source was never detected.
+
+A trained classifier is a cheap proxy for one thing readers do notice, generic
+machine prose, and it is a weak one. On the pilot, the production checker read
+as AI-generated six Recompose outputs that a blind expert rated level with
+human originals, and a Preserve edit that the rater preferred moved an open
+model's verdict the wrong way. The score therefore ranks below every
+reader-facing measure, and the guardrail is bounded:
+
+- Score every cell before and after a rule change, on the same corpus with the
+  same calibration file.
+- Flag a change that raises a cell's mean score or moves a verdict toward
+  machine-written. Find the passages responsible and have a reader judge them.
+  Keep the change only when it carries a reader-facing gain that outweighs the
+  flag, and record that gain.
+- Count a lower score in a change's favor only to break a tie between changes
+  that readers rate equally.
+- Adopt a rule only on a reader-facing reason that stands without the
+  detector. A rule whose sole support is a score is not adopted.
+- Never adopt typos, casing tricks, homoglyphs, invisible characters, synonym
+  churn, fake self-corrections, or any other transformation that changes a
+  detector's reading while leaving the reader's experience the same or worse.
+- Fidelity, fabricated-humanity, and reader-preference results outrank the
+  score in every conflict. Never use a score as an optimization target or a release
+  criterion for prose quality.
 
 Record three columns:
 
@@ -316,6 +341,7 @@ comparable only within a version.
 | Quick isolation        | Reference loads during a `quick` run; target: 0                  |
 | Verdict distribution   | Human / AI-assisted / AI-generated / humanized per cell          |
 | Humanizer positives    | Rate above baseline on any cell; target: 0                       |
+| Detector guardrail     | Score and verdict shift per cell after a rule change             |
 | Preserve accounting    | Added clauses (target: 0) and model-token share under budget     |
 | Reliability            | Variance across genres, lengths, models, and repeated runs       |
 | Efficiency             | Tokens, latency, and number of passes                            |
@@ -346,8 +372,10 @@ A production candidate should meet all of these:
   repetition
 - destination and writer-recognition cases meet their predeclared thresholds
 - stable performance across repeated runs and major genres
-- Recompose regime: verdict distribution statistically indistinguishable from
-  the original AI draft on trained classifiers
+- Recompose regime: output reads as no more machine-written than its source
+  on trained classifiers
+- no rule change raises a cell's detector score or moves a verdict toward
+  machine-written without a recorded reader-facing gain
 - Preserve regime at the default budget: at least 95% of outputs labeled
   human or AI-assisted, zero humanizer-head positives where a head exists,
   and a fidelity pass rate at or above Recompose's
@@ -363,9 +391,9 @@ or detector.
 
 ## 11. What not to do
 
-- Do not iterate prose rules against a detector score. If a rule change moves
-  a verdict, treat it as a signal that the rule is doing something other than
-  repairing reader-facing defects, and investigate the rule.
+- Do not adopt a prose rule because it moves a detector score, and do not tune
+  a rule's wording against one. Scores enter only through the guardrail in
+  [section 8](#8-detector-columns).
 - Do not submit user or customer text to any detector service.
 - Do not train, fine-tune, or run reinforcement learning against a detector
   inside this repository. Model-stack notes belong in
@@ -409,5 +437,5 @@ For every failed item, classify the root cause:
 - verifier miss
 
 Update the smallest relevant instruction or example. Do not expand a word
-blacklist in response to isolated failures, and do not change a rule because
-a detector moved.
+blacklist in response to isolated failures, and do not change a rule on a
+detector's movement alone.

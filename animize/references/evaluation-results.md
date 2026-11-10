@@ -340,6 +340,19 @@ Findings:
   column shows that Preserve does not trip these classifiers. The evidence
   that its output is still the author's text is the clause diff.
 
+### Guardrail baseline
+
+The protocol now uses these scores as a guardrail on rule changes. The
+tables above are the baseline: a later change to the skill is scored on the
+same two corpora with `calibration.json` as it stands, and a cell whose
+mean rises or whose verdicts move toward machine-written is flagged for a
+reader's judgment. The baseline also shows the guardrail's limit. Every
+Recompose output on generated text still reads as machine-written, on the
+production checker and on both open models, including outputs a blind
+expert rated level with human originals. A score from these detectors can
+flag a regression. It has not tracked how a skilled reader judged the same
+prose.
+
 ## Quick core versus full skill
 
 Six routine-communication drafts with 25 injected local defects (chatbot
@@ -462,19 +475,19 @@ alter both your syntax and diction appropriately."
 
 ## Acceptance criteria, pass or fail
 
-| Criterion                                                            | Result at pilot scale                                                                                                                                                |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Preserve: zero added clauses, share under budget                     | Pass: 0 added clauses in 34 outputs after hand review of 2 flagged clauses, max share 0.039                                                                          |
-| Preserve: at least 95% labeled human or AI-assisted                  | Pass at this scale: 10 of 10 Human on production (famous text), 10 of 10 human on both open models (ordinary text), 5 human and 1 assisted on Llama (famous text)    |
-| Preserve: zero humanizer-head positives                              | Not measurable; the open models have no such head                                                                                                                    |
-| Preserve fidelity at or above Recompose                              | Pass: 0 number losses, 0 added clauses, 2 flagged inferences, all in notes                                                                                           |
-| Recompose: verdict distribution unchanged on trained classifiers     | Mixed: unchanged on production (6 of 6) and RoBERTa (10 of 10); on Llama 3 of 10 moved from AI-generated to AI-assisted and 9 of 10 scored lower; none read as human |
-| Human preference at least 60% on defect drafts                       | 6 of 6, one rater                                                                                                                                                    |
-| Human preference at most 45% on strong drafts                        | 2 of 5, one rater; both named objections were lexical substitutions                                                                                                  |
-| Skeptical-observer parity with human controls                        | Mean authorship 3.33 for human sources, 3.33 for Recompose outputs, 2.33 for Preserve outputs; one rater, three passages per class                                   |
-| Routing accuracy at or above 90%, remainder resolved by the question | Pass: 0 wrong guesses in 18, 6 questions                                                                                                                             |
-| Quick pass loads no references                                       | Pass                                                                                                                                                                 |
-| Quick core matches full skill on routine communication               | Pass on defect repair (25/25 each); one stance drift in the core                                                                                                     |
+| Criterion                                                            | Result at pilot scale                                                                                                                                                             |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preserve: zero added clauses, share under budget                     | Pass: 0 added clauses in 34 outputs after hand review of 2 flagged clauses, max share 0.039                                                                                       |
+| Preserve: at least 95% labeled human or AI-assisted                  | Pass at this scale: 10 of 10 Human on production (famous text), 10 of 10 human on both open models (ordinary text), 5 human and 1 assisted on Llama (famous text)                 |
+| Preserve: zero humanizer-head positives                              | Not measurable; the open models have no such head                                                                                                                                 |
+| Preserve fidelity at or above Recompose                              | Pass: 0 number losses, 0 added clauses, 2 flagged inferences, all in notes                                                                                                        |
+| Recompose: output no more machine-written than its source            | Pass at this scale: unchanged on production (6 of 6) and RoBERTa (10 of 10); on Llama 9 of 10 scored lower and 3 of 10 moved from AI-generated to AI-assisted; none read as human |
+| Human preference at least 60% on defect drafts                       | 6 of 6, one rater                                                                                                                                                                 |
+| Human preference at most 45% on strong drafts                        | 2 of 5, one rater; both named objections were lexical substitutions                                                                                                               |
+| Skeptical-observer parity with human controls                        | Mean authorship 3.33 for human sources, 3.33 for Recompose outputs, 2.33 for Preserve outputs; one rater, three passages per class                                                |
+| Routing accuracy at or above 90%, remainder resolved by the question | Pass: 0 wrong guesses in 18, 6 questions                                                                                                                                          |
+| Quick pass loads no references                                       | Pass                                                                                                                                                                              |
+| Quick core matches full skill on routine communication               | Pass on defect repair (25/25 each); one stance drift in the core                                                                                                                  |
 
 One instruction changed in response to the rating. The Preserve edit policy
 now says a lexical replacement must repair a defect, and that the author's

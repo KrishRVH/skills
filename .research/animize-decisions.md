@@ -39,6 +39,34 @@ brief's citations.
    Results from the Open Pangram models are labeled as EditLens and Pangram 3
    lineage, never as Pangram 4 verdicts.
 
+## Revision of 2026-11-09: detector scores as a guardrail
+
+The maintainer revised the brief's position that detector scores are never
+an optimization signal. Reading as machine-written is one of the ways prose
+gives an impression of low quality, and a detector is a cheap proxy for it,
+so the evaluation now tracks detector scores as a bounded guardrail on rule
+changes. The purpose is quality control, not circumvention.
+
+What changed: the protocol scores every cell before and after a rule change,
+flags a change that makes output read as more machine-written, lets a lower
+score break a tie between changes readers rate equally, and replaces the
+Recompose criterion "verdict unchanged" with "no more machine-written than
+the source."
+
+What did not change: every rule needs a reader-facing reason that stands
+without the detector; the trick family (typos, casing, homoglyphs, synonym
+churn, fake self-corrections) stays banned; the skill still makes no claim
+about any detector's verdict; no figure is reported as a bypass rate; and
+model-stack techniques stay outside the prose rules in `backends.md`.
+
+Evidence on how far the proxy can be trusted, from the pilot: the
+production checker read 6 of 6 Recompose outputs as AI-generated while a
+blind expert rated the same kind of output level with human originals, and
+a Preserve edit the expert preferred moved an open model's verdict from
+human to AI-assisted. Open question 5 above predicted that Recompose would
+not move a trained classifier; on the stronger open model it lowered 9 of
+10 scores and moved 3 of 10 verdicts from AI-generated to AI-assisted.
+
 ## Decisions forced by repository rules
 
 1. **No `agents/backends.md`.** The validator allows only `openai.yaml` inside
