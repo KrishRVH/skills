@@ -3,5 +3,4 @@
 
 # Use format-aware diffs and include the repository's primary content in
 # GitHub's language statistics.
-*.html diff=html
 *.md diff=markdown linguist-detectable

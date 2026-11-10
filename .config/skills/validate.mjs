@@ -30,6 +30,7 @@ const SUPPORT_DIRECTORIES = new Set([
   "references",
   "templates",
 ]);
+const CONFIG_PATH = ".config/skills/validation.json";
 const AGENT_METADATA_PATH = "agents/openai.yaml";
 const AGENT_METADATA_KEYS = new Set(["interface", "policy"]);
 const AGENT_INTERFACE_KEYS = new Set([
@@ -44,24 +45,34 @@ const AGENT_POLICY_KEYS = new Set(["allow_implicit_invocation"]);
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MAX_NAME_CHARACTERS = 64;
 const MAX_DESCRIPTION_CHARACTERS = 1024;
+const MIN_SHORT_DESCRIPTION_CHARACTERS = 25;
+const MAX_SHORT_DESCRIPTION_CHARACTERS = 64;
 const MAX_SKILL_LINES = 500;
 const MAX_SKILL_BYTES = 50_000;
 const MAX_SUPPORT_MARKDOWN_BYTES = 100_000;
 const MAX_REFERENCE_LINES_WITHOUT_CONTENTS = 100;
+const INSTALLATION_COMMANDS = [
+  /^(?:npm|pnpm|yarn|bun)\s+(?:add|install)\s+\S+(?:\s+\S+)*$/i,
+  /^(?:pip|pip3|pipx)\s+install\s+\S+(?:\s+\S+)*$/i,
+  /^python3?\s+-m\s+pip\s+install\s+\S+(?:\s+\S+)*$/i,
+  /^uv\s+(?:add|tool\s+install)\s+\S+(?:\s+\S+)*$/i,
+  /^cargo\s+install\s+\S+(?:\s+\S+)*$/i,
+  /^dotnet\s+tool\s+install\s+\S+(?:\s+\S+)*$/i,
+  /^go\s+install\s+\S+(?:\s+\S+)*$/i,
+  /^npx\s+skills@latest\s+add\s+\S+(?:\s+\S+)*$/i,
+];
+const utf8Decoder = new TextDecoder("utf-8", { fatal: true });
 const markdownParser = new MarkdownIt({
   html: true,
   linkify: false,
   typographer: false,
 });
+// markdown-it drops `file:` destinations as unsafe. Keep them as links so the
+// package-escape check reports them.
 const defaultLinkValidator =
   markdownParser.validateLink.bind(markdownParser);
-markdownParser.validateLink = (destination) => {
-  return (
-    /^file:/i.test(destination) ||
-    /^[A-Za-z]:(?:[\\/]|%5[cC]|%2[fF])/.test(destination) ||
-    defaultLinkValidator(destination)
-  );
-};
+markdownParser.validateLink = (destination) =>
+  /^file:/i.test(destination) || defaultLinkValidator(destination);
 
 export function validateRepository(rootDirectory, options = {}) {
   const root = realpathSync(resolve(rootDirectory));
@@ -73,9 +84,9 @@ export function validateRepository(rootDirectory, options = {}) {
     options.config ?? readConfig(root, add),
     add,
   );
-  const git = gitContext(root, add);
-  const repositoryFiles = listRepositoryFiles(root, git, add);
-  const rootEntries = listRootEntries(root, git, add);
+  const usesGit = isGitWorkTreeRoot(root, add);
+  const repositoryFiles = listRepositoryFiles(root, usesGit, add);
+  const rootEntries = listRootEntries(root, usesGit, add);
   const topLevelSymlinks = new Set(
     rootEntries
       .filter(({ symlink }) => symlink)
@@ -87,10 +98,10 @@ export function validateRepository(rootDirectory, options = {}) {
       .map((path) => path.split("/", 1)[0]),
   );
   const skillFolders = rootEntries
-    .filter(({ ignored, name, portableDirectory }) => {
+    .filter(({ directory, ignored, name, symlink }) => {
       return (
         !name.startsWith(".") &&
-        portableDirectory &&
+        (directory || symlink) &&
         (!ignored || foldersWithFiles.has(name))
       );
     })
@@ -166,7 +177,7 @@ export function validateRepository(rootDirectory, options = {}) {
     validateInvocationContract(folder, metadata, agentMetadata, add);
 
     validateSkillContent(skillText, `${folder}/SKILL.md`, add);
-    validateReferenceContent(root, folder, packageFiles, add);
+    validateSupportMarkdown(root, folder, packageFiles, add);
     validateSupportGraph(root, folder, packageFiles, add);
     validateVendorNeutrality(
       root,
@@ -186,14 +197,10 @@ export function validateRepository(rootDirectory, options = {}) {
 function normalizeConfig(rawConfig, add) {
   const normalized = { forbiddenTerms: [] };
 
-  if (
-    rawConfig === null ||
-    typeof rawConfig !== "object" ||
-    Array.isArray(rawConfig)
-  ) {
+  if (!isMapping(rawConfig)) {
     add(
       "config.format",
-      ".config/skills/validation.json",
+      CONFIG_PATH,
       "Validation configuration must be a JSON object.",
     );
     return normalized;
@@ -203,24 +210,20 @@ function normalizeConfig(rawConfig, add) {
     if (key !== "forbiddenTerms") {
       add(
         "config.format",
-        ".config/skills/validation.json",
+        CONFIG_PATH,
         `Unsupported validation configuration key "${key}".`,
       );
     }
   }
 
   if (!Array.isArray(rawConfig.forbiddenTerms)) {
-    add(
-      "config.format",
-      ".config/skills/validation.json",
-      "forbiddenTerms must be an array.",
-    );
+    add("config.format", CONFIG_PATH, "forbiddenTerms must be an array.");
   } else {
     for (const term of rawConfig.forbiddenTerms) {
-      if (typeof term !== "string" || term.trim() === "") {
+      if (!isNonemptyString(term)) {
         add(
           "config.format",
-          ".config/skills/validation.json",
+          CONFIG_PATH,
           "Each forbidden term must be a nonempty string.",
         );
         continue;
@@ -233,16 +236,14 @@ function normalizeConfig(rawConfig, add) {
 }
 
 function readConfig(root, add) {
-  const relativePath = ".config/skills/validation.json";
-  const path = join(root, relativePath);
   try {
-    const source = readFileSync(path, "utf8");
-    validateJsonDuplicates(source, relativePath, add);
+    const source = readFileSync(join(root, CONFIG_PATH), "utf8");
+    validateJsonDuplicates(source, CONFIG_PATH, add);
     return JSON.parse(source);
   } catch (error) {
     add(
       "config.format",
-      relativePath,
+      CONFIG_PATH,
       `Could not read valid JSON: ${error.message}`,
     );
     return { forbiddenTerms: [] };
@@ -286,30 +287,30 @@ function validateJsonDuplicates(source, path, add) {
   visit(tree, []);
 }
 
-function gitContext(root, add) {
+function isGitWorkTreeRoot(root, add) {
   const result = Bun.spawnSync(
     ["git", "rev-parse", "--show-toplevel"],
     { cwd: root, stderr: "ignore", stdout: "pipe" },
   );
   if (result.exitCode !== 0) {
-    return null;
+    return false;
   }
 
   const topLevel = result.stdout.toString().replace(/\r?\n$/, "");
   try {
-    return realpathSync(resolve(topLevel)) === root ? { root } : null;
+    return realpathSync(resolve(topLevel)) === root;
   } catch (error) {
     add(
       "repository.git",
       ".",
       `Could not resolve Git's repository root: ${error.message}`,
     );
-    return null;
+    return false;
   }
 }
 
-function listRepositoryFiles(root, git, add) {
-  if (git) {
+function listRepositoryFiles(root, usesGit, add) {
+  if (usesGit) {
     const result = Bun.spawnSync(
       [
         "git",
@@ -350,15 +351,14 @@ function listRepositoryFiles(root, git, add) {
 }
 
 function splitGitPaths(stdout, add) {
-  const bytes = Buffer.from(stdout);
   const paths = [];
   let start = 0;
 
-  for (let index = 0; index <= bytes.length; index += 1) {
-    if (index !== bytes.length && bytes[index] !== 0) {
+  for (let index = 0; index <= stdout.length; index += 1) {
+    if (index !== stdout.length && stdout[index] !== 0) {
       continue;
     }
-    const encodedPath = bytes.subarray(start, index);
+    const encodedPath = stdout.subarray(start, index);
     start = index + 1;
     if (encodedPath.length === 0) {
       continue;
@@ -373,11 +373,9 @@ function splitGitPaths(stdout, add) {
 
 function decodePath(encodedPath, add) {
   try {
-    return new TextDecoder("utf-8", { fatal: true }).decode(encodedPath);
+    return utf8Decoder.decode(encodedPath);
   } catch {
-    const preview = Buffer.from(encodedPath)
-      .toString("hex")
-      .slice(0, 128);
+    const preview = encodedPath.toString("hex").slice(0, 128);
     add(
       "repository.path",
       ".",
@@ -411,7 +409,7 @@ function walk(root, relativeDirectory, files, add) {
   }
 }
 
-function listRootEntries(root, git, add) {
+function listRootEntries(root, usesGit, add) {
   const entries = [];
   for (const encodedName of readdirSync(root, { encoding: "buffer" })) {
     const name = decodePath(encodedName, add);
@@ -419,11 +417,10 @@ function listRootEntries(root, git, add) {
       continue;
     }
     const stat = lstatSync(join(root, name));
-    const ignored = git ? gitIgnores(root, name) : false;
     entries.push({
-      ignored,
+      directory: stat.isDirectory(),
+      ignored: usesGit && gitIgnores(root, name),
       name,
-      portableDirectory: stat.isDirectory() || stat.isSymbolicLink(),
       symlink: stat.isSymbolicLink(),
     });
   }
@@ -453,11 +450,10 @@ function validatePackageLayout(root, folder, packageFiles, add) {
       continue;
     }
 
-    if (relativePath === "SKILL.md") {
-      continue;
-    }
-
-    if (relativePath === AGENT_METADATA_PATH) {
+    if (
+      relativePath === "SKILL.md" ||
+      relativePath === AGENT_METADATA_PATH
+    ) {
       continue;
     }
 
@@ -466,7 +462,7 @@ function validatePackageLayout(root, folder, packageFiles, add) {
       add(
         "package.layout",
         path,
-        `The agents directory may contain only "${AGENT_METADATA_PATH.split("/")[1]}".`,
+        `The agents directory may contain only "${basename(AGENT_METADATA_PATH)}".`,
       );
       continue;
     }
@@ -520,11 +516,7 @@ function validateFrontmatter(text, path, add) {
     return null;
   }
 
-  if (
-    metadata === null ||
-    typeof metadata !== "object" ||
-    Array.isArray(metadata)
-  ) {
+  if (!isMapping(metadata)) {
     add(
       "frontmatter.format",
       path,
@@ -590,18 +582,17 @@ function validateFrontmatter(text, path, add) {
 }
 
 function validateAgentMetadata(root, folder, packageFiles, add) {
-  const relativePath = AGENT_METADATA_PATH;
-  const displayPath = `${folder}/${relativePath}`;
-  if (!packageFiles.includes(relativePath)) {
+  const displayPath = `${folder}/${AGENT_METADATA_PATH}`;
+  if (!packageFiles.includes(AGENT_METADATA_PATH)) {
     add(
       "agent-metadata.missing",
       displayPath,
-      "Every skill must include agents/openai.yaml.",
+      `Every skill must include ${AGENT_METADATA_PATH}.`,
     );
     return null;
   }
 
-  const path = join(root, folder, relativePath);
+  const path = join(root, folder, AGENT_METADATA_PATH);
   const stat = lstatSync(path);
   if (!stat.isFile() || stat.isSymbolicLink()) {
     return null;
@@ -615,7 +606,7 @@ function validateAgentMetadata(root, folder, packageFiles, add) {
     add(
       duplicate ? "agent-metadata.duplicate" : "agent-metadata.format",
       displayPath,
-      `agents/openai.yaml is not valid YAML: ${error.message}`,
+      `${AGENT_METADATA_PATH} is not valid YAML: ${error.message}`,
     );
     return null;
   }
@@ -624,7 +615,7 @@ function validateAgentMetadata(root, folder, packageFiles, add) {
     add(
       "agent-metadata.format",
       displayPath,
-      "agents/openai.yaml must be a YAML mapping.",
+      `${AGENT_METADATA_PATH} must be a YAML mapping.`,
     );
     return null;
   }
@@ -634,7 +625,7 @@ function validateAgentMetadata(root, folder, packageFiles, add) {
     AGENT_METADATA_KEYS,
     "agent-metadata.key",
     displayPath,
-    "agents/openai.yaml",
+    AGENT_METADATA_PATH,
     add,
   );
 
@@ -662,15 +653,17 @@ function validateAgentMetadata(root, folder, packageFiles, add) {
       );
     }
     const shortDescription = interfaceMetadata.short_description;
+    const shortDescriptionLength = isNonemptyString(shortDescription)
+      ? Array.from(shortDescription).length
+      : 0;
     if (
-      !isNonemptyString(shortDescription) ||
-      Array.from(shortDescription).length < 25 ||
-      Array.from(shortDescription).length > 64
+      shortDescriptionLength < MIN_SHORT_DESCRIPTION_CHARACTERS ||
+      shortDescriptionLength > MAX_SHORT_DESCRIPTION_CHARACTERS
     ) {
       add(
         "agent-metadata.interface",
         displayPath,
-        "interface.short_description must contain 25-64 characters.",
+        `interface.short_description must contain ${MIN_SHORT_DESCRIPTION_CHARACTERS}-${MAX_SHORT_DESCRIPTION_CHARACTERS} characters.`,
       );
     }
   }
@@ -784,7 +777,7 @@ function validateSkillContent(text, path, add) {
   }
 }
 
-function validateReferenceContent(root, folder, packageFiles, add) {
+function validateSupportMarkdown(root, folder, packageFiles, add) {
   for (const relativePath of packageFiles) {
     if (
       extname(relativePath).toLowerCase() !== ".md" ||
@@ -858,10 +851,8 @@ function validateSupportGraph(root, folder, packageFiles, add) {
       return stat.isFile() && !stat.isSymbolicLink();
     }),
   );
-  const supportFiles = [...regularFiles].filter(
-    (relativePath) =>
-      relativePath !== "SKILL.md" &&
-      SUPPORT_DIRECTORIES.has(relativePath.split("/")[0]),
+  const supportFiles = [...regularFiles].filter((relativePath) =>
+    SUPPORT_DIRECTORIES.has(relativePath.split("/")[0]),
   );
   const visited = new Set();
   const queue = regularFiles.has("SKILL.md") ? ["SKILL.md"] : [];
@@ -938,10 +929,7 @@ function markdownDestinations(markdown) {
 }
 
 function resolvePackageLink(sourcePath, destination) {
-  if (
-    destination === "" ||
-    destination.startsWith("#")
-  ) {
+  if (destination === "" || destination.startsWith("#")) {
     return null;
   }
 
@@ -1039,15 +1027,17 @@ function markdownProse(markdown) {
       continue;
     }
     for (const child of token.children ?? []) {
-      if (child.type === "text" || child.type === "code_inline") {
+      if (
+        child.type === "text" ||
+        child.type === "code_inline" ||
+        child.type === "image"
+      ) {
         parts.push(child.content);
       } else if (
         child.type === "softbreak" ||
         child.type === "hardbreak"
       ) {
         parts.push(" ");
-      } else if (child.type === "image") {
-        parts.push(child.content);
       } else if (child.type === "html_inline") {
         parts.push(htmlVisibleText(child.content));
       }
@@ -1076,20 +1066,11 @@ function htmlVisibleText(html) {
 }
 
 function isInstallationCommand(line) {
-  const command = line.trim().replace(/^(?:[$>]\s*)/, "");
+  const command = line.trim().replace(/^[$>]\s*/, "");
   if (/[;&|`<>]|\$\(|\s#/.test(command)) {
     return false;
   }
-  return [
-    /^(?:npm|pnpm|yarn|bun)\s+(?:add|install)\s+\S+(?:\s+\S+)*$/i,
-    /^(?:pip|pip3|pipx)\s+install\s+\S+(?:\s+\S+)*$/i,
-    /^python(?:3)?\s+-m\s+pip\s+install\s+\S+(?:\s+\S+)*$/i,
-    /^uv\s+(?:add|tool\s+install)\s+\S+(?:\s+\S+)*$/i,
-    /^cargo\s+install\s+\S+(?:\s+\S+)*$/i,
-    /^dotnet\s+tool\s+install\s+\S+(?:\s+\S+)*$/i,
-    /^go\s+install\s+\S+(?:\s+\S+)*$/i,
-    /^npx\s+skills@latest\s+add\s+\S+(?:\s+\S+)*$/i,
-  ].some((pattern) => pattern.test(command));
+  return INSTALLATION_COMMANDS.some((pattern) => pattern.test(command));
 }
 
 function validateReadme(root, skillFolders, add) {

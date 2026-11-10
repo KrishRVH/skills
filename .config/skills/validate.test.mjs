@@ -27,6 +27,25 @@ function fixture() {
   return root;
 }
 
+function initGit(root) {
+  const init = Bun.spawnSync(["git", "init", "--quiet"], { cwd: root });
+  expect(init.exitCode).toBe(0);
+}
+
+function agentMetadata({
+  displayName = "Sample Skill",
+  shortDescription = "Perform the requested sample skill work",
+  userInvoked = false,
+} = {}) {
+  return [
+    "interface:",
+    `  display_name: "${displayName}"`,
+    `  short_description: "${shortDescription}"`,
+    ...(userInvoked ? ["policy:", "  allow_implicit_invocation: false"] : []),
+    "",
+  ].join("\n");
+}
+
 function write(root, relativePath, content) {
   const path = join(root, relativePath);
   mkdirSync(dirname(path), { recursive: true });
@@ -35,15 +54,7 @@ function write(root, relativePath, content) {
     const skillDirectory = dirname(path);
     const metadataPath = join(skillDirectory, "agents/openai.yaml");
     mkdirSync(dirname(metadataPath), { recursive: true });
-    writeFileSync(
-      metadataPath,
-      [
-        "interface:",
-        '  display_name: "Sample Skill"',
-        '  short_description: "Perform the requested sample skill work"',
-        "",
-      ].join("\n"),
-    );
+    writeFileSync(metadataPath, agentMetadata());
   }
 }
 
@@ -77,11 +88,11 @@ function exactLengthSkill(name, lineCount) {
   return `${lines.join("\n")}\n`;
 }
 
-function exactLengthReference(lineCount, withContents = false) {
+function exactLengthReference(lineCount, contentsTitle) {
   const lines = ["# Reference"];
 
-  if (withContents) {
-    lines.push("", "## Contents", "", "- [Reference](#reference)");
+  if (contentsTitle) {
+    lines.push("", `## ${contentsTitle}`, "", "- [Reference](#reference)");
   }
 
   while (lines.length < lineCount) {
@@ -136,12 +147,7 @@ describe("valid repositories", () => {
 
   test("uses Git discovery for untracked files and skips ignored dependencies", () => {
     const root = fixture();
-    const init = Bun.spawnSync(["git", "init", "--quiet"], {
-      cwd: root,
-      stderr: "pipe",
-      stdout: "pipe",
-    });
-    expect(init.exitCode).toBe(0);
+    initGit(root);
     write(root, ".gitignore", "node_modules/\n");
     write(root, "node_modules/package/index.js", "export {};\n");
     write(root, "sample-skill/SKILL.md", skillDocument("sample-skill"));
@@ -290,30 +296,61 @@ describe("package structure", () => {
     );
   });
 
+  test("enforces the display name and short description boundaries", () => {
+    const metadataCodes = (metadata) => {
+      const root = fixture();
+      write(root, "sample-skill/SKILL.md", skillDocument("sample-skill"));
+      write(
+        root,
+        "sample-skill/agents/openai.yaml",
+        agentMetadata(metadata),
+      );
+      write(root, "README.md", readme("sample-skill"));
+      return codes(validate(root));
+    };
+
+    for (const length of [25, 64]) {
+      expect(
+        metadataCodes({ shortDescription: "x".repeat(length) }),
+      ).toEqual([]);
+    }
+    for (const metadata of [
+      { shortDescription: "x".repeat(24) },
+      { shortDescription: "x".repeat(65) },
+      { displayName: " " },
+    ]) {
+      expect(metadataCodes(metadata)).toContain("agent-metadata.interface");
+    }
+  });
+
   test("requires invocation controls to agree", () => {
-    const root = fixture();
-    write(
-      root,
-      "sample-skill/SKILL.md",
-      "---\nname: sample-skill\ndescription: Work.\ndisable-model-invocation: true\n---\n# Skill\n",
-    );
-    write(root, "README.md", readme("sample-skill"));
+    const invocationCodes = (userInvoked) => {
+      const root = fixture();
+      const flag = userInvoked.frontmatter
+        ? "disable-model-invocation: true\n"
+        : "";
+      write(
+        root,
+        "sample-skill/SKILL.md",
+        `---\nname: sample-skill\ndescription: Work.\n${flag}---\n# Skill\n`,
+      );
+      write(
+        root,
+        "sample-skill/agents/openai.yaml",
+        agentMetadata({ userInvoked: userInvoked.metadata }),
+      );
+      write(root, "README.md", readme("sample-skill"));
+      return codes(validate(root));
+    };
 
-    expect(codes(validate(root))).toContain("invocation.mismatch");
-
-    write(
-      root,
-      "sample-skill/agents/openai.yaml",
-      [
-        "interface:",
-        '  display_name: "Sample Skill"',
-        '  short_description: "Perform the requested sample skill work"',
-        "policy:",
-        "  allow_implicit_invocation: false",
-        "",
-      ].join("\n"),
-    );
-    expect(validate(root)).toEqual([]);
+    const agreed = { frontmatter: true, metadata: true };
+    expect(invocationCodes(agreed)).toEqual([]);
+    for (const userInvoked of [
+      { frontmatter: true, metadata: false },
+      { frontmatter: false, metadata: true },
+    ]) {
+      expect(invocationCodes(userInvoked)).toContain("invocation.mismatch");
+    }
   });
 
   test("rejects visible non-skill directories", () => {
@@ -332,30 +369,63 @@ describe("package structure", () => {
     expect(codes(validate(root))).toContain("package.name");
   });
 
-  test("rejects stray root files and unsupported directories", () => {
+  test("reports every folder that shares a portable name", () => {
+    const root = fixture();
+    write(root, "first-skill/SKILL.md", skillDocument("first-skill"));
+    write(root, "second-skill/SKILL.md", skillDocument("first-skill"));
+    write(root, "README.md", readme("first-skill", "second-skill"));
+
+    const duplicateNamePaths = validate(root)
+      .filter(({ code }) => code === "frontmatter.name")
+      .map(({ path }) => path);
+    expect(duplicateNamePaths.sort()).toEqual([
+      "first-skill/SKILL.md",
+      "second-skill/SKILL.md",
+    ]);
+  });
+
+  test("rejects stray root files, extra agent files, and unsupported directories", () => {
     const root = fixture();
     write(root, "sample-skill/SKILL.md", skillDocument("sample-skill"));
     write(root, "sample-skill/NOTES.md", "# Notes\n");
+    write(root, "sample-skill/agents/notes.md", "# Notes\n");
     write(root, "sample-skill/docs/guide.md", "# Guide\n");
     write(root, "README.md", readme("sample-skill"));
 
-    expect(codes(validate(root))).toContain("package.layout");
+    const layoutPaths = validate(root)
+      .filter(({ code }) => code === "package.layout")
+      .map(({ path }) => path);
+    expect(layoutPaths.sort()).toEqual([
+      "sample-skill/NOTES.md",
+      "sample-skill/agents/notes.md",
+      "sample-skill/docs/guide.md",
+    ]);
   });
 
   test("enforces the parent skill's uppercase template stem", () => {
-    const root = fixture();
-    write(
-      root,
-      "sample-skill/SKILL.md",
-      skillDocument(
-        "sample-skill",
-        "Use the [template](templates/WRONG.html).",
-      ),
-    );
-    write(root, "sample-skill/templates/WRONG.html", "<!doctype html>\n");
-    write(root, "README.md", readme("sample-skill"));
+    const templateCodes = (templateName) => {
+      const root = fixture();
+      write(
+        root,
+        "sample-skill/SKILL.md",
+        skillDocument(
+          "sample-skill",
+          `Use the [template](templates/${templateName}).`,
+        ),
+      );
+      write(
+        root,
+        `sample-skill/templates/${templateName}`,
+        "<!doctype html>\n",
+      );
+      write(root, "README.md", readme("sample-skill"));
+      return codes(validate(root));
+    };
 
-    expect(codes(validate(root))).toContain("package.template-name");
+    expect(templateCodes("SAMPLE-SKILL.html")).toEqual([]);
+    for (const templateName of ["WRONG.html", "sample-skill.html"]) {
+      expect(templateCodes(templateName)).toContain("package.template-name");
+    }
   });
 
   test("rejects symlinks inside portable packages", () => {
@@ -560,19 +630,22 @@ describe("LLM-facing boundaries", () => {
     expect(codes(validate(invalidRoot))).toContain("skill.length");
   });
 
-  test("rejects a large single-line payload", () => {
-    const root = fixture();
+  test("accepts 50,000 SKILL.md bytes and rejects 50,001 on a single line", () => {
     const prefix =
       "---\nname: sample-skill\ndescription: Work.\n---\n# Skill\n";
-    const targetBytes = 50_001;
-    write(
-      root,
-      "sample-skill/SKILL.md",
-      `${prefix}${"x".repeat(targetBytes - Buffer.byteLength(prefix))}`,
-    );
-    write(root, "README.md", readme("sample-skill"));
+    const sizeCodes = (bytes) => {
+      const root = fixture();
+      write(
+        root,
+        "sample-skill/SKILL.md",
+        `${prefix}${"x".repeat(bytes - Buffer.byteLength(prefix))}`,
+      );
+      write(root, "README.md", readme("sample-skill"));
+      return codes(validate(root));
+    };
 
-    expect(codes(validate(root))).toContain("skill.size");
+    expect(sizeCodes(50_000)).not.toContain("skill.size");
+    expect(sizeCodes(50_001)).toContain("skill.size");
   });
 
   test("counts bare carriage returns as line boundaries", () => {
@@ -612,24 +685,24 @@ describe("LLM-facing boundaries", () => {
     );
   });
 
-  test("rejects oversized support Markdown before parsing it", () => {
-    const root = fixture();
-    write(
-      root,
-      "sample-skill/SKILL.md",
-      skillDocument(
-        "sample-skill",
-        "Read the [reference](references/guide.md).",
-      ),
-    );
-    write(
-      root,
-      "sample-skill/references/guide.md",
-      "x".repeat(100_001),
-    );
-    write(root, "README.md", readme("sample-skill"));
+  test("accepts 100,000 support Markdown bytes and rejects 100,001", () => {
+    const sizeCodes = (bytes) => {
+      const root = fixture();
+      write(
+        root,
+        "sample-skill/SKILL.md",
+        skillDocument(
+          "sample-skill",
+          "Read the [reference](references/guide.md).",
+        ),
+      );
+      write(root, "sample-skill/references/guide.md", "x".repeat(bytes));
+      write(root, "README.md", readme("sample-skill"));
+      return codes(validate(root));
+    };
 
-    expect(codes(validate(root))).toContain("support.size");
+    expect(sizeCodes(100_000)).not.toContain("support.size");
+    expect(sizeCodes(100_001)).toContain("support.size");
   });
 
   test("requires a contents section only above 100 reference lines", () => {
@@ -667,22 +740,26 @@ describe("LLM-facing boundaries", () => {
     write(invalidRoot, "README.md", readme("sample-skill"));
     expect(codes(validate(invalidRoot))).toContain("reference.contents");
 
-    const contentsRoot = fixture();
-    write(
-      contentsRoot,
-      "sample-skill/SKILL.md",
-      skillDocument(
-        "sample-skill",
-        "Read the [reference](references/guide.md).",
-      ),
-    );
-    write(
-      contentsRoot,
-      "sample-skill/references/guide.md",
-      exactLengthReference(101, true),
-    );
-    write(contentsRoot, "README.md", readme("sample-skill"));
-    expect(codes(validate(contentsRoot))).not.toContain("reference.contents");
+    for (const contentsTitle of ["Contents", "Table of contents"]) {
+      const contentsRoot = fixture();
+      write(
+        contentsRoot,
+        "sample-skill/SKILL.md",
+        skillDocument(
+          "sample-skill",
+          "Read the [reference](references/guide.md).",
+        ),
+      );
+      write(
+        contentsRoot,
+        "sample-skill/references/guide.md",
+        exactLengthReference(101, contentsTitle),
+      );
+      write(contentsRoot, "README.md", readme("sample-skill"));
+      expect(codes(validate(contentsRoot))).not.toContain(
+        "reference.contents",
+      );
+    }
 
     const emptyRoot = fixture();
     write(
@@ -900,11 +977,7 @@ describe("repository path discovery", () => {
 
   test("sees dangling symlinks and POSIX backslash names through Git", () => {
     const dangling = repositoryFixture();
-    expect(
-      Bun.spawnSync(["git", "init", "--quiet"], {
-        cwd: dangling,
-      }).exitCode,
-    ).toBe(0);
+    initGit(dangling);
     mkdirSync(join(dangling, "sample-skill/references"), {
       recursive: true,
     });
@@ -916,11 +989,7 @@ describe("repository path discovery", () => {
 
     if (process.platform !== "win32") {
       const backslash = repositoryFixture();
-      expect(
-        Bun.spawnSync(["git", "init", "--quiet"], {
-          cwd: backslash,
-        }).exitCode,
-      ).toBe(0);
+      initGit(backslash);
       write(
         backslash,
         "sample-skill/references\\hidden.md",
@@ -930,17 +999,9 @@ describe("repository path discovery", () => {
     }
   });
 
-  test("fails closed on a non-UTF-8 Git path", () => {
-    if (process.platform === "win32") {
-      return;
-    }
-
+  test.skipIf(process.platform === "win32")("fails closed on a non-UTF-8 Git path", () => {
     const root = repositoryFixture();
-    expect(
-      Bun.spawnSync(["git", "init", "--quiet"], {
-        cwd: root,
-      }).exitCode,
-    ).toBe(0);
+    initGit(root);
 
     // Stage the invalid path through the index rather than the working tree.
     // Git stores index paths as raw bytes, so `git ls-files -z` reports the
@@ -1000,11 +1061,7 @@ describe("repository path discovery", () => {
     const root = `${originalRoot} `;
     renameSync(originalRoot, root);
     roots[roots.indexOf(originalRoot)] = root;
-    expect(
-      Bun.spawnSync(["git", "init", "--quiet"], {
-        cwd: root,
-      }).exitCode,
-    ).toBe(0);
+    initGit(root);
     write(root, "sample-skill/SKILL.md", skillDocument("sample-skill"));
     write(root, "README.md", readme("sample-skill"));
 
