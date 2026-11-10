@@ -1,0 +1,244 @@
+{
+ "rater": "R1",
+ "exported": "2026-10-19T06:50:48.748Z",
+ "pairs": {
+  "1": {
+   "q1": "B",
+   "updated": "2026-10-12T04:46:04.091Z",
+   "strength": "strong",
+   "q2": "B",
+   "q3": "same",
+   "orig": "B",
+   "notes": "The elaboration of the text's meaning at the end feels out of place and too on the nose. This is especially noticeable given that the rest of the text is much more artful and less straightforward"
+  },
+  "2": {
+   "q1": "A",
+   "updated": "2026-10-12T04:49:50.079Z",
+   "strength": "clear",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A"
+  },
+  "3": {
+   "q1": "A",
+   "updated": "2026-10-12T04:55:06.183Z",
+   "strength": "strong",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A",
+   "notes": "Virtually every edit beyond the minor word changes are overly explanatory and dry.  They also fail to capture the distinct syntactic style of the rest of the text."
+  },
+  "4": {
+   "q1": "A",
+   "updated": "2026-10-12T04:58:00.579Z",
+   "strength": "clear",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A",
+   "notes": " B just seems grammatically odd in many ways. The additional semicolon results in a massive sentence that feels like a run-on, while the removal of 'would' from the other sentence causes the causes a case disagreement."
+  },
+  "5": {
+   "q1": "A",
+   "updated": "2026-10-12T05:11:13.064Z",
+   "strength": "strong",
+   "q2": "A",
+   "q3": "same",
+   "orig": "B",
+   "notes": "The change from 'entry' to 'entered' while seemingly minor actually alters the whole sentence. In A, this makes \"were\" the only verb in the sentence, thus the primary action of the sentence is *being*, which is carried out by the slaves, and the sentence is as such in active voice. In B, \"entered\" is now the main verb of the sentence while \"were\" is an auxiliary, changing the sentence to passive voice. In this case, the preceding sentences also examples of passive voice—\"could not have told\", \"were kept\"—so it slightly meshes better, even if I think the word choice is inferior."
+  },
+  "6": {
+   "q1": "B",
+   "updated": "2026-10-12T05:18:49.488Z",
+   "strength": "slight",
+   "q2": "B",
+   "q3": "same",
+   "orig": "B",
+   "notes": "The author is clearly very particular about vivid and unique details, so the repetition of \"one\" to refer both a particular incident (the day he's describing) and a singular object in the same paragraph strikes me as an uncharacteristic oversight. Additionally, referring to a sandbar as being \"on\" a river leads me to suspect that the model consumed oceanic sandbars (which exits off coast and thus could be considered \"in\" or \"on\" the ocean) with river sandbars (which are essentially part of the coast and thus more accurately run alongside the river)."
+  },
+  "7": {
+   "q1": "A",
+   "updated": "2026-10-12T05:19:49.557Z",
+   "strength": "slight",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A"
+  },
+  "8": {
+   "q1": "A",
+   "updated": "2026-10-12T05:23:00.778Z",
+   "strength": "strong",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A",
+   "notes": "The opening and closing sentences of B are, frankly, amateurish and juvenile, reading more like a high school paper than the sophisticated prose that is the rest of the text. There is no clean transition sentence one to sentence two, and I would even argue that sentence two makes the first irrelevant by serving as a much more well constructed topic sentence for the paragraph."
+  },
+  "9": {
+   "q1": "B",
+   "updated": "2026-10-12T05:31:19.664Z",
+   "strength": "slight",
+   "q2": "B",
+   "q3": "same",
+   "orig": "B",
+   "notes": "The changes in diction in A lead to some awkward feeling sentence. \"imagine doing without one\" feels far more natural than \"imagine a situation without one\" and also better suits the diction seen in the unedited portions. Essentially, the text overall, despite the intellectual subject matter, presents an informal, conversational tone, which would be hindered by examples such as the above and \"consider the practical problem of building shelter\". Both make the text drier and slightly alter the narrative voice."
+  },
+  "10": {
+   "q1": "B",
+   "updated": "2026-10-12T05:34:07.386Z",
+   "strength": "toss",
+   "q2": "B",
+   "orig": "A",
+   "q3": "same",
+   "notes": ""
+  },
+  "11": {
+   "q1": "A",
+   "updated": "2026-10-12T05:44:52.977Z",
+   "strength": "clear",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A",
+   "notes": "The word \"organic\" is entirely redundant. Any reader within the target audience of the text would know well enough the \"beings\" in question are organic, while the whole term \"organic being\" feels a awkward compared to alternatives such as \"organism\" or \"living thing\"."
+  },
+  "12": {
+   "q1": "A",
+   "updated": "2026-10-12T05:42:25.186Z",
+   "q2": "A",
+   "strength": "strong",
+   "orig": "A",
+   "q3": "same",
+   "notes": "The first and last sentence of B are entirely at odds with the flavor and style of the text. They are dry, matter-of-fact explanations that *tell* the ideas and themes in a passage that otherwise revels in complex and vivid descriptions to *show* the reader the beauty of the river and thus the magnitude of what the narrator has lost."
+  },
+  "13": {
+   "q1": "B",
+   "updated": "2026-10-19T05:53:48.225Z",
+   "strength": "slight",
+   "q2": "B",
+   "q3": "same",
+   "orig": "unsure"
+  },
+  "14": {
+   "q1": "A",
+   "updated": "2026-10-19T05:56:29.282Z",
+   "strength": "slight",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A",
+   "notes": "\"Eventually\" simply does not fit the preceding diction and tone as well as \"at length\". The text as a whole is a tad archaic and uses constructs which would seem odd or unusual in modern English; \"at length\" fits this perfectly."
+  },
+  "15": {
+   "q1": "A",
+   "updated": "2026-10-19T05:59:09.032Z",
+   "strength": "slight",
+   "q2": "A",
+   "q3": "same",
+   "orig": "B"
+  },
+  "16": {
+   "q1": "A",
+   "updated": "2026-10-19T06:01:43.242Z",
+   "strength": "strong",
+   "q2": "A",
+   "q3": "same",
+   "orig": "A",
+   "notes": "Much the same as other pairs with this style of editing, the edits which lay out the themes of the text are incongruous with the diction and tone of the text; they are too simple, do not transition cleanly to/from the rest of the text, and lack the more dramatic voice that writer otherwise displays."
+  },
+  "18": {
+   "q1": "B",
+   "updated": "2026-10-19T06:03:05.387Z",
+   "strength": "strong",
+   "q2": "B",
+   "q3": "same",
+   "orig": "B",
+   "notes": "The thesis sentence and conclusionary sentence in A go against the intent of the rest of the passage, which was to demonstrate the author's point via dissecting a scenario, rather than simply *telling* the reader. "
+  }
+ },
+ "reads": {
+  "1": {
+   "publish": "light",
+   "updated": "2026-10-19T06:08:10.274Z",
+   "deliberate": "4",
+   "authorship": "4",
+   "confidence": "mid",
+   "evidence": "While the text maintains *some* degree of casualness and is not fully academic, it still maintains a distinct sophisticated voice. As such, the use of \"pretty clear\" feels mildly anachronistic and out of character. Referring to living thing as \"organic beings\" also feels generally awkward, but may be an idiosyncrasy."
+  },
+  "2": {
+   "publish": "yes",
+   "updated": "2026-10-19T06:10:10.100Z",
+   "deliberate": "5",
+   "authorship": "2",
+   "confidence": "mid"
+  },
+  "3": {
+   "publish": "yes",
+   "updated": "2026-10-19T06:13:24.536Z",
+   "deliberate": "6",
+   "authorship": "2",
+   "confidence": "mid",
+   "evidence": "The passage has a very consistent syntactic style with the correct, if somewhat antiquated, use of semicolons. That same syntax, however, leads me to believe that some of the wording has been altered to be partially modernized."
+  },
+  "4": {
+   "deliberate": "5",
+   "updated": "2026-10-19T06:21:33.946Z",
+   "authorship": "3",
+   "confidence": "mid",
+   "publish": "light",
+   "evidence": "There are parts that certainly feel human written; for instance, \" They seldom come nearer to it than planting-time, harvest-time...\" features not only the abstraction of a concept (the slaves categorizing their birthdates based on landmark events), but does so in a fashion relevant to the era and setting, and uses appropriately uses a compound construct (cherry-time) which is nebulous and context dependent. However, there are various minor word or syntax choices which contribute to a general sense of \"offness\", such as the sentences being a little too staccato. "
+  },
+  "5": {
+   "publish": "light",
+   "updated": "2026-10-19T06:24:35.381Z",
+   "deliberate": "5",
+   "authorship": "3",
+   "confidence": "mid",
+   "evidence": "The first few of the sentences class somewhat with the rest of the text, not in diction, but in \"flow\". The rest of the text alternates effectively between long and short sentences, and even joins clauses via semicolon. The first few sentences, in contrast, feel more uniform in length, resulting in a more monotone and curt flow."
+  },
+  "6": {
+   "publish": "light",
+   "updated": "2026-10-19T06:27:42.992Z",
+   "deliberate": "5",
+   "authorship": "3",
+   "confidence": "mid",
+   "evidence": "Once more, the issue is not with word choice or even phrasing (at least not so much with phrasing), but with syntax. Many sentences represent related ideas which could be joined either by comma or semicolon; an act which would also benefit the flow of the text. Somewhat related, I also get the impression that words may have been removed in certain places."
+  },
+  "7": {
+   "publish": "light",
+   "updated": "2026-10-19T06:33:26.589Z",
+   "deliberate": "3",
+   "authorship": "5",
+   "confidence": "mid",
+   "evidence": "The overall diction of the text feels uncohesive, alternating between more a more elevated, antiquated style and modern, casual one. Of singular note, the phrase \"share of the care\" contains an awkward assonance that is not seen anywhere else, nor does the prose otherwise attempt to be poetic."
+  },
+  "8": {
+   "publish": "light",
+   "updated": "2026-10-19T06:37:37.043Z",
+   "deliberate": "7",
+   "authorship": "2",
+   "evidence": "\"many-tinted\" strikes me as an unconventional term; not one impossible for an AI to produce, but very human-sounding.",
+   "confidence": "mid"
+  },
+  "9": {
+   "publish": "no",
+   "updated": "2026-10-19T06:41:24.989Z",
+   "deliberate": "5",
+   "authorship": "3",
+   "confidence": "low",
+   "evidence": "There seems to me a slight excess of verbosity with this text, not too dissimilar to the output of a model who has been prompted to provide lush text. However, human authors are equally capable of using more words than necessary. The words \"tolerable\" and \"erect\" both stand out to me as feeling slightly odd in their usage, but not impossibly so."
+  }
+ },
+ "edit": {
+  "1": {
+   "text": "I was born in Tuckahoe, near Hillsborough, and about twelve miles from Easton, in Talbot county, Maryland. I have no accurate knowledge of my age, never having seen any authentic record containing it. By far the larger part of the slaves know as little of their ages as horses know of theirs, and it is the wish of most masters within my knowledge to keep their slaves thus fundamentally ignorant. I do not remember to have ever met a slave who could tell of his birthday; they seldom come nearer to it than planting-time, harvest-time, cherry-time, spring-time, or fall-time. A want of information concerning my own was a source of unhappiness to me even during childhood. The white children could tell their ages; I could not tell why I ought to be deprived of the same privilege. I was not allowed, to make any inquiries of my master concerning it. He deemed all such inquiries on the part of a slave improper and impertinent, and evidence of a restless spirit. The nearest estimate I can give makes me now between twenty-seven and twenty-eight years of age. I come to this, from hearing my master say, some time during 1835, I was about seventeen years old. ",
+   "source": "douglass",
+   "updated": "2026-10-19T06:46:08.229Z",
+   "note": "Removed needless exposition and transitions. Joined a couple of ideas that express related ideas."
+  }
+ },
+ "closing": {
+  "1": {
+   "c3": "Keep in mind the era of the text (or at least the era it is attempting to portray) and alter both your syntax and diction appropriately.  Also keep in mind that sentences of varying lengths tend to be more pleasing to the average reader. Richer, too.",
+   "updated": "2026-10-19T06:50:00.247Z",
+   "c2": "Subtly. Two words can have very similar meanings in a dictionary, but convey entirely different states of mind or differing subtext.",
+   "c1": "The principle, core meaning of the overall text was perfectly maintained throughout all edits."
+  }
+ }
+}

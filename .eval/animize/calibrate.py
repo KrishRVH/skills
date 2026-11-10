@@ -14,16 +14,23 @@ field. For each model the script records:
 Comparisons are strict: a document is called AI when its score is beyond
 the threshold (above it for EditLens, below it for Binoculars).
 
-Score field and direction: EditLens rows use `expected_ai_fraction`
-(higher means AI). Binoculars rows use `binoculars_score` (lower means AI)
-and are detected automatically when `expected_ai_fraction` is absent.
+Score field and direction: EditLens rows use `editlens_score` (higher means
+AI). Binoculars rows use `binoculars_score` (lower means AI) and are
+detected automatically when `editlens_score` is absent.
+
+A three-class verdict follows from two of the thresholds: a score at or
+below `fpr_1pct` is human, a score beyond `macro_f1` is ai_generated, and
+anything between is ai_assisted. With `--check`, the chosen thresholds are
+applied to a second labeled split the thresholds never saw, and the
+false-positive rate, recall, and three-class confusion on it are stored as
+`held_out`.
 
 The output merges into an existing calibration.json so each model can be
 calibrated separately. Each entry records the split name and the date.
 
 Usage:
-  python calibrate.py --scores scores_roberta_iclr.jsonl --labels-field label \
-      --split test --out calibration.json
+  python calibrate.py --scores scores_roberta_iclr_val.jsonl --split val \
+      --check scores_roberta_iclr_test.jsonl --out calibration.json
 """
 
 from __future__ import annotations
@@ -46,11 +53,11 @@ def pick_score_field(rows: list[dict], requested: str | None) -> tuple[str, str]
     if requested:
         direction = "lower_is_ai" if requested == "binoculars_score" else "higher_is_ai"
         return requested, direction
-    if any("expected_ai_fraction" in r for r in rows):
-        return "expected_ai_fraction", "higher_is_ai"
+    if any("editlens_score" in r for r in rows):
+        return "editlens_score", "higher_is_ai"
     if any("binoculars_score" in r for r in rows):
         return "binoculars_score", "lower_is_ai"
-    die("rows have neither expected_ai_fraction nor binoculars_score")
+    die("rows have neither editlens_score nor binoculars_score")
     return "", ""  # unreachable
 
 
@@ -91,6 +98,29 @@ def macro_f1_threshold(oriented: np.ndarray, labels: np.ndarray) -> dict:
     return {"oriented_threshold": best_t, "macro_f1": best_f1, "n": int(len(x))}
 
 
+def held_out(rows: list[dict], score_field: str, direction: str, labels_field: str, thresholds: dict) -> dict:
+    """Apply chosen thresholds to a labeled split they were not picked on."""
+    usable = [r for r in rows if r.get(labels_field) in CLASSES and r.get(score_field) is not None]
+    scores = np.array([float(r[score_field]) for r in usable])
+    labels = np.array([r[labels_field] for r in usable])
+    sign = -1.0 if direction == "lower_is_ai" else 1.0
+    oriented = sign * scores
+    out: dict = {"n_rows": int(len(usable)), "class_counts": {c: int(np.sum(labels == c)) for c in CLASSES}}
+    for name in ("fpr_1pct", "fpr_0_5pct"):
+        t = thresholds[name]["threshold"]
+        if t is None:
+            continue
+        flagged = oriented > sign * t
+        out[name] = {c: float(np.mean(flagged[labels == c])) for c in CLASSES if np.any(labels == c)}
+    t_h, t_g = thresholds["fpr_1pct"]["threshold"], thresholds["macro_f1"]["threshold"]
+    if t_h is not None and t_g is not None:
+        pred = np.where(oriented <= sign * t_h, "human", np.where(oriented > sign * t_g, "ai_generated", "ai_assisted"))
+        out["three_class_accuracy"] = float(np.mean(pred == labels))
+        out["three_class_macro_f1"] = float(f1_score(labels, pred, average="macro"))
+        out["confusion"] = {t: {p: int(np.sum((labels == t) & (pred == p))) for p in CLASSES} for t in CLASSES}
+    return out
+
+
 def unorient(entry: dict, direction: str) -> dict:
     t = entry.pop("oriented_threshold")
     entry["threshold"] = None if t is None else (-t if direction == "lower_is_ai" else t)
@@ -101,8 +131,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--scores", required=True, nargs="+", help="scored held-out JSONL files")
     ap.add_argument("--labels-field", default="label")
-    ap.add_argument("--score-field", help="override the score field (expected_ai_fraction or binoculars_score)")
+    ap.add_argument("--score-field", help="override the score field (editlens_score or binoculars_score)")
     ap.add_argument("--split", help="name of the held-out split; defaults to the rows' `split` field or `unknown`")
+    ap.add_argument("--check", nargs="+", help="scored JSONL files from a second labeled split, for held-out rates")
     ap.add_argument("--out", default="calibration.json")
     args = ap.parse_args()
 
@@ -143,8 +174,14 @@ def main() -> None:
                 "macro_f1": unorient(macro_f1_threshold(oriented, labels), direction),
             },
         }
+        if args.check:
+            check_rows = [r for path in args.check for r in read_jsonl(path) if r.get("model", "unknown") == model]
+            entry["held_out"] = held_out(check_rows, score_field, direction, args.labels_field, entry["thresholds"])
+            entry["held_out"]["split"] = next((r.get("split") for r in check_rows if r.get("split")), "unknown")
         calibration["models"][model] = entry
         log(f"{model}: {json.dumps(entry['thresholds'])}")
+        if "held_out" in entry:
+            log(f"{model} held out: {json.dumps(entry['held_out'])}")
 
     out_path.write_text(json.dumps(calibration, indent=2) + "\n", encoding="utf-8")
     log(f"wrote {out_path}")

@@ -16,14 +16,6 @@ MIN_WORDS = 50
 WINDOW_TOKENS = 512
 WINDOW_STRIDE = 256
 
-GATED_REPOS = {
-    "pangram/editlens_roberta-large": "model",
-    "pangram/editlens_Llama-3.2-3B": "model",
-    "meta-llama/Llama-3.2-3B": "model",
-    "pangram/editlens_iclr": "dataset",
-}
-
-
 def log(msg: str) -> None:
     """Print a status line to stderr."""
     print(msg, file=sys.stderr, flush=True)
@@ -142,20 +134,3 @@ def hub_revision(repo: str, repo_type: str = "model") -> str | None:
         return info.sha
     except Exception:  # noqa: BLE001
         return None
-
-
-def load_bucket_map(path: str | Path, num_labels: int) -> list[float]:
-    """Load bucket centers in label order; refuse placeholders."""
-    p = Path(path)
-    if not p.exists():
-        die(f"bucket map `{p}` not found; run inspect_labels.py and fill it")
-    data = json.loads(p.read_text(encoding="utf-8"))
-    if data is None or not isinstance(data, list) or any(v is None for v in data):
-        die(
-            f"bucket map `{p}` is still a placeholder. Run inspect_labels.py, read the\n"
-            "  id2label mapping, and write a JSON list of bucket centers (0.0 to 1.0)\n"
-            "  in label order, for example [0.0, 0.1, 0.3, 0.5, 0.7, 0.9, 1.0]."
-        )
-    if len(data) != num_labels:
-        die(f"bucket map has {len(data)} entries but the model has {num_labels} labels")
-    return [float(v) for v in data]

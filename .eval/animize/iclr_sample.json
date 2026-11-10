@@ -1,0 +1,171 @@
+{
+ "dataset": "pangram/editlens_iclr",
+ "split": "test",
+ "seed": 20261109,
+ "word_range": [
+  200,
+  400
+ ],
+ "documents": [
+  {
+   "id": "iclr/human/540d5c21fa9ee59e7f1153e0cb883e31",
+   "words": 201,
+   "text_type": "human_written",
+   "source": "fineweb_edu",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/12ea8bd20d596b1c405af132e12a6777",
+   "words": 312,
+   "text_type": "human_written",
+   "source": "fineweb_edu",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/d7ecb670519171c56f0223abbd5d4082",
+   "words": 255,
+   "text_type": "human_written",
+   "source": "news",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/84114ab2d1dd0bd2cb78ab42dae7bc4d",
+   "words": 281,
+   "text_type": "human_written",
+   "source": "news",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/3fa5cb1510a483b9d333dd6aa89ec4d1",
+   "words": 380,
+   "text_type": "human_written",
+   "source": "reddit_writing_prompts",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/ba0e77caeca9b383e78e7de3a1ed8a1b",
+   "words": 343,
+   "text_type": "human_written",
+   "source": "news",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/a626bf3725f998956d8d60649917de37",
+   "words": 380,
+   "text_type": "human_written",
+   "source": "reddit_writing_prompts",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/539149354b2a3e2d64397d514c2b56b0",
+   "words": 359,
+   "text_type": "human_written",
+   "source": "reddit_writing_prompts",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/03f170329f5b94210f59461227bcca42",
+   "words": 381,
+   "text_type": "human_written",
+   "source": "news",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/human/cc4e3eaa96108050a65f3f53f03828ad",
+   "words": 226,
+   "text_type": "human_written",
+   "source": "reddit_writing_prompts",
+   "generator": "human",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/243e7ade9fe6ac4290da784322ee3189",
+   "words": 298,
+   "text_type": "ai_generated",
+   "source": "news",
+   "generator": "gpt-4.1-2025-04-14",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/4aa8fc19293f82e827905d3016cb3f0b",
+   "words": 368,
+   "text_type": "ai_generated",
+   "source": "fineweb_edu",
+   "generator": "gpt-4.1-2025-04-14",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/caacf70295f7ff792bc846a677114880",
+   "words": 332,
+   "text_type": "ai_generated",
+   "source": "reddit_writing_prompts",
+   "generator": "claude-sonnet-4-20250514",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/4d70d1933ff7737637f0a431fe173400",
+   "words": 348,
+   "text_type": "ai_generated",
+   "source": "news",
+   "generator": "gemini-2.5-flash",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/91774192fb479583bf6af45c59ae485b",
+   "words": 284,
+   "text_type": "ai_generated",
+   "source": "fineweb_edu",
+   "generator": "claude-sonnet-4-20250514",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/3b034d397f8c594eff2842b33a71ebe1",
+   "words": 261,
+   "text_type": "ai_generated",
+   "source": "amazon_reviews",
+   "generator": "claude-sonnet-4-20250514",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/7c189380e858e8d0a6c4128d1085c100",
+   "words": 242,
+   "text_type": "ai_generated",
+   "source": "news",
+   "generator": "gpt-4.1-2025-04-14",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/755f2cea7719d172a35e79921176a1c7",
+   "words": 357,
+   "text_type": "ai_generated",
+   "source": "amazon_reviews",
+   "generator": "claude-sonnet-4-20250514",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/90e5315e9fdbb22b31073a239197a537",
+   "words": 379,
+   "text_type": "ai_generated",
+   "source": "reddit_writing_prompts",
+   "generator": "gemini-2.5-flash",
+   "split": "test"
+  },
+  {
+   "id": "iclr/ai/abc26fa962fe97b3487c096cbdb81b24",
+   "words": 289,
+   "text_type": "ai_generated",
+   "source": "news",
+   "generator": "claude-sonnet-4-20250514",
+   "split": "test"
+  }
+ ]
+}

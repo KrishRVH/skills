@@ -2,3 +2,5 @@
 missing_jobs.txt
 report.md
 __pycache__/
+iclr/
+scores_*_iclr_*.jsonl

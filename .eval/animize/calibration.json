@@ -1,0 +1,149 @@
+{
+  "models": {
+    "editlens_roberta": {
+      "score_field": "editlens_score",
+      "direction": "higher_is_ai",
+      "split": "val",
+      "date": "2026-11-09",
+      "n_rows": 2400,
+      "class_counts": {
+        "human": 753,
+        "ai_assisted": 894,
+        "ai_generated": 753
+      },
+      "model_revision": "f93e1ace74528cfb48f337ab2fe946fb71a728cb",
+      "thresholds": {
+        "fpr_1pct": {
+          "fpr_human": 0.009296148738379814,
+          "recall_ai_generated": 1.0,
+          "n_human": 753,
+          "n_ai_generated": 753,
+          "threshold": 0.29027193039655685
+        },
+        "fpr_0_5pct": {
+          "fpr_human": 0.00398406374501992,
+          "recall_ai_generated": 1.0,
+          "n_human": 753,
+          "n_ai_generated": 753,
+          "threshold": 0.34083124498526257
+        },
+        "macro_f1": {
+          "macro_f1": 0.9165348878243007,
+          "n": 1647,
+          "threshold": 0.9976019609021023
+        }
+      },
+      "held_out": {
+        "n_rows": 6115,
+        "class_counts": {
+          "human": 2038,
+          "ai_assisted": 2031,
+          "ai_generated": 2046
+        },
+        "fpr_1pct": {
+          "human": 0.0068694798822374874,
+          "ai_assisted": 0.6661742983751846,
+          "ai_generated": 0.998533724340176
+        },
+        "fpr_0_5pct": {
+          "human": 0.003925417075564278,
+          "ai_assisted": 0.5750861644510094,
+          "ai_generated": 0.9980449657869013
+        },
+        "three_class_accuracy": 0.8366312346688471,
+        "three_class_macro_f1": 0.8303410553393599,
+        "confusion": {
+          "human": {
+            "human": 2024,
+            "ai_assisted": 14,
+            "ai_generated": 0
+          },
+          "ai_assisted": {
+            "human": 678,
+            "ai_assisted": 1245,
+            "ai_generated": 108
+          },
+          "ai_generated": {
+            "human": 3,
+            "ai_assisted": 196,
+            "ai_generated": 1847
+          }
+        },
+        "split": "test"
+      }
+    },
+    "editlens_llama": {
+      "score_field": "editlens_score",
+      "direction": "higher_is_ai",
+      "split": "val",
+      "date": "2026-11-09",
+      "n_rows": 2400,
+      "class_counts": {
+        "human": 753,
+        "ai_assisted": 894,
+        "ai_generated": 753
+      },
+      "model_revision": "b5f8044f631f5b455eafbcb569dcf175f2b0726d",
+      "thresholds": {
+        "fpr_1pct": {
+          "fpr_human": 0.009296148738379814,
+          "recall_ai_generated": 1.0,
+          "n_human": 753,
+          "n_ai_generated": 753,
+          "threshold": 0.19865733943879604
+        },
+        "fpr_0_5pct": {
+          "fpr_human": 0.00398406374501992,
+          "recall_ai_generated": 1.0,
+          "n_human": 753,
+          "n_ai_generated": 753,
+          "threshold": 0.26823932211846113
+        },
+        "macro_f1": {
+          "macro_f1": 0.9510260153850272,
+          "n": 1647,
+          "threshold": 0.9740799592497448
+        }
+      },
+      "held_out": {
+        "n_rows": 6115,
+        "class_counts": {
+          "human": 2038,
+          "ai_assisted": 2031,
+          "ai_generated": 2046
+        },
+        "fpr_1pct": {
+          "human": 0.005397448478900883,
+          "ai_assisted": 0.7380600689315608,
+          "ai_generated": 1.0
+        },
+        "fpr_0_5pct": {
+          "human": 0.0024533856722276743,
+          "ai_assisted": 0.654357459379616,
+          "ai_generated": 1.0
+        },
+        "three_class_accuracy": 0.878659035159444,
+        "three_class_macro_f1": 0.8757727582163396,
+        "confusion": {
+          "human": {
+            "human": 2027,
+            "ai_assisted": 11,
+            "ai_generated": 0
+          },
+          "ai_assisted": {
+            "human": 532,
+            "ai_assisted": 1439,
+            "ai_generated": 60
+          },
+          "ai_generated": {
+            "human": 0,
+            "ai_assisted": 139,
+            "ai_generated": 1907
+          }
+        },
+        "split": "test"
+      }
+    }
+  },
+  "date": "2026-11-09"
+}

@@ -28,7 +28,7 @@ import pandas as pd
 from _common import log, read_jsonl
 
 SCORE_FIELDS = {"binoculars": ("binoculars_score", "lower_is_ai")}
-DEFAULT_SCORE = ("expected_ai_fraction", "higher_is_ai")
+DEFAULT_SCORE = ("editlens_score", "higher_is_ai")
 
 
 def load_scores(pattern: str, missing: list[str]) -> pd.DataFrame:
