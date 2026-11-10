@@ -367,8 +367,6 @@ Every run:
 - **Genre:** formality, terminology, headings, citations, and explanation fit
 - **Dashes:** generated prose follows the tier 8 default unless a stronger tier
   decided otherwise
-- **Detector silence:** no sentence describes the output's standing with any
-  detector
 - **Unattended:** no question reached the caller, and each named default
   taken is stated in the notes
 - **Delivery:** the output fits its destination and holds only the requested

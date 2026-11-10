@@ -17,11 +17,11 @@ easy to understand on the first read without flattening necessary precision or
 voice.
 
 This skill improves prose quality and perceived naturalness. It does not prove
-human authorship, guarantee that no observer will question it, or move any
-detector's verdict. Register, genre, and voice choices exist for readers. The
-one workflow that has a provenance consequence is the Preserve regime, which
-keeps a human draft's own words in the majority so the result is honestly
-describable as human-written with AI assistance.
+human authorship or guarantee that no observer will question it. Register,
+genre, and voice choices exist for readers. The one workflow that has a
+provenance consequence is the Preserve regime, which keeps a human draft's own
+words in the majority so the result is honestly describable as human-written
+with AI assistance.
 
 ## Scope
 
@@ -244,7 +244,7 @@ higher tier fixes.
    sources, edits to named exact spans, or invention within a fiction or role
    brief. It never authorizes presenting invented real-world experience,
    credentials, sources, quotations, citations, or provenance as true, or
-   claiming human authorship or a detector outcome.
+   claiming human authorship.
 2. **Fidelity and integrity.** Preserve the source's substance, relationships,
    uncertainty, commitments, and owned evaluative force. Do not invent factual
    or personal substance.
@@ -253,10 +253,9 @@ higher tier fixes.
    numbers, dates, units, formulas, defined terms, and legally or technically
    significant wording.
 4. **Hard output and content-shaping rules.** Apply the
-   no-manufactured-humanity, no-fake-imperfection, no-detector-optimization,
-   positive-scope, and no-detector-claim rules below. Keep brief and session
-   residue out of the artifact. Apply the Preserve regime's edit policy when
-   it applies.
+   no-manufactured-humanity, no-fake-imperfection, and positive-scope rules
+   below. Keep brief and session residue out of the artifact. Apply the
+   Preserve regime's edit policy when it applies.
 5. **Caller form constraints.** Apply requested style guides, format, register,
    length, writing samples, and destination requirements.
 6. **Destination and genre.** Follow the medium and the artifact's real genre,
@@ -274,7 +273,7 @@ higher tier fixes.
    to parentheses, semicolons, or hyphens. A caller's explicit request, a
    controlling style guide, or a protected exact span outranks this default.
    The presence or absence of either character says nothing about who wrote
-   the text, and the default is never applied to change a score.
+   the text.
 
 ## Universal rules
 
@@ -292,12 +291,7 @@ higher tier fixes.
    These transformations damage the reader's trust and are the exact behavior
    that classifiers of "humanized" text are trained to find. Let real
    sentences do different jobs.
-5. **Do not optimize against a detector.** Tells are reader-facing defects, not
-   detector tokens. Repair their cause instead of substituting watched words or
-   targeting punctuation, burstiness, perplexity, or a score. Detector scores
-   are read in evaluation, where every rule still has to earn its place with
-   a reader-facing reason.
-6. **State scope positively.** Delete negative scaffolding, non-goal
+5. **State scope positively.** Delete negative scaffolding, non-goal
    throat-clearing, and out-of-scope statements that change no reader decision.
    If a boundary matters and has a positive statement with identical truth
    conditions, use it. Otherwise preserve the negative form for prohibitions,
@@ -307,17 +301,13 @@ higher tier fixes.
    scaffolding unless readers might reasonably rely on the article for
    deployment or the omission limits correct use. Classify deletion of that
    scaffolding as expression-level selection, not loss of substantive content.
-7. **Keep judgment within its authority.** Reference prose contains facts,
+6. **Keep judgment within its authority.** Reference prose contains facts,
    options, limits, and errors, not editorial opinion. How-to and tutorial prose
    may include task-required recommendations and warnings. Explanation, review,
    argument, and essay prose may include supported judgment. Any rewrite keeps
    source-owned stance at its supported strength and invents none.
-8. **Respect genre.** Formality, passive voice, repetition, headings, technical
+7. **Respect genre.** Formality, passive voice, repetition, headings, technical
    terms, deliberate roughness, and unusual syntax may be necessary.
-9. **Make no detector claim.** Never describe an output as undetectable, as a
-   way around a detector, or as something that gets past one. The skill can
-   teach a reader what deliberate prose looks like; it cannot change who wrote
-   a draft.
 
 ## Files outside a run
 

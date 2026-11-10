@@ -1,11 +1,11 @@
 # Evaluation protocol
 
-No evaluation can prove that a text was written by a person. The useful
-questions are whether the skill produces prose that is as natural, deliberate,
-reader-specific, and publication-ready as a matched human edit while
-preserving substance, and what its two regimes do to a trained classifier's
-reading: whether Recompose leaves a generated draft's verdict where it found
-it, and whether Preserve produces the label its workflow honestly earns.
+The skill's main input is model-written text: messages, emails, pull request
+descriptions, write-ups, and articles. Its target is output that reads as
+human-authored, that Pangram's live detector reads as human-written, that
+carries no LLM-isms, and that preserves the source's substance. The live
+verdict is the benchmark the skill is developed against. Reader ratings, the
+defect suite, and the fidelity suite measure the rest.
 
 Measured results live in [evaluation-results.md](evaluation-results.md).
 
@@ -278,58 +278,50 @@ Use automation for hard invariants, not for final naturalness judgments:
 
 ## 8. Detector columns
 
-Detector scores are a diagnostic with three purposes. The first: measure what
-the Recompose regime does to a trained classifier's reading of a generated
-draft. The second: test whether the Preserve regime's output carries the label
-its workflow earns. The third is a guardrail: catch a rule change that makes
-output read as more machine-written, and point to passages that deserve a
-reader's second look. First show that the detector separates the corpus's own
-source classes; an unchanged verdict on an output means nothing when the
-source was never detected.
+Pangram's live verdict is the benchmark. Report it per cell as counts of
+Human Written, AI Assisted, and AI Generated outputs, with each output's
+highest humanizer score and its source's verdict beside it. First show that
+the detector separates the corpus's own source classes; an unchanged verdict
+on an output means nothing when the source was never detected.
 
-A trained classifier is a cheap proxy for one thing readers do notice, generic
-machine prose, and it is a weak one. On the pilot, the production checker read
-as AI-generated six Recompose outputs that a blind expert rated level with
-human originals, and a Preserve edit that the rater preferred moved an open
-model's verdict the wrong way. The score therefore ranks below every
-reader-facing measure, and the guardrail is bounded:
+The verdict and a reader's rating are separate measurements, and a high
+rating does not predict a human verdict: on the pilot, the live model read as
+AI-generated six Recompose outputs that a blind expert rated level with human
+originals. Report both.
 
-- Score every cell before and after a rule change, on the same corpus with the
-  same calibration file.
-- Flag a change that raises a cell's mean score or moves a verdict toward
-  machine-written. Find the passages responsible and have a reader judge them.
-  Keep the change only when it carries a reader-facing gain that outweighs the
-  flag, and record that gain.
-- Count a lower score in a change's favor only to break a tie between changes
-  that readers rate equally.
-- Adopt a rule only on a reader-facing reason that stands without the
-  detector. A rule whose sole support is a score is not adopted.
-- Never adopt typos, casing tricks, homoglyphs, invisible characters, synonym
-  churn, fake self-corrections, or any other transformation that changes a
-  detector's reading while leaving the reader's experience the same or worse.
-- Fidelity, fabricated-humanity, and reader-preference results outrank the score
-  in every conflict. Never use a score as an optimization target or a release
-  criterion for prose quality.
+- Score every cell before and after a rule change, on the same documents.
+- A change that moves a verdict toward human-written counts in its favor. A
+  change that moves one toward machine-written is a regression; find the
+  passages responsible.
+- The live model bills by the word. Send the same few documents before and
+  after a change, three at a time, and widen the sample only when a verdict
+  moves.
+- Score with the open models first, to rule a candidate out. They are more
+  lenient than the live model, so a human reading from them is a reason to
+  spend on a live check, never a result.
+- A verdict gain never excuses a fidelity failure or fabricated material.
+  [Section 10](#10-acceptance-criteria) requires all of them at once.
 
-Record three columns:
+Record these columns:
 
-- **A trained classifier of the target family.** The Open Pangram release (two
+- **The live model.** The harness's `score_pangram.py` sends documents to
+  Pangram's text API and stores the verdict, the class fractions, and each
+  passage's label and humanizer score, without the text. Record the model
+  version the API reports.
+- **The open classifiers of the same family.** The Open Pangram release (two
   EditLens models: a LoRA adapter on `meta-llama/Llama-3.2-3B` and a
   `roberta-large` classifier, CC BY-NC-SA 4.0, noncommercial only) runs on one
   24 GB consumer GPU. Both are Pangram 3 lineage, trained on human, AI-edited,
   and AI-generated versions of news, educational web text, reviews, and fiction
   written to prompts, with no humanizer head, no tokenwise decoding, and
-  narrower domain coverage than the production model. Both read a quarter to a
-  third of the AI-edited documents in their own test split as human, so a human
-  verdict cannot rule out light editing. Use them for the negative check and for
-  AI-fraction estimates on Preserve output. Report their verdicts as EditLens
-  verdicts, never as production verdicts. The vendor's free web checker can
-  spot-check up to twenty final documents against the production model by hand;
-  record those separately.
+  narrower domain coverage than the live model. Both read a quarter to a
+  third of the AI-edited documents in their own test split as human. Use them
+  as the free pre-check and for AI-fraction estimates on Preserve output.
+  Report their verdicts as EditLens verdicts, never as live verdicts.
 - **A perplexity-family detector** (Binoculars, open source) to compare how
   a perplexity score and a trained classifier respond to the same edit.
-- **An optional second trained classifier** from another lineage, as another
-  "does not move" check on Recompose. Never a verdict source.
+- **An optional second trained classifier** from another lineage. Never a
+  verdict source.
 
 Record detector names, revisions, calibration files, and dates. Results are
 comparable only within a version.
@@ -355,7 +347,8 @@ comparable only within a version.
 | Fixed loading          | Runs whose loaded files differ from the branch's set; target: 0   |
 | Verdict distribution   | Human / AI-assisted / AI-generated / humanized per cell           |
 | Humanizer positives    | Rate above baseline on any cell; target: 0                        |
-| Detector guardrail     | Score and verdict shift per cell after a rule change              |
+| Live verdict           | Outputs the live model reads Human Written, per cell; target: all |
+| Verdict shift          | Score and verdict change per cell after a rule change             |
 | Preserve accounting    | Added clauses (target: 0) and model-token share under budget      |
 | Reliability            | Variance across genres, lengths, models, and repeated runs        |
 | Efficiency             | Tokens and latency per run                                        |
@@ -388,10 +381,8 @@ A production candidate should meet all of these:
   repetition
 - destination and writer-recognition cases meet their predeclared thresholds
 - stable performance across repeated runs and major genres
-- Recompose regime: output reads as no more machine-written than its source
-  on trained classifiers
-- no rule change raises a cell's detector score or moves a verdict toward
-  machine-written without a recorded reader-facing gain
+- model-written input: the live model reads the output as Human Written
+- no rule change moves a cell's live verdict toward machine-written
 - Preserve regime at the default budget: at least 95% of outputs labeled
   human or AI-assisted, zero humanizer-head positives where a head exists,
   and a fidelity pass rate at or above Recompose's
@@ -407,14 +398,10 @@ or detector.
 
 ## 11. What not to do
 
-- Do not adopt a prose rule because it moves a detector score, and do not tune
-  a rule's wording against one. Scores enter only through the guardrail in
-  [section 8](#8-detector-columns).
 - Do not submit user or customer text to any detector service.
 - Do not train, fine-tune, or run reinforcement learning against a detector
   inside this repository. Model-stack notes belong in
   [backends.md](backends.md) only.
-- Do not report any figure framed as a bypass rate.
 
 ## 12. Local detector setup
 
@@ -454,5 +441,4 @@ For every failed item, classify the root cause:
 - verifier miss
 
 Update the smallest relevant instruction or example. Do not expand a word
-blacklist in response to isolated failures, and do not change a rule on a
-detector's movement alone.
+blacklist in response to isolated failures.
