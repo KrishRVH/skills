@@ -1,5 +1,58 @@
 # Changelog
 
+## animize: one unattended procedure (2026-11-09)
+
+Changes:
+
+- The skill has one procedure and no settings. The `quick` pass and the
+  `voice`, `clarity`, and `delivery` controls are gone. Every invocation runs
+  every step of its branch at every artifact length, so `run the skill on X
+before sending it` always gets the full work.
+- A run asks the caller nothing. A draft the caller says they wrote, or
+  whose wording they ask to keep, gets the Preserve branch. Everything else
+  is recomposed. A draft of unstated origin is recomposed too, and a fixed
+  origin note after the artifact says so and says how to get the clause-level
+  edit instead. The three framing questions are answered from the material;
+  an open one narrows the piece and is named in the notes.
+- Each branch loads a fixed set of references on every run: six files for
+  Recompose and for findings-only runs, two for Preserve.
+- The clear-communication profile is chosen by genre, and supplied writing
+  samples steer expression, without a named control for either. A plain
+  instruction in the request (a style guide, a length, a request for the text
+  alone or for a change summary) still governs.
+- A file whose origin is unstated is overwritten only when version control
+  can restore the original. Otherwise the recomposed text comes back in the
+  reply and the file is left as it was.
+- `the real X` staged as a revelation is now a line-level tell, with its
+  retain cases.
+- `references/deep-recomposition.md` is now `references/procedure.md`, and
+  `examples/quick-core.md` is now `examples/prompt-block.md`, a rule block
+  for prompts where the skill is not installed.
+- Two worked Preserve examples no longer trade the author's words for near
+  synonyms, which the edit policy has not counted as a repair since the
+  previous entry.
+- The evaluation protocol replaces its control matrix with an unattended-run
+  matrix: a question to the caller, a wrong regime, a missing note, a skipped
+  step, or a wrong reference set each fails a run. The harness builds jobs
+  from the caller's statement about authorship and counts those failures
+  when it merges outputs.
+
+Measured, with the table in `animize/references/evaluation-results.md`:
+
+- Forward test, five independent sessions on bare requests: no session
+  asked a question, and each loaded exactly its branch's fixed reference
+  set, checked against its recorded tool calls. A PR description the agent
+  had drafted was recomposed with three unsupported claims withheld. A
+  first-person email introduced only as "my update email" was recomposed
+  with the origin note, twice, on the same deciding sentence. A note the
+  caller said they wrote got four edits at a model-token share of 0.014. A
+  one-sentence release note ran every step.
+- Cost: 96,000 to 145,000 tokens and 3 to 9 minutes per run, including the
+  one-sentence artifact.
+- Not run: the file-target, findings-only, supplied-samples, text-alone, and
+  long-document cases, and the guardrail's before-and-after detector score
+  for this change.
+
 ## animize: trained-classifier column and blind rating (2026-11-09)
 
 Changes:

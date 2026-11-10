@@ -67,6 +67,70 @@ human to AI-assisted. Open question 5 above predicted that Recompose would
 not move a trained classifier; on the stronger open model it lowered 9 of
 10 scores and moved 3 of 10 verdicts from AI-generated to AI-assisted.
 
+## Revision of 2026-11-09: one unattended procedure
+
+The maintainer reversed two decisions the brief had settled (two passes,
+three controls) and open question 1 above (ask once, fall back to Preserve).
+The intended use is `run the skill on X before sending it`: the heaviest
+work on every run, with nothing for the caller to set or answer. In the
+maintainer's words, "fire and forget."
+
+The reason is consistency. Nobody had to set the old controls, because all
+of them were inferred, and that inference was the problem: a bare invocation
+passed through seven judgment calls (pass, regime, three controls, whether
+to ask the framing questions, which references to load), and each one
+changed how much work was done.
+
+What changed:
+
+- **One procedure.** The lighter pass for short artifacts is gone. Every
+  invocation runs every step of its branch, at every length.
+- **No controls.** The regime comes from the caller's statement, the
+  clear-communication profile from the genre, voice from supplied samples,
+  and notes from whether anything needs reporting. A plain instruction in the
+  request still governs at its tier in Precedence.
+- **No questions.** Every missing fact has a default, reported in a note. A
+  draft of unstated origin is fully recomposed and carries a fixed origin
+  note. The three framing questions are answered from the material; an open
+  one narrows the piece and is named in the notes.
+- **Fixed loading.** Recompose and findings-only runs load six files every
+  time. Preserve loads two.
+
+What it costs, measured before the change: Recompose on six human drafts
+removed every injected defect and about a fifth of the author's wording
+(mean model-token share 0.141), where Preserve removed the same defects at
+a share of 0.014 or less. Open question 1 gave the reason for the old
+fallback: over-rewriting a human draft destroys authorship. The maintainer
+accepted that cost for unattended use, offered the alternative of one
+question when origin is unknown. What remains of the protection is the
+origin note and the rule that only the caller's statement selects Preserve.
+
+What did not change: Preserve on the caller's word, the 0.15 budget, the
+clause diff, every fidelity and integrity rule, and the rule against any
+detector claim.
+
+Choices made while implementing, each narrower than a literal reading of
+"the same files on every run" or "drop the lighter pass":
+
+- Preserve loads only the procedure and the verification reference. Loading
+  the repair catalogs into a run whose edit policy forbids catalog-driven
+  repair invites over-editing, which the blind rater had already penalized.
+- The pasteable rule block survives as `examples/prompt-block.md`. It is for
+  prompts where the skill is not installed, and an invocation never
+  substitutes it for the procedure.
+- A request to keep a draft's wording selects Preserve as well as a
+  statement of authorship, so a caller can still get clause-level edits on
+  text they did not write.
+
+Superseded by this revision: open questions 1 and 3 as worded above, and the
+vocabulary decision below (there are no caller-facing values now).
+
+The same change added one line-level tell at the maintainer's request: `the
+real X` staged as a revelation. Its reader-facing reason is that the phrase
+promises a truth hidden behind a decoy the text never showed.
+
+Not done: the guardrail's before-and-after detector score for this change.
+
 ## Decisions forced by repository rules
 
 1. **No `agents/backends.md`.** The validator allows only `openai.yaml` inside
