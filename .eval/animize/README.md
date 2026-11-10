@@ -143,6 +143,15 @@ so no document is scored by a threshold it helped choose.
   `__deep__` segment and their job rows carry `pass` and `controls` fields,
   the job format on those dates. `merge` and every script after it read
   both formats.
+- `consolidated/`: the guardrail run of 2026-11-09 on the skill after its
+  rules were consolidated, kept apart so the files above stay the baseline.
+  `top/` and `mid/` hold one model tier each, with the same file names as
+  the baseline: `jobs.jsonl`, `outputs/`, `outputs.jsonl`, `diffs.jsonl`,
+  and the three `scores_*_outputs.jsonl` files for the pilot corpus. Each
+  tier's `iclr/` subfolder holds the same files for the sampled cell and is
+  untracked; `iclr_scored_roberta.jsonl` and `iclr_scored_llama.jsonl`
+  beside it keep that cell's scores and clause-diff counts without text.
+  Sources did not change, so the baseline's source scores apply.
 
 ## Known failure points
 
