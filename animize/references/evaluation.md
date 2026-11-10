@@ -166,6 +166,14 @@ safety warning, procedural reminder, defined term, deliberate refrain, requested
 summary, modular reference section, and repeated fact supporting a new inference
 should remain. A distant paraphrase that adds nothing should not.
 
+Check a catalog entry against labeled text before it names a construction
+as a machine default. The harness's `construction_rates.py` reports how
+often people and models use each construction in a labeled dataset. A
+construction that people use more often than models is not a tell: remove
+the entry, or make it a density signal that leaves a single instance alone.
+Record the dataset, split, and model generation with the rates, because a
+rate measured on one generation of models can be wrong for the next.
+
 ## 4. Fidelity suite
 
 Construct passages containing:

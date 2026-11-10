@@ -53,7 +53,15 @@ the supported comparison.
 
 ## Sentence machinery
 
-**"Not just X, but Y."** State the point directly.
+**Staged contrast.** `Not just X, but Y`; `X rather than Y`; `Rather than X,
+Y`; `It is not X. It is Y.` across two sentences; `should not be confused
+with`. Each raises a position nobody held so that the point can arrive as a
+correction. State the point alone: "the outage was a process failure rather
+than a technical one" → "the outage was a process failure". Retain the
+contrast when the rejected side is real: the source or the reader holds it,
+it is the earlier state of the work, it is an alternative someone weighed,
+or it is the mistake an instruction exists to prevent ("the key is per
+user, not per session").
 
 **"The real X."** `The real problem`, `the real question`, `the real work`,
 `the real win`, `the real story`. The phrase promises a truth hidden behind a
@@ -84,9 +92,10 @@ claim with its own sentence.
 **Synonym cycling.** Protagonist, main character, central figure, hero within
 one passage. Pick the clearest term and repeat it.
 
-**Filler.** "In order to" → to. "Due to the fact that" → because. "It is
-important to note that" → delete. "There is/are … that" → recast around the
-real subject.
+**Filler.** "It is important to note that" → delete. "Due to the fact that"
+→ because. Leave a single `in order to`, `the fact that`, `as a result of`,
+or `there is … that` as it stands: each is ordinary English that people
+write more often than models do. Tighten only a passage that stacks them.
 
 **Empty significance adverbs.** `Significantly`, `meaningfully`, `dramatically`,
 `fundamentally`, `unusually`, and similar adverbs are defects when they supply
@@ -118,8 +127,9 @@ deliberately.
 
 **Stacked declaratives.** A run of short statements hides cause, contrast,
 condition, or qualification behind dramatic cadence. Join the thoughts with
-syntax that carries their real relationship. A deliberate sequence of beats is
-fine when the order or emphasis does useful work.
+the plain conjunction that carries their real relationship: `because`, `so`,
+`but`, `if`, or `although`. A deliberate sequence of beats is fine when the
+order or emphasis does useful work.
 
 ## Plain speech
 
@@ -134,6 +144,14 @@ another project's docs says nothing about this one.
 **First-pass syntax.** A sentence may carry several ideas when their
 relationship is clear. If the reader must backtrack to recover that
 relationship, split the sentence or remove nonessential clauses.
+
+**Spelled-out contractions.** A message, email, comment, PR description, or
+post that writes out every `do not`, `it is`, and `we will` reads stiffer
+than a person writing in that register. Contract where a speaker would.
+Keep the full form where it carries stress or states a rule ("do not run
+this in production", `must not`), in legal, academic, and formal reference
+prose, and wherever supplied samples or the destination's existing text
+write it out. A mix is normal: convert only what reads stiff.
 
 ## Typography and formatting
 
@@ -189,6 +207,8 @@ precision. Retain:
 - conventional passive voice in genres that require it
 - deliberate repetition, defined terms, and legal or technical modality
 - a colon or triad doing real work
+- ordinary idiom that people use freely: a single `in order to` or
+  `there is`, a plain `because`, and a request's `please`
 - clean grammar and complex formatting that fit the destination
 - genuine asides, fragments, self-corrections, contrasts, objections, and
   unusual details supported by the source or target samples

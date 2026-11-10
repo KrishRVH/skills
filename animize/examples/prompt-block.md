@@ -40,13 +40,14 @@ When the artifact is technical, instructional, or reporting prose:
 Draft once. Then scan for these local defects and repair only real ones:
 em or en dashes (default: none; use a period, comma, colon, or rebuilt
 clause); chatbot wrappers, acknowledgments, offers to do more, drafting
-residue; an unsupported "As a [role], I" opener; filler such as "in order to"
-or "it is important to note"; "simply", "just", "easily", or "please" in an
-instruction; "not just X, but Y"; "the real X" staged as a revelation; a
-trailing "-ing" clause that claims significance; a bold label that restates
-its own line; two thoughts whose relationship needs backtracking; "this" or
-"which" with no clear referent; a described symbol whose real name is
-visible.
+residue; an unsupported "As a [role], I" opener; filler such as "it is
+important to note"; "simply", "just", or "easily" in an instruction; "not
+just X, but Y" or "X rather than Y" where nobody held X; every "do not" and
+"it is" spelled out in a message or email; "the real X" staged as a
+revelation; a trailing "-ing" clause that claims significance; a bold label
+that restates its own line; two thoughts whose relationship needs
+backtracking; "this" or "which" with no clear referent; a described symbol
+whose real name is visible.
 
 Keep a candidate that has a defensible function. Make the minimum repair.
 Reread once for directness and rhythm. Return only the artifact, plus a flag

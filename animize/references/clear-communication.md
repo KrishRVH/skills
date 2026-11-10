@@ -76,9 +76,11 @@ documentation defaults:
 3. Sound like a knowledgeable friend: conversational and direct, with plain
    words instead of slang, wordplay, exclamation marks, or pop-culture
    references.
-4. Write instructions as plain imperatives, such as "Click **View**." Remove
-   politeness and ease claims such as `please`, `simply`, `easily`, `just`, and
-   `quickly`.
+4. Write a documentation instruction as a plain imperative, such as "Click
+   **View**." Remove ease claims such as `simply`, `easily`, `just`, and
+   `quickly`, and remove `please` from a procedure step. A request to a
+   person in a message, email, or comment keeps the courtesy the source
+   gave it.
 5. Put the condition or goal before the instruction so an unaffected reader
    can skip it: `To delete the file, click **Delete**.`
 6. Put the common case first and exceptions after it.
