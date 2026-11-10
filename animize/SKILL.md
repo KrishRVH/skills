@@ -27,10 +27,10 @@ describable as human-written with AI assistance.
 
 Use Animize when the caller invokes it for a lasting piece of writing: a PR
 description, review or issue comment, document, article, email, post, or other
-text intended to be saved, sent, or published. Apply the procedure to that artifact.
-Keep surrounding conversation in the agent's ordinary voice. If the caller
-explicitly asks to apply Animize to a conversational reply, treat the requested
-reply as the artifact.
+text intended to be saved, sent, or published. Apply the procedure to that
+artifact. Keep surrounding conversation in the agent's ordinary voice. If the
+caller explicitly asks to apply Animize to a conversational reply, treat the
+requested reply as the artifact.
 
 ## One unattended procedure
 
@@ -89,10 +89,13 @@ producing it, Recompose still runs and the notes carry the origin note:
 When the caller asks what is wrong, asks for a review or diagnosis, asks for a
 source-versus-revision fidelity comparison, or forbids edits, run the
 procedure as a diagnosis: apply every check to the text as it stands and
-change nothing. Return the findings as notes and withhold the artifact. Each
-finding carries its location, the observable pattern or changed relationship,
-the reader effect or fidelity consequence, and the smallest repair. Do not
-assign authorship in a finding.
+change nothing. Return the findings as notes, ranked by cost to the reader,
+and withhold the artifact. Each finding carries its location, the observable
+pattern or changed relationship, the reader effect or fidelity consequence,
+and the smallest repair. For a cluster, that is one repair to the whole
+passage. Name the pattern and its effect, never who or what wrote the text.
+A framing question the material leaves open is a finding. The run changes
+nothing, so it carries no origin note.
 
 ### Clear-communication profile
 
@@ -101,6 +104,8 @@ applies to technical, instructional, reporting, reference, how-to, and
 tutorial prose, including workplace messages such as PR text, issue comments,
 and status email. It stays inactive for fiction, essays, marketing, and
 personal prose. A caller request or a project style guide decides first.
+Marketing copy inside a technical destination, such as a README or product
+documentation, gets the profile.
 When following writing samples, protect supported voice traits, but still
 repair ambiguity or hidden agency that changes what the reader can do or
 infer. Preserve repairs clarity defects through its own edit policy and runs
@@ -118,7 +123,8 @@ reports on. Record internally:
 - main point and required content or structure
 - artifact boundary: which passages belong in the output and which are
   instructions, samples, quotations, code, data, or commentary about the work
-- source boundary and authorized external sources
+- source boundary: the source draft, the brief, the task evidence, and any
+  external source the caller authorized
 - protected exact spans
 - requested style standards or registers
 - writing samples, when the caller supplied any
@@ -126,14 +132,15 @@ reports on. Record internally:
 Under Recompose, answer three questions before drafting:
 
 1. What is the one thing the reader must leave with?
-2. What does the caller actually think about it?
+2. What does the caller actually think about it? When the caller states no
+   view, what does the evidence support concluding?
 3. What is one real particular (a number, an event, a name, a mechanism) the
    piece can stand on?
 
-Answer them from the brief, the source, and the task evidence inside the
-source boundary. When that material leaves a question open, write the
-narrowest piece the material supports and name the open question in the
-notes. Never fill the gap with an average of what such a piece usually says.
+Answer them from the material inside the source boundary. When it leaves a
+question open, take the default: write the narrowest piece the material
+supports and name the open question in the notes. Never fill the gap with an
+average of what such a piece usually says.
 
 Complete framing when the reader, purpose, artifact and source boundaries,
 and protected spans are each settled from the material or from a default.
@@ -161,6 +168,8 @@ every run of the branch:
 
 Preserve leaves the repair catalogs unloaded on purpose: its edit policy
 repairs what a reader would notice in the draft, not what a catalog can find.
+Loading a file does not activate it: the profile's rules apply only when
+Routing selects the profile.
 
 Then follow [procedure.md](references/procedure.md): every step of the routed
 branch in order, then the acceptance gate. Verification is an internal step
@@ -171,24 +180,24 @@ Complete the procedure only when the acceptance gate passes.
 
 ## Destination and delivery
 
-| Destination                  | Rule                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------ |
-| Invoked conversational reply | Return the answer without a change log or self-review.                                           |
-| Artifact embedded in chat    | Keep surrounding explanation separate and return clean artifact text.                            |
-| File target                  | Edit only bounded prose; preserve frontmatter, code, data, and link targets outside scope.       |
-| Email, DM, or SMS            | Return sendable plain text without literal Markdown markers.                                     |
-| Social post                  | Follow the requested platform form without importing documentation structure or decorative tags. |
-| Code-bearing prose           | Use real identifiers in code font and never reflow or restyle code.                              |
-| Repository review            | Report and rank candidates without editing files unless the caller selects them for repair.      |
+| Destination                  | Rule                                                                                                            |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Invoked conversational reply | Return the answer without a change log or self-review.                                                          |
+| Artifact embedded in chat    | Return clean artifact text apart from any explanation. Fence it when it carries markup its destination renders. |
+| File target                  | Edit only bounded prose; preserve frontmatter, code, data, and link targets outside scope.                      |
+| Email, DM, or SMS            | Return sendable plain text without literal Markdown markers.                                                    |
+| Social post                  | Follow the requested platform form without importing documentation structure or decorative tags.                |
+| Code-bearing prose           | Use real identifiers in code font and never reflow or restyle code.                                             |
+| Repository review            | Report and rank candidates without editing files unless the caller selects them for repair.                     |
 
 A file of unstated origin is overwritten only when version control can
 restore the original. Otherwise leave the file as it is, return the
 recomposed text in the reply, and say so in the notes.
 
 Return the artifact alone when nothing requires reporting. Notes follow the
-artifact and never enter it. Keep each note to the one or two sentences the
-caller needs in order to act on it. A run returns notes when any of these
-applies:
+artifact, never enter it, and are written in the agent's ordinary voice. Keep
+each note that accompanies an artifact to the one or two sentences the caller
+needs in order to act on it. A run returns notes when any of these applies:
 
 - the origin note from Routing
 - under Preserve: the notes
@@ -216,8 +225,9 @@ default. Remove redundancy and empty scaffolding; omit or compress unique
 substance only with scoped authorization or when the requested form
 necessarily compresses it.
 
-Factual handling is preserve-and-flag. Correct a claim only from sources the
-caller supplies. Qualify or withhold a claim that is unsafe to publish.
+Factual handling is preserve-and-flag. Correct a claim only from material
+inside the source boundary. Qualify or withhold a claim that is unsafe to
+publish.
 
 Voice shapes expression, never content. Writing samples or a first-person
 source can justify cadence, diction, humor, roughness, or unusual structure.

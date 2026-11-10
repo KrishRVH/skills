@@ -1,6 +1,6 @@
 # Line-level tells
 
-Constructions that readers now recognize as machine defaults. Unlike the
+Constructions that readers recognize as machine defaults. Unlike the
 skeptical-reader clusters, these can usually be judged and repaired locally.
 For each candidate, choose `fix`, `retain`, or `flag`: one conspicuous formula
 may justify a fix, while an ordinary word or punctuation mark usually matters
@@ -160,9 +160,9 @@ says otherwise.
 **Diff-anchored reference prose.** `Was added`, `now uses`, `has been updated`,
 and `replaces the old` narrate an edit instead of explaining current behavior.
 Describe the steady state in reference docs and comments. Retain change framing
-in changelogs, release notes, migrations, postmortems, and other version-scoped
-genres, and retain historical rationale when it changes correct use or
-interpretation.
+in commit messages, PR descriptions, changelogs, release notes, migrations,
+postmortems, and other version-scoped genres, and retain historical rationale
+when it changes correct use or interpretation.
 
 **Destination mismatch.** Markdown markers in email or SMS, decorative social
 tags in documentation, or repeated exclamation marks and ellipses in a quiet

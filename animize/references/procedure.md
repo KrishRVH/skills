@@ -48,8 +48,8 @@ Permitted, in order of preference:
    not defects. Never trade a word for a near synonym, modernize it, or
    insert a word the clause is complete without.
 4. **Merge or split at clause boundaries.** Join two source clauses with a
-   conjunction or a period, or separate them, without introducing a clause
-   that has no source.
+   conjunction or a period, separate them, or move a paragraph break, without
+   introducing a clause that has no source.
 
 Prohibited:
 
@@ -132,7 +132,8 @@ Deliver by the entry point's
 [destination and delivery](../SKILL.md#destination-and-delivery) rules. The
 Preserve notes are:
 
-- the clause-diff summary from P3
+- the clause-diff summary from P3 on one line, then one line naming each
+  edit in plain words, because the clause labels count clauses, not edits
 - one line stating why Preserve ran: the caller's statement of authorship,
   which the run did not verify, or the caller's request to keep the wording
 - residual defects left unrepaired because of the edit policy or the budget,
@@ -150,14 +151,17 @@ and suggestion.
 Recompose rebuilds the piece from its content. A findings-only run uses this
 branch as a diagnosis: it skips R3 and R4, runs every other step on the text
 as it stands, and reports each repair as a finding instead of applying it.
-R7 runs when there is a source and a revision to compare.
+R7 compares a source with a revision when the caller supplied both; on a
+single text it runs only the Unicode scan. The checks on generated prose, R8's
+final scan and the gate's Dashes check, have nothing to apply to.
 
 ### R1. Lock the content
 
 Build the content lock in
-[the content-lock schema](verification.md#1-content-lock-schema). For a
-rewrite, fill it from the source. For a write job, fill it from the brief and
-authorized supporting material.
+[the content-lock schema](verification.md#1-content-lock-schema). Fill it
+from everything inside the source boundary Frame recorded: the source draft,
+the brief, the task evidence, and authorized sources. Record a draft's claim
+that the rest of that material does not support with `support: unsupported`.
 
 Apply the entry point's positive-scope test before locking a negative scope
 statement. Lock a decision-relevant constraint, prohibition, exclusion, or
@@ -179,13 +183,16 @@ Classify the material:
   are sparse. Write the strongest narrower piece the source supports, and
   name in the notes each framing question the material left open.
 - **Unsafe:** a central claim is unsupported, contradictory, or misleading.
-  Preserve and flag it. Correct it only from sources the caller supplied.
-  Qualify or withhold it when publishing it unqualified would mislead.
+  Preserve and flag it. Correct it only from material inside the source
+  boundary. Qualify or withhold it when publishing it unqualified would
+  mislead.
 
 Never compensate for thin material with invented detail or personality. Treat
 vague benefits, quality labels, and future action as proof gaps, not raw
-material for a stronger claim. Narrow them to what the source establishes or
-flag the missing actor, mechanism, changed step, metric, evidence, or owner.
+material for a stronger claim. Narrow each to what the source boundary
+establishes, and name in the notes what was narrowed or withheld and the
+missing actor, mechanism, changed step, metric, evidence, or owner. That
+narrowing is authorized: verification does not count it as a weakened claim.
 
 Complete the test when the material is classified and the permitted response
 to that classification is fixed.
@@ -294,8 +301,8 @@ Classify each candidate from either pass:
 For each `retain`, record the span, the pattern it matched, the function that
 makes it legitimate, and the source or genre evidence for that function. A
 claim that the span sounds natural is not a function. Keep the record
-internal; report it only in a findings-only run or when the caller asked what
-changed.
+internal; report it, one line per span, only in a findings-only run or when
+the caller asked what changed.
 
 Complete the pass when every diagnostic and every entry has been applied,
 every candidate is classified, every `fix` is repaired, and clean or
@@ -342,8 +349,8 @@ the gate passes when every check has been applied.
 
 Every run:
 
-- **Completeness:** every step of the routed branch ran, whatever the
-  artifact's length
+- **Completeness:** every step the routed branch requires of this run ran,
+  whatever the artifact's length
 - **Fidelity:** zero unauthorized substantive changes, including added or
   removed commitments
 - **Exact spans:** every protected exact span is reproduced exactly, and the

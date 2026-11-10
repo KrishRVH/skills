@@ -175,10 +175,9 @@ Treat the codebase as the word list:
   font. Do not substitute a synonym for an exact identifier.
 - Use the plain verbs a developer would say aloud, such as `move` and `delete`,
   instead of an invented metaphor.
-- Describe shipped behavior as the current state. Keep change framing for
-  changelogs, release notes, migrations, postmortems, and other version-scoped
-  destinations. See
-  [diff-anchored reference prose](tells.md#typography-and-formatting).
+- Describe shipped behavior as the current state. Keep change framing where
+  [diff-anchored reference prose](tells.md#typography-and-formatting) retains
+  it.
 - Name the human or system actor when responsibility matters. Literal system
   actions and conventional agency remain valid; repair wording only when it
   hides task-relevant agency. See
