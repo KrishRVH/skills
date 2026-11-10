@@ -274,6 +274,11 @@ Not adopted:
   most human text.
 - Genre baselines for sentence length and contraction rate. They wait for
   text from the voice packet.
+- A regime that finishes a writer's rough version. Preserve adds no
+  sentence, so it returns a two-minute rough version nearly as it came. The
+  voice packet collects eight rough versions, and a prompt outside the skill
+  finishes them. The regime waits on what the live model says about those
+  finished versions.
 
 The line on changes made for the verdict. The maintainer's position is that
 making a model-written message read the way a person would write it
