@@ -4,101 +4,43 @@ This repository stores reusable skills.
 
 ## What Lives Here
 
-- Each visible top-level folder is one skill.
-- Every skill folder must contain a `SKILL.md` at its root.
-- Supporting material should live inside the skill folder, not at the
-  repository root.
-- Dot-prefixed root folders are repo infrastructure, not skills.
+- Each visible top-level folder is one skill, entered through the `SKILL.md`
+  at its root. Supporting material lives inside the skill folder.
+- Dot-prefixed root folders are repo infrastructure, not skills. Give every
+  non-skill root folder a dot prefix.
+- Skill categories exist only in `README.md`. Every skill stays a top-level
+  folder; grouping folders such as `quality/` or `workflow/` break discovery
+  and install paths.
 - Root-level docs explain repository-wide expectations:
   - `README.md` lists the published skills.
-  - `STYLE.md` defines how to create and update skills.
+  - `STYLE.md` defines how to create and update skills: layout, naming,
+    frontmatter, the automated contract, and writing rules.
   - `AGENTS.md` explains how to work in this repository.
-
-## Expected Shape
-
-Use a simple, predictable structure:
-
-```text
-skill-name/
-  SKILL.md
-  agents/
-    openai.yaml
-  references/
-    REFERENCE.md
-  assets/
-    RESOURCE-FILE
-  helpers/
-    HELPER-NAME.md
-  templates/
-    SKILL-NAME.ext
-```
-
-Optional examples may live in `examples/` when they support trigger behavior,
-output expectations, or forward-testing.
-
-## Structure Rules
-
-- The folder name is the skill name and must be lowercase kebab-case.
-- `SKILL.md` is required and is the entry point for the skill.
-- `SKILL.md` frontmatter must include `name` and `description`; treat those
-  fields as the portable skill-selection contract.
-- Every skill includes `agents/openai.yaml` for picker metadata and the
-  harness-specific invocation policy.
-- Do not create visible root-level non-skill folders. Use dot-prefixed folders
-  for repo infrastructure.
-- Keep skill categories in README only. Do not create
-  visible grouping folders such as `quality/`, `workflow/`, or `config/`.
-- `references/` is for longer factual or background material the skill may lean on.
-- `assets/` is for static resources consumed by the skill's output, such as
-  document templates, images, fonts, fixtures, or boilerplate.
-- `helpers/` is for smaller supporting Markdown files that belong to the parent skill.
-- `templates/` is for reusable output skeletons when a skill needs them.
-- `examples/` is optional and only for concrete sample inputs or outputs that
-  improve trigger behavior, output expectations, or forward-testing.
-- `agents/` is machine metadata. It contains only `openai.yaml` and does not
-  participate in support-file reachability.
-- Template filenames must use the parent skill name as their uppercase stem,
-  preserve kebab-case, and keep the format's normal extension:
-  `skill-name/templates/SKILL-NAME.ext`.
-- Only create directories that the skill actually uses. Avoid empty scaffolding.
 
 ## Working In This Repo
 
 - Start by reading the target skill's `SKILL.md`.
+- Read [`STYLE.md`](STYLE.md) before creating or changing any file inside a
+  skill folder.
 - Read [`.agents/invocation.md`](.agents/invocation.md) when adding a skill or
   changing whether an agent may invoke one implicitly.
-- Keep context and examples close to the skill that uses them.
 - Update `README.md` when adding, renaming, or removing a top-level skill.
-- Follow `STYLE.md` for naming, tone, structure, and update rules.
 - Preserve user work in the dirty tree. Do not revert unrelated changes.
 
 ## Commands
 
-- Use `mise run tasks` to list the available command surface.
-- Use `mise run standards` to format and lint-fix Markdown.
-- Use `mise run skills:check` to run the validator tests and validate skill
-  packages, metadata, support-file reachability, and publication entries.
-- Use `mise run standards:check` before handoff. It scans for secrets, checks
+- Run every tool through its mise task; `mise run tasks` lists them. Call a
+  package manager or quality tool directly only when fixing the mise task
+  that wraps it.
+- Run `mise run standards` after editing Markdown. It formats and lint-fixes.
+- Run `mise run standards:check` before handoff. It scans for secrets, checks
   Markdown structure and formatting, validates skills and local links, and
   checks prose and filenames for typos.
-- Use `mise run secrets` for a focused secret scan.
-
-Do not call package managers or quality tools directly unless fixing the mise
-task that wraps them.
+- Run `mise run skills:check` or `mise run secrets` for a focused pass on
+  skill packages or secrets.
 
 ## Git
 
 - Keep generated and local-only files out of commits.
 - Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/#specification)
   for every commit message.
-
-## Language Rules
-
-Keep skill instructions tool- and vendor-neutral:
-
-- Keep product-specific names inside installation instructions, machine
-  adapter paths, and documentation that defines those adapters.
-- Prefer neutral terms such as `coding agent`, `caller`, `workflow`,
-  `workspace`, or `session`.
-- Write guidance so it still makes sense if the skill is used in a different
-  tool later.

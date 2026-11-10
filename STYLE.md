@@ -10,28 +10,24 @@ Use this guide when creating or updating any skill in this repository.
 - Match specificity to risk: fragile work needs tighter guardrails; contextual
   work needs room for judgment.
 - Separate facts, guesses, and recommended next steps.
-- Keep skills agent-agnostic. Do not depend on a named product or model.
 
 ## Naming And Layout
 
-- Use a lowercase kebab-case folder name for each skill.
-- Match the folder name and frontmatter `name`.
-- Put the required `SKILL.md` at the root of the skill folder.
-- Put picker metadata and invocation policy in `agents/openai.yaml`.
-- Treat `SKILL.md` plus frontmatter `name` and `description` as the required
-  portable contract.
-- Keep visible root-level directories reserved for skills.
-- Store supporting material in well-named subdirectories:
+The [automated skill contract](#automated-skill-contract) fixes names,
+required files, and permitted folders. Within it:
+
+- `SKILL.md` with frontmatter `name` and `description` is the portable
+  contract. `agents/openai.yaml` carries picker metadata and the
+  harness-specific invocation policy.
+- Store supporting material in the folder that matches its job:
   - `references/` for longer factual or background material
-  - `assets/` for static resources consumed by the skill's output
+  - `assets/` for static resources consumed by the skill's output, such as
+    document templates, images, fonts, fixtures, or boilerplate
   - `helpers/` for smaller helper Markdown files
   - `templates/` for substantial reusable output skeletons
-- Use `examples/` only when concrete sample inputs or outputs improve trigger
-  behavior, output expectations, or forward-testing.
-- Keep the structure minimal. Add folders only when they serve the skill.
-- Use the parent skill name as each template's uppercase stem, preserve
-  kebab-case, and keep the format's normal extension:
-  `skill-name/templates/SKILL-NAME.ext`.
+  - `examples/` for concrete sample inputs or outputs that improve trigger
+    behavior, output expectations, or forward-testing
+- Keep the structure minimal. Add a folder only when the skill uses it.
 
 ## Invocation And Frontmatter
 
@@ -72,11 +68,13 @@ non-ignored skill files. The deterministic contract is:
   over 100 lines includes an H2 `Contents` or `Table of contents` section with
   at least one same-document link. Any supporting Markdown file has at most
   100,000 UTF-8 bytes.
-- Template names use the uppercase parent skill name, README contains exactly
-  one complete install command per skill folder in a `ruby` display fence
-  containing no other commands, and rendered skill prose omits the unambiguous
-  vendor terms configured in `.config/skills/validation.json`. Installation
-  commands are exempt from the vendor-term check.
+- A template name uses the parent skill name as its uppercase stem, keeps the
+  kebab-case, and keeps the format's normal extension:
+  `skill-name/templates/SKILL-NAME.ext`.
+- README contains exactly one complete install command per skill folder in a
+  `ruby` display fence containing no other commands.
+- Rendered skill prose omits the unambiguous vendor terms configured in
+  `.config/skills/validation.json`. Installation commands are exempt.
 
 These checks enforce portable structure, bounded context, and discoverable
 resources. They do not decide whether a completion criterion is genuinely
@@ -107,6 +105,17 @@ good. Review and forward-test those behavioral properties.
   guardrails and pair them with the intended alternative.
 - Keep examples realistic and aligned with the actual workflow.
 
+## Neutral Language
+
+Keep skill instructions tool- and vendor-neutral, so the guidance still makes
+sense when the skill runs in a different tool:
+
+- Keep product-specific names inside installation instructions, machine
+  adapter paths, and documentation that defines those adapters.
+- Prefer neutral terms such as `coding agent`, `caller`, `workflow`,
+  `workspace`, or `session`.
+- Depend on no named product or model.
+
 ## Output Quality
 
 Every skill must define enough output guidance to prevent generic filler. Make
@@ -118,8 +127,7 @@ clear:
 - how to omit unsupported sections and placeholders
 
 Keep simple adaptive reports inline. Use a template only when the skill produces
-a substantial, rigid artifact whose exact structure matters. Do not create an
-empty `templates/` directory.
+a substantial, rigid artifact whose exact structure matters.
 
 ## Updating An Existing Skill
 
@@ -127,25 +135,22 @@ empty `templates/` directory.
 - Start from concrete successes and failures observed in real use.
 - Clean up stale or contradictory wording instead of layering exceptions onto
   it.
-- Keep examples, pointers, and supporting material synchronized with the
-  instructions.
-- Update `README.md` when adding, renaming, or removing a top-level skill.
-- Replace product-specific references with neutral language.
+- Keep examples, pointers, supporting material, and the README entry
+  synchronized with the instructions.
 - Forward-test substantial or behaviorally subtle revisions with independent,
   highest-capability workers. Give them the skill and realistic raw artifacts,
   not the intended answer or diagnosis.
 
 ## Review Checklist
 
-Before finishing a change, confirm:
+`mise run standards:check` confirms the automated contract. Before finishing
+a change, confirm what it cannot decide:
 
-- the folder name matches the skill name
 - invocation mode and description match the intended reach
-- `SKILL.md` exists at the skill root with valid frontmatter
 - every step has an appropriate completion criterion
-- required instructions are inline and every relative pointer resolves
+- instructions every branch needs are inline, and each pointer says when to
+  follow it
 - each behavior has one source of truth and no obvious no-op wording
-- support folders are useful and non-empty
-- templates, when justified, use the parent skill's uppercase name
-- README entries and install commands are current
+- every support file is used by the skill
+- the README entry still describes the skill
 - substantial revisions were forward-tested when practical
