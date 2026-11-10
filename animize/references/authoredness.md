@@ -207,52 +207,35 @@ constraints. Invention is permitted only within the creative brief.
 
 ## 11. Voice
 
-When the caller supplied writing samples, complete a voice record before
-drafting. Record three to five observable signals, each tied to source evidence, such as
-sentence movement, density, register, stance, vocabulary, paragraph shape,
-humor, qualification, or deliberate roughness. Exclude topic vocabulary,
-demographic inference, isolated punctuation, and memorable phrases that would
-amount to imitation.
+### No samples supplied
 
-Do not mark voice capture complete until three to five supported signals are
-recorded. When the available material supports fewer than three, preserve only
-what is observable and mark writer recognition unverified rather than inventing
-the missing signals. After drafting, ask whether a reader familiar with the
-writer could recognize the same decision-making habits after topic words and
-protected phrases are removed. Recognition is a voice-fidelity test, not proof
-of authorship.
-
-### Default: no samples supplied
-
-Treat source cadence, sentence shapes, transitions, headings, and lexical habits
-as editable rather than protected. Use a direct, unshowy register suited to the
-genre. Preserve content, deliberate terminology, and owned evaluative force.
-
-Rebuilding is permission to change the structure, not a quota for change. Leave
-an exact, deliberate, genre-native passage intact when a rewrite would serve no
-reader-facing purpose.
-
-### The caller's own draft
-
-A draft the caller calls their own writing runs under
-[the Preserve branch](procedure.md#preserve-branch), whose edit policy
-protects the author's voice by construction: every change is a deletion, a
-reorder, a defect repair within a clause, or a merge or split at a clause
-boundary. That branch needs no voice record.
+Use a direct, unshowy register suited to the genre.
 
 ### Supplied samples
 
-Infer durable traits from more than one passage when possible. Separate writer
-traits from topic vocabulary and genre requirements. Match functional
-properties rather than memorable phrasing. Supplied samples and destination
-style outrank discretionary tell heuristics when they show a consistent
-deliberate choice; they do not override fidelity, integrity, or protected
-exact spans. A consistent punctuation habit in the samples, including dash
-use, counts as a controlling style for the tier 8 default. Record both
-positive habits and
-evidence-backed negative boundaries: registers, phrases, or mannerisms the
-samples consistently avoid. Do not infer an absence from a single short sample
-or from demographic stereotypes.
+Complete a voice record before drafting. Record three to five observable
+signals, each tied to evidence in the samples, such as sentence movement,
+density, register, stance, vocabulary, paragraph shape, humor, qualification,
+or deliberate roughness. Record both positive habits and evidence-backed
+negative boundaries: registers, phrases, or mannerisms the samples
+consistently avoid. Exclude topic vocabulary, genre requirements, demographic
+inference, isolated punctuation, and memorable phrases that would amount to
+imitation. Infer a durable trait from more than one passage when possible,
+and infer no absence from a single short sample.
+
+When the samples support fewer than three signals, preserve only what is
+observable and mark writer recognition unverified rather than inventing the
+missing signals.
+
+Supplied samples and destination style outrank discretionary tell heuristics
+when they show a consistent deliberate choice; they do not override fidelity,
+integrity, or protected exact spans. A consistent punctuation habit in the
+samples, including dash use, counts as a controlling style for the tier 8
+default.
+
+After drafting, ask whether a reader familiar with the writer could recognize
+the same decision-making habits after topic words and protected phrases are
+removed. Recognition is a voice-fidelity test, not proof of authorship.
 
 ## 12. Continuous read tests
 

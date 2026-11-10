@@ -1,7 +1,10 @@
 # Verification
 
-Use this reference after the rewrite is complete. Generation and verification
-are separate tasks. Do not accept a revision merely because it reads well.
+Generation and verification are separate tasks. Do not accept a revision
+merely because it reads well. The content-lock schema is filled before
+drafting, at the procedure's lock step. Every later section runs on the
+finished text: against the content lock under Recompose, and against the
+caller's draft under Preserve.
 
 ## Contents
 
@@ -12,18 +15,17 @@ are separate tasks. Do not accept a revision merely because it reads well.
 - [High-risk semantic checks](#5-high-risk-semantic-checks)
 - [Human-integrity check](#6-human-integrity-check)
 - [Structural verification](#7-structural-verification)
-- [Skeptical-reader red team](#8-skeptical-reader-red-team)
-- [Acceptance decision](#9-acceptance-decision)
 
 ## 1. Content-lock schema
 
-The internal content lock should contain, where applicable:
+The content lock records, where applicable:
 
 ```yaml
 purpose: ""
 reader: ""
 genre: ""
 main_point: ""
+required_content: [] # examples, actions, or sections the brief requires
 artifact_boundary:
   include: []
   exclude: []
@@ -33,7 +35,7 @@ claims:
     actor: ""
     support: supplied | authorized_source | inference | unsupported
     modality: may | likely | will | must | none
-    scope: ""
+    scope: "" # quantifiers, exceptions, and conditions
     polarity: positive | negative
     attribution: ""
 relationships:
@@ -42,6 +44,7 @@ relationships:
     to: C2
 protected:
   names: []
+  places: []
   numbers: []
   dates: []
   units: []
@@ -49,10 +52,11 @@ protected:
   quotations: []
   citations: []
   urls: []
-owned_judgments: []
-commitments: []
-state_labels: []
-source_gaps: []
+  code: []
+owned_judgments: [] # each with its strength
+commitments: [] # promises, obligations, permissions, prohibitions, guarantees, owners
+state_labels: [] # current, prior, proposed, hypothetical, or unknown
+source_gaps: [] # unsupported or ambiguous source claims
 ```
 
 The representation may be informal, but it must capture the same distinctions.
@@ -150,23 +154,14 @@ Compare source and output for:
 
 Do not normalize exact elements without authorization.
 
-For stylistic diagnostics, mask each protected exact span with a stable
-identifier and restore it exactly afterward. Masking keeps the diagnostic from
-rewriting the span; it does not replace the source-versus-output exactness
-check.
-
 Scan Unicode candidates by provenance. Record whether zero-width characters,
 `U+00AD` soft hyphens, `U+00A0` non-breaking spaces, or mixed-script homoglyphs
 were source-supplied or introduced by the revision. Remove unsupported
 introduced residue. Flag suspicious source residue with its location and code
 point, and never silently normalize a protected span. Defend language-required
 joiners, intentional typesetting spaces, and exact characters in names, code,
-identifiers, or quotations.
-
-Generated prose follows the entry point's tier 8 dash default unless a
-protected exact span, an explicit caller request, or a controlling style
-guide or sample set decides otherwise. Verify this as an output preference,
-never as evidence about authorship.
+identifiers, or quotations. A defense names the character's function and its
+source support.
 
 ## 5. High-risk semantic checks
 
@@ -240,8 +235,8 @@ omit it. Do not simulate it.
 
 ## 7. Structural verification
 
-Under the Recompose regime, check that the result is not merely a lexical
-paraphrase:
+This section applies under Recompose; Preserve verifies structure with its
+clause diff. Check that the result is not merely a lexical paraphrase:
 
 - the information hierarchy reflects the reader's needs
 - paragraph boundaries follow the new plan
@@ -254,54 +249,3 @@ paraphrase:
 
 Structural independence is not a license to reorder chronology, logic, or
 procedural steps incorrectly.
-
-Under the Preserve regime, structural independence is not the goal. Run the
-clause diff from [the procedure](procedure.md#p3-clause-diff) instead
-and confirm zero added clauses and a model-token share under budget.
-
-## 8. Skeptical-reader red team
-
-Mask protected exact spans before this pass. Read the remaining output while
-assuming it may be AI-assisted. Mark every span that feels assembled rather
-than decided. For each mark, name the observable reason:
-
-- generic or portable claim
-- exposed template
-- over-symmetry
-- inflated importance
-- vague authority
-- repeated rhetorical device
-- unnecessary recap or transition
-- slogan ending
-- borrowed intimacy
-- polished abstraction without particulars
-
-Repair only supported defects. A suspicion without an observable reader-facing
-problem does not justify random change.
-
-For every candidate retained as a false positive, record the exact span, the
-apparent pattern, its legitimate function, and the evidence for that function.
-Do not count defended false positives as defects. In a findings-only fidelity
-review, report a
-defense only when exhaustive accounting is requested or the defense explains a
-material decision.
-
-## 9. Acceptance decision
-
-Reject or revise the artifact when any of these remain:
-
-- unsupported added claim
-- changed actor, scope, modality, polarity, causation, chronology, attribution,
-  or evaluation
-- fabricated personal or source material
-- invented commitment, obligation, permission, owner, deadline, or guarantee
-- leaked brief material or a hypothetical presented as fact
-- corrupted quotation, citation, URL, code, or exact value
-- a dash character outside the tier 8 default without a stronger tier
-  deciding it
-- unsupported Unicode residue introduced by the revision
-- central generic scaffolding that survives a requested recompose
-- unresolved material claim that makes publication unsafe
-
-Minor stylistic preferences are not blockers when the prose is clear,
-genre-native, and deliberate.

@@ -34,13 +34,20 @@ reply as the artifact.
 
 ## One unattended procedure
 
-Animize runs unattended. One invocation runs the whole procedure on one
-artifact: Routing, Frame, every step of the routed branch, the universal
-gate, and delivery. The caller sets nothing and is asked nothing.
+Animize runs unattended. The caller sets nothing and is asked nothing. One
+invocation runs four steps on one artifact, in order:
 
-- **Same steps at every length.** A three-sentence message gets the same
-  content lock, verification, and gate as a long report. Length changes how
-  long a step takes, never which steps run.
+1. [Route](#routing) the run to a regime.
+2. [Frame](#frame) the artifact.
+3. [Run the procedure](#procedure): load the routed branch's files, run every
+   step of the branch, and pass the acceptance gate.
+4. [Deliver](#destination-and-delivery) the artifact and any notes.
+
+Three properties hold on every run:
+
+- **Same steps at every length.** A three-sentence message runs every step a
+  long report runs. Length changes how long a step takes, never which steps
+  run.
 - **Defaults, then notes.** Settle every open fact from the request, the
   text, and the session. When none of them settles it, take the default this
   entry point names, finish the work, and state the default in the notes.
@@ -49,8 +56,156 @@ gate, and delivery. The caller sets nothing and is asked nothing.
   register, or house style needs no note.
 - **Plain instructions still govern.** A style guide, a length, a register,
   writing samples, or a request for a change summary is an ordinary
-  instruction and takes its tier in Precedence. A run is complete without
-  any of them.
+  instruction and takes its tier in [Precedence](#precedence). A run is
+  complete without any of them.
+
+## Routing
+
+Route from the request, the text, and the session. Every case below has an
+outcome, so routing completes without the caller.
+
+### Regime
+
+| What the run knows                                                                            | Regime    | What the regime does                                                                           |
+| --------------------------------------------------------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------- |
+| The caller says the draft is their own writing, or asks to keep its wording                   | Preserve  | Repairs reader-facing defects inside the draft's own wording, under an edit policy and budget. |
+| Anything else: a draft a model produced, a brief with no draft, or a draft of unstated origin | Recompose | Rebuilds the piece from its locked content.                                                    |
+
+Only the caller's statement selects Preserve: `I wrote this`, `my own draft`,
+`keep the wording`. A possessive such as `my PR description` names whose
+artifact it is, not who wrote it. A draft's first-person content, roughness,
+or particulars never select Preserve on their own. Under Preserve the run
+takes the caller's word about authorship, does not verify it, and says so in
+the notes.
+
+When a draft's origin is unstated and the session does not show a model
+producing it, Recompose still runs and the notes carry the origin note:
+
+> Origin note: this draft's origin was not stated, so it was fully
+> recomposed. If you wrote it, say so and the next run keeps your wording.
+
+### Findings only
+
+When the caller asks what is wrong, asks for a review or diagnosis, asks for a
+source-versus-revision fidelity comparison, or forbids edits, run the
+procedure as a diagnosis: apply every check to the text as it stands and
+change nothing. Return the findings as notes and withhold the artifact. Each
+finding carries its location, the observable pattern or changed relationship,
+the reader effect or fidelity consequence, and the smallest repair. Do not
+assign authorship in a finding.
+
+### Clear-communication profile
+
+The profile in [clear-communication.md](references/clear-communication.md)
+applies to technical, instructional, reporting, reference, how-to, and
+tutorial prose, including workplace messages such as PR text, issue comments,
+and status email. It stays inactive for fiction, essays, marketing, and
+personal prose. A caller request or a project style guide decides first.
+When following writing samples, protect supported voice traits, but still
+repair ambiguity or hidden agency that changes what the reader can do or
+infer. Preserve repairs clarity defects through its own edit policy and runs
+without the profile.
+
+Complete routing when the regime, the findings-only decision, and the profile
+are each settled by a row or sentence above.
+
+## Frame
+
+Read the complete brief, the source, and the task evidence the artifact
+reports on. Record internally:
+
+- reader, genre, destination, purpose, and desired response
+- main point and required content or structure
+- artifact boundary: which passages belong in the output and which are
+  instructions, samples, quotations, code, data, or commentary about the work
+- source boundary and authorized external sources
+- protected exact spans
+- requested style standards or registers
+- writing samples, when the caller supplied any
+
+Under Recompose, answer three questions before drafting:
+
+1. What is the one thing the reader must leave with?
+2. What does the caller actually think about it?
+3. What is one real particular (a number, an event, a name, a mechanism) the
+   piece can stand on?
+
+Answer them from the brief, the source, and the task evidence inside the
+source boundary. When that material leaves a question open, write the
+narrowest piece the material supports and name the open question in the
+notes. Never fill the gap with an average of what such a piece usually says.
+
+Complete framing when the reader, purpose, artifact and source boundaries,
+and protected spans are each settled from the material or from a default.
+
+## Procedure
+
+Load the routed branch's files before its first step. The set is fixed for
+every run of the branch:
+
+| Branch                                 | Files                                                                                                             |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Preserve                               | `procedure.md`, `verification.md`                                                                                 |
+| Recompose, and every findings-only run | `procedure.md`, `verification.md`, `tells.md`, `skeptic-patterns.md`, `authoredness.md`, `clear-communication.md` |
+
+- [procedure.md](references/procedure.md): the steps of both branches and
+  the acceptance gate
+- [verification.md](references/verification.md): the content-lock schema and
+  the fidelity checks
+- [tells.md](references/tells.md): line-level reader-facing defects
+- [skeptic-patterns.md](references/skeptic-patterns.md): cluster diagnostics
+- [authoredness.md](references/authoredness.md): positive properties, genre
+  defaults, and voice
+- [clear-communication.md](references/clear-communication.md): the
+  clear-communication profile
+
+Preserve leaves the repair catalogs unloaded on purpose: its edit policy
+repairs what a reader would notice in the draft, not what a catalog can find.
+
+Then follow [procedure.md](references/procedure.md): every step of the routed
+branch in order, then the acceptance gate. Verification is an internal step
+of every run. It never becomes a separate output; its findings surface only
+as notes.
+
+Complete the procedure only when the acceptance gate passes.
+
+## Destination and delivery
+
+| Destination                  | Rule                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| Invoked conversational reply | Return the answer without a change log or self-review.                                           |
+| Artifact embedded in chat    | Keep surrounding explanation separate and return clean artifact text.                            |
+| File target                  | Edit only bounded prose; preserve frontmatter, code, data, and link targets outside scope.       |
+| Email, DM, or SMS            | Return sendable plain text without literal Markdown markers.                                     |
+| Social post                  | Follow the requested platform form without importing documentation structure or decorative tags. |
+| Code-bearing prose           | Use real identifiers in code font and never reflow or restyle code.                              |
+| Repository review            | Report and rank candidates without editing files unless the caller selects them for repair.      |
+
+A file of unstated origin is overwritten only when version control can
+restore the original. Otherwise leave the file as it is, return the
+recomposed text in the reply, and say so in the notes.
+
+Return the artifact alone when nothing requires reporting. Notes follow the
+artifact and never enter it. Keep each note to the one or two sentences the
+caller needs in order to act on it. A run returns notes when any of these
+applies:
+
+- the origin note from Routing
+- under Preserve: the notes
+  [its last step](references/procedure.md#p4-verify-disclose-and-deliver)
+  lists
+- a framing question the material left open, or a thin source that narrowed
+  the piece
+- a source claim that is unsupported, contradictory, qualified, or withheld
+- the caller asked what changed: material structural changes and defended
+  choices
+
+A caller who asks for the text alone gets it without the origin note or the
+clause-diff summary. A warning about an unresolved source issue still follows
+the artifact, and an unsafe artifact is withheld with the notes returned in
+its place.
+
+## Substance and expression
 
 **The source's substance is authoritative; its expression is editable.**
 Preserve facts, logic, qualifications, owned judgments, exact material, and
@@ -67,8 +222,7 @@ caller supplies. Qualify or withhold a claim that is unsafe to publish.
 Voice shapes expression, never content. Writing samples or a first-person
 source can justify cadence, diction, humor, roughness, or unusual structure.
 They never license a new opinion, reaction, aside, self-correction, or degree
-of conviction. Following samples is a reader feature: it makes a piece read
-like its samples and has no effect on provenance.
+of conviction.
 
 ## Precedence
 
@@ -84,13 +238,15 @@ higher tier fixes.
 2. **Fidelity and integrity.** Preserve the source's substance, relationships,
    uncertainty, commitments, and owned evaluative force. Do not invent factual
    or personal substance.
-3. **Protected exact spans.** Preserve quotations, code, commands, identifiers,
-   paths, URLs, citations, titles, proper names, numbers, dates, units, formulas,
-   defined terms, and legally or technically significant wording.
-4. **Hard output and content-shaping rules.** Apply the positive-scope,
-   no-manufactured-humanity, no-fake-imperfection, no-session-residue, and
-   no-detector-optimization rules below, and the Preserve regime's edit policy
-   when it applies.
+3. **Protected exact spans.** Preserve quotations, code, commands,
+   structured data, identifiers, paths, URLs, citations, titles, proper names,
+   numbers, dates, units, formulas, defined terms, and legally or technically
+   significant wording.
+4. **Hard output and content-shaping rules.** Apply the
+   no-manufactured-humanity, no-fake-imperfection, no-detector-optimization,
+   positive-scope, and no-detector-claim rules below. Keep brief and session
+   residue out of the artifact. Apply the Preserve regime's edit policy when
+   it applies.
 5. **Caller form constraints.** Apply requested style guides, format, register,
    length, writing samples, and destination requirements.
 6. **Destination and genre.** Follow the medium and the artifact's real genre,
@@ -109,24 +265,6 @@ higher tier fixes.
    controlling style guide, or a protected exact span outranks this default.
    The presence or absence of either character says nothing about who wrote
    the text, and the default is never applied to change a score.
-
-## Directions
-
-Use five directions, not quotas:
-
-- **Select:** decide what deserves emphasis; cut only redundancy and empty
-  scaffolding unless compression is authorized.
-- **Ground:** connect claims to supported actors, mechanisms, examples, limits,
-  numbers, or consequences.
-- **Commit:** state the conclusion, recommendation, importance, and uncertainty
-  the material supports instead of defaulting to symmetric neutrality.
-- **Plain:** prefer the concrete plain word, the named actor, and the mechanism
-  or number over the mood it is meant to create.
-- **Shape:** let structure and rhythm follow the thought and genre. Vary
-  sentence length on purpose, tolerate a real fragment or aside that does a
-  job, and let paragraphs be uneven when the thought is uneven. This is a
-  reader preference. It has no provenance effect and is never a reason to add
-  noise.
 
 ## Universal rules
 
@@ -171,191 +309,10 @@ Use five directions, not quotas:
    teach a reader what deliberate prose looks like; it cannot change who wrote
    a draft.
 
-## Routing
+## Files outside a run
 
-Route from the request, the text, and the session. Every case below has an
-outcome, so routing completes without the caller.
-
-### Regime
-
-| What the run knows                                                                            | Regime    | What the run may do                                                                                                                                      |
-| --------------------------------------------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| The caller says the draft is their own writing, or asks to keep its wording                   | Preserve  | Delete, reorder, lexically edit within clauses, merge or split at clause boundaries. Model-added tokens stay under budget.                               |
-| Anything else: a draft a model produced, a brief with no draft, or a draft of unstated origin | Recompose | Full recomposition: content lock, sufficiency test, structural design, draft, authoredness test, skeptical-reader passes, verification, continuous read. |
-
-Only the caller's statement selects Preserve: `I wrote this`, `my own draft`,
-`keep the wording`. A possessive such as `my PR description` names whose
-artifact it is, not who wrote it. A draft's first-person content, roughness,
-or particulars never select Preserve on their own. Under Preserve the run
-takes the caller's word about authorship, does not verify it, and says so in
-the notes. It honors a stricter Preserve budget stated in the brief.
-
-When a draft's origin is unstated and the session does not show a model
-producing it, Recompose still runs and the notes carry the origin note:
-
-> Origin note: this draft's origin was not stated, so it was fully
-> recomposed. If you wrote it, say so and the next run keeps your wording.
-
-### Findings only
-
-When the caller asks what is wrong, asks for a review or diagnosis, asks for a
-source-versus-revision fidelity comparison, or forbids edits, run the
-procedure as a diagnosis: apply every check to the text as it stands and
-change nothing. Return the findings as notes and withhold the artifact. Each
-finding carries its location, the observable pattern or changed relationship,
-the reader effect or fidelity consequence, and the smallest repair. Do not
-assign authorship in a finding.
-
-### Clear-communication profile
-
-The profile in [clear-communication.md](references/clear-communication.md)
-applies to technical, instructional, reporting, reference, how-to, and
-tutorial prose, including workplace messages such as PR text, issue comments,
-and status email. It stays inactive for fiction, essays, marketing, and
-personal prose. A caller request or a project style guide decides first.
-Under Preserve, and when following writing samples, protect supported voice
-traits, but still repair ambiguity or hidden agency that changes what the
-reader can do or infer. Plain language normalizes toward a register that
-detectors have flagged in academic and second-language human writing; the
-risk runs both ways, and it is one more reason the skill never treats a
-verdict as a target.
-
-Complete routing when the regime, the findings-only decision, and the profile
-are each settled by a row or sentence above.
-
-## Frame
-
-Read the complete brief, the source, and the task evidence the artifact
-reports on. Record internally:
-
-- reader, genre, destination, purpose, and desired response
-- main point and required content or structure
-- artifact boundary: which passages belong in the output and which are
-  instructions, samples, quotations, code, data, or commentary about the work
-- source class and the regime it selects
-- source boundary and authorized external sources
-- protected exact spans
-- requested style standards or registers
-- writing samples, when the caller supplied any
-
-Under Recompose, answer three questions before drafting:
-
-1. What is the one thing the reader must leave with?
-2. What does the caller actually think about it?
-3. What is one real particular (a number, an event, a name, a mechanism) the
-   piece can stand on?
-
-Answer them from the brief, the source, and the task evidence inside the
-source boundary. When that material leaves a question open, write the
-narrowest piece the material supports and name the open question in the
-notes. Never fill the gap with an average of what such a piece usually says.
-
-Complete framing when the reader, purpose, artifact and source boundaries,
-and regime are each settled from the material or from a default.
-
-## Procedure
-
-Load the routed branch's files, listed under
-[Reference loading](#reference-loading), then follow
-[references/procedure.md](references/procedure.md). It opens with the
-Preserve branch (edit policy, token budget, clause diff, and disclosure text)
-and continues with the Recompose branch (content lock, sufficiency test,
-information hierarchy, structural draft, authoredness test, skeptical-reader
-passes, independent fidelity verification, continuous read, and the
-acceptance gate). Verification is an internal step of every run. It never
-becomes a separate output; its findings surface only as notes.
-
-Preserve exists for one purpose: keeping a human draft's authorship intact
-while repairing reader-facing defects, so that the result is honestly
-describable as human-written with AI assistance. Callers care most in academic
-and editorial submission, where the writer must be able to describe the work's
-provenance accurately. The skill makes no claim about what any detector will
-say.
-
-Complete the procedure only when the acceptance gate passes.
-
-## Destination and delivery
-
-| Destination                  | Rule                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------ |
-| Invoked conversational reply | Return the answer without a change log or self-review.                                           |
-| Artifact embedded in chat    | Keep surrounding explanation separate and return clean artifact text.                            |
-| File target                  | Edit only bounded prose; preserve frontmatter, code, data, and link targets outside scope.       |
-| Email, DM, or SMS            | Return sendable plain text without literal Markdown markers.                                     |
-| Social post                  | Follow the requested platform form without importing documentation structure or decorative tags. |
-| Code-bearing prose           | Use real identifiers in code font and never reflow or restyle code.                              |
-| Repository review            | Report and rank candidates without editing files unless the caller selects them for repair.      |
-
-A file of unstated origin is overwritten only when version control can
-restore the original. Otherwise leave the file as it is, return the
-recomposed text in the reply, and say so in the notes.
-
-Return the artifact alone when nothing requires reporting. Notes follow the
-artifact and never enter it. Keep each note to the one or two sentences the
-caller needs in order to act on it. A run returns notes when any of these
-applies:
-
-- the origin note from Routing
-- under Preserve: the authorship line, the clause-diff summary, residual
-  defects, and marked suggestions
-- a framing question the material left open, or a thin source that narrowed
-  the piece
-- a source claim that is unsupported, contradictory, qualified, or withheld
-- the caller asked what changed: material structural changes and defended
-  choices
-
-A caller who asks for the text alone gets it without the origin note or the
-clause-diff summary. A warning about an unresolved source issue still follows
-the artifact, and an unsafe artifact is withheld with the notes returned in
-its place.
-
-## Universal gate
-
-Before delivery, confirm:
-
-- no unauthorized substantive change or invented factual or personal material
-- every protected exact span remains exact
-- no brief, sample, placeholder, or drafting instruction leaked into the answer
-- judgment and uncertainty match their source and genre authority
-- no decision-irrelevant negative scope scaffolding remains; every retained
-  prohibition, exclusion, or limit changes interpretation or action
-- under Preserve, zero added clauses and the model-token share under budget,
-  with residual defects listed in the notes rather than fixed over budget
-- generated prose follows the tier 8 dash default unless a stronger tier
-  decided otherwise
-- no sentence describes the output's standing with any detector
-- every step of the routed branch ran, whatever the artifact's length
-- the run stayed unattended: no question reached the caller, and each named
-  default taken is stated in the notes
-- output matches the requested destination and contains no workflow residue
-
-## Reference loading
-
-Each branch loads a fixed set of files on every run, before its first step:
-
-| Branch                                 | Files                                                                                                             |
-| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Preserve                               | `procedure.md`, `verification.md`                                                                                 |
-| Recompose, and every findings-only run | `procedure.md`, `tells.md`, `skeptic-patterns.md`, `authoredness.md`, `verification.md`, `clear-communication.md` |
-
-Preserve leaves the repair catalogs unloaded on purpose: its edit policy
-repairs what a reader would notice in the draft, not what a catalog can find.
-
-- [procedure.md](references/procedure.md): both branches and the acceptance
-  gate
-- [tells.md](references/tells.md): line-level reader-facing defects, used for
-  repair, never as a detector token list
-- [skeptic-patterns.md](references/skeptic-patterns.md): cluster-based
-  diagnostics
-- [authoredness.md](references/authoredness.md): positive properties, genre
-  defaults, and voice behavior
-- [verification.md](references/verification.md): content-lock and fidelity
-  checks
-- [clear-communication.md](references/clear-communication.md): plain-language,
-  documentation-genre, sentence-load, and ambiguity rules
-
-A run loads none of the remaining files. They serve maintainers and callers
-outside a run:
+A run loads none of these files. They serve maintainers and callers outside a
+run:
 
 - [examples/recomposition.md](examples/recomposition.md): Preserve and
   Recompose examples

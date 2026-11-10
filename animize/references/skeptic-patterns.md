@@ -4,18 +4,11 @@ These are diagnostic clusters, not banned words and not evidence of authorship.
 A skeptical reader usually reacts to several mutually reinforcing choices, not
 to one dash, transition, adjective, or sentence length.
 
-For each plausible cluster, choose `fix`, `retain`, or `flag`.
-
-- **Fix** when it makes the piece generic, evasive, inflated, repetitive, or
-  poorly fitted to the reader.
-- **Retain** when it is accurate, useful, genre-required, or deliberately
-  rhetorical.
-- **Flag** when repair requires missing facts, sources, interpretation, or a
-  caller decision.
+Classify each plausible cluster as `fix`, `retain`, or `flag` by the rule in
+[the procedure](procedure.md#r6-red-team-the-skeptical-reader).
 
 ## Contents
 
-- [Diagnostic controls](#diagnostic-controls)
 - [Generic runway](#1-generic-runway)
 - [Generic closure](#2-generic-closure)
 - [Exposed scaffolding](#3-exposed-scaffolding)
@@ -38,21 +31,6 @@ For each plausible cluster, choose `fix`, `retain`, or `flag`.
 - [Interchangeable blocks](#20-interchangeable-blocks)
 - [Distant semantic duplication](#21-distant-semantic-duplication)
 - [Cluster rule](#cluster-rule)
-
-## Diagnostic controls
-
-Before a diagnostic, mask protected exact spans with stable placeholders.
-Inspect quotations, code, structured data, URLs, citation locators, published
-titles, proper names, defined terms, and caller-designated spans only when the
-caller includes them in scope. Restore masked contents exactly after inspecting
-the surrounding relationships.
-
-Defend a false positive when the matched form performs an observable genre,
-logical, precision, safety, or source-voice function. Record the span, candidate
-pattern, function, and supporting evidence. A protected span is defended by its
-status, not by a claim that it sounds natural. The entry point's tier 8 dash
-default is a house-style preference, separate from authorship diagnosis;
-neither character's presence or absence is authorship evidence.
 
 ## 1. Generic runway
 
@@ -227,17 +205,21 @@ facts, or flag the missing evidence in the notes.
 
 ## 16. Session and format residue
 
-**Cues:** `certainly`, `great question`, `here is an overview`, offers to do more,
-reasoning scaffolds, acknowledgment loops, editorial instructions copied from a
-mixed brief, unresolved placeholders, leaked reference tokens, a heading echoed
-by its first sentence, unexplained emphasis, Markdown in a plain-text
-destination, or broken list structure.
+**Cues:** `certainly`, `great question`, `here is an overview`, `I hope this
+helps`, offers to do more, sycophancy, cutoff disclaimers such as `while
+specific details are limited`, reasoning scaffolds, acknowledgment loops, a
+restated brief, editorial instructions copied from a mixed brief, unresolved
+placeholders, leaked reference tokens, a heading echoed by its first sentence,
+unexplained emphasis, Markdown in a plain-text destination, or broken list
+structure.
 
 **Effect:** exposes the generation or drafting environment and can corrupt the
 artifact.
 
 **Repair:** remove accidental wrappers after preserving any substantive
-limitation; convert formatting only when the destination is known.
+limitation; convert formatting only when the destination is known. Flag a
+questionable URL or citation for verification and leave the protected
+material as it is.
 
 ## 17. Mechanical lexical cleanup
 
@@ -327,5 +309,5 @@ for example:
 - orphaned objections + coined labels + interchangeable paragraphs
 - distant semantic duplication + recap transitions + generic closure
 
-When a cluster exists under the Recompose regime, rebuild the affected
-section from the content lock instead of patching each sentence.
+When a cluster exists, rebuild the affected section from the content lock
+instead of patching each sentence.

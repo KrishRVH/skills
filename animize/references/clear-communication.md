@@ -2,13 +2,13 @@
 
 Use this profile to make prose understandable on the first read without
 simplifying away precision. It governs document shape, reader address,
-sentence load, and ambiguity inside Animize. It does not select the regime.
+sentence load, and ambiguity.
+[The entry point](../SKILL.md#clear-communication-profile) decides whether it
+applies.
 
 ## Contents
 
-- [When the profile applies](#when-the-profile-applies)
 - [Precedence and Orwell escape rule](#precedence-and-orwell-escape-rule)
-- [Establish the brief](#establish-the-brief)
 - [Choose the documentation genre](#choose-the-documentation-genre)
 - [Reader address](#reader-address)
 - [Sentence load](#sentence-load)
@@ -16,31 +16,13 @@ sentence load, and ambiguity inside Animize. It does not select the regime.
 - [Code-bearing prose](#code-bearing-prose)
 - [Dead prose](#dead-prose)
 - [Strict STE claims](#strict-ste-claims)
-- [Completion check](#completion-check)
-
-## When the profile applies
-
-[The entry point](../SKILL.md#clear-communication-profile) decides whether
-the profile applies: a caller request or a project style guide first, then
-the artifact's genre. Where the profile is inactive, Animize's fidelity and
-integrity rules still apply.
-
-For a findings-only clarity review, inspect and report without rewriting.
-Under the Preserve regime, repair a clarity defect only within the
-clause-level edit policy and list the rest in the notes.
 
 ## Precedence and Orwell escape rule
 
-Apply clarity rules in this order:
-
-1. Preserve substance and every protected exact span. Use
-   [verification](verification.md) for fact-bearing rewrites.
-2. Follow the caller's explicit constraints and the caller or project style
-   guide.
-3. Under Preserve, or when the caller supplied writing samples, retain
-   evidence-backed voice traits.
-4. Apply destination and genre conventions.
-5. Apply this profile's house preferences.
+The profile's rules are house preferences. Every higher tier of the entry
+point's [Precedence](../SKILL.md#precedence) outranks them: fidelity,
+protected exact spans, caller constraints and style guides, sample-backed
+voice traits, and destination and genre conventions.
 
 Voice does not protect a sentence with two plausible readings or wording that
 hides task-relevant agency. Treat either as a material clarity defect and
@@ -63,24 +45,6 @@ outrank the preferences that follow:
 Complete precedence review when every exception follows a controlling
 contract or prevents a concrete loss of clarity, fidelity, precision, or fit.
 
-## Establish the brief
-
-Identify the audience, purpose, format, tone, destination, and controlling
-style guide from the request or source. When a choice is missing, take the
-destination's convention.
-
-- For new prose, use concrete subjects, active verbs, and enough supported
-  detail to fulfill the brief.
-- For a rewrite, improve clarity and concision while preserving supported
-  claims, exact material, and intentional voice.
-- For a findings-only clarity review, keep the source unchanged. Report each
-  material problem with its location, reason, and a proposed replacement or
-  smallest repair direction.
-
-Complete the brief when every factor is known, constrained by the source, or
-explicitly left to judgment, and every requested section or review concern is
-accounted for.
-
 ## Choose the documentation genre
 
 Use two questions when documentation feels shapeless: does the reader need
@@ -96,10 +60,6 @@ action or understanding, and are they learning or working?
 Give one response one dominant documentation genre. When two are genuinely
 needed, separate them with structure and keep each section faithful to its own
 job.
-
-Reviews and arguments may state supported judgment. Any rewrite preserves the
-source's owned stance and its force, regardless of genre, but invents no
-opinion, reaction, or degree of conviction.
 
 Complete genre selection when the response's dominant job, structure, and
 opinion policy agree.
@@ -171,8 +131,6 @@ instructional, and reporting prose:
 11. For new prose, use consistent American English unless a controlling style
     guide selects another variety. In supplied prose, preserve the established
     spelling variety unless the caller authorizes normalization.
-12. Preserve code, commands, identifiers, names, legal text, quotations, and
-    other protected exact material unless the caller authorizes a change.
 
 Complete the load review when each sentence carries one recoverable logical
 job, and reducing its load further would separate relationships the reader
@@ -198,16 +156,12 @@ moves the runtime`, not a construction that leaves the second action
 client and the host`.
 7. Make the grouping of `and` and `or` explicit. Use constructions such as
    `both ... and`, `either ... or`, and `if ... then` when they remove doubt.
-8. Prefer a period to a semicolon. Follow the entry point's tier 8 dash
-   default unless a stronger tier decides, and rebuild the relationship
-   instead of swapping punctuation mechanically. See
-   [typography and formatting](tells.md#typography-and-formatting).
+8. Prefer a period to a semicolon.
 9. Make parenthetical text a complete grammatical unit or its own sentence.
    Form plurals directly instead of using `(s)`.
 10. Write alternatives out instead of using slashes. Use `a, b, or both`, not
     `a/b` or `and/or`.
-11. Call each thing by one name throughout the passage.
-12. Replace idioms, colloquialisms, Latin abbreviations, and metaphors when a
+11. Replace idioms, colloquialisms, Latin abbreviations, and metaphors when a
     non-native reader, translator, or agent could parse them more than one way.
 
 Complete this review when every modifier, pronoun, clause, series,
@@ -229,8 +183,6 @@ Treat the codebase as the word list:
   actions and conventional agency remain valid; repair wording only when it
   hides task-relevant agency. See
   [false agency](tells.md#sentence-machinery).
-- Preserve code blocks, structured data, frontmatter, formulas, link targets,
-  and exact technical text outside the authorized prose scope.
 
 Complete code-bearing review when every symbol, path, flag, command, number,
 and described behavior is real, source-supported, consistently named, and
@@ -243,12 +195,12 @@ throat-clearing, placeholders such as `please note` and `at this time`,
 announcements of what a section will cover, restatements of what it just
 covered, and sentences kept only to fill out a structure.
 
-Apply [Animize's universal positive-scope rule](../SKILL.md) to limits and
-non-goals. Preserve a qualification, warning, exception, or limit when it
-changes what the reader must understand or plan for. Use the canonical
-[line-level tells](tells.md#sentence-machinery) and
-[session-residue rules](tells.md#session-residue) instead of building another
-phrase blacklist here.
+Apply the entry point's
+[positive-scope rule](../SKILL.md#universal-rules) to limits and non-goals.
+Preserve a qualification, warning, exception, or limit when it changes what
+the reader must understand or plan for. The phrase catalogs are
+[the line-level tells](tells.md#sentence-machinery) and
+[session and format residue](skeptic-patterns.md#16-session-and-format-residue).
 
 Complete the dead-prose review when every remaining sentence adds a fact,
 instruction, relationship, qualification, consequence, or necessary
@@ -261,19 +213,3 @@ certification claim. Use an approved word with its approved meaning when the
 relevant STE dictionary is available. Claim strict STE conformance only after
 checking the requested issue of the standard and its dictionary. When strict
 STE is requested, identify every necessary domain exception.
-
-## Completion check
-
-Deliver only when all applicable checks pass:
-
-- A reader can understand the prose on the first read.
-- Every sentence has one supported reading.
-- Every sentence carries one main action, statement, or relationship bundle.
-- The structure, address, opinion, spelling, and formatting fit the genre and
-  destination.
-- Instructions state the condition, action, and expected result where each is
-  relevant.
-- Code-bearing prose uses real, protected names and values.
-- No clarity edit loses precision, qualification, stance, or protected exact
-  material.
-- Every retained exception follows the precedence and escape rule.

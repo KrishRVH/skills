@@ -1,10 +1,8 @@
 # Procedure
 
-Every run follows this procedure. Complete Routing and Frame in
-[the entry point](../SKILL.md#routing) first. The Preserve branch applies
-when the caller says the draft is their own writing or asks to keep its
-wording. The Recompose branch applies to everything else. Run every step of the routed branch in order,
-whatever the artifact's length.
+Every run follows this procedure after Routing and Frame in
+[the entry point](../SKILL.md#routing). Run every step of the routed branch
+in order, then pass the [acceptance gate](#acceptance-gate).
 
 ## Contents
 
@@ -14,14 +12,14 @@ whatever the artifact's length.
   - [P3. Clause diff](#p3-clause-diff)
   - [P4. Verify, disclose, and deliver](#p4-verify-disclose-and-deliver)
 - [Recompose branch](#recompose-branch)
-  - [2. Lock the content](#2-lock-the-content)
-  - [3. Test sufficiency](#3-test-sufficiency)
-  - [4. Design before drafting](#4-design-before-drafting)
-  - [5. Recompose](#5-recompose)
-  - [6. Test authoredness](#6-test-authoredness)
-  - [7. Red-team the skeptical reader](#7-red-team-the-skeptical-reader)
-  - [8. Verify independently](#8-verify-independently)
-  - [9. Read continuously and deliver](#9-read-continuously-and-deliver)
+  - [R1. Lock the content](#r1-lock-the-content)
+  - [R2. Test sufficiency](#r2-test-sufficiency)
+  - [R3. Design before drafting](#r3-design-before-drafting)
+  - [R4. Recompose](#r4-recompose)
+  - [R5. Test authoredness](#r5-test-authoredness)
+  - [R6. Red-team the skeptical reader](#r6-red-team-the-skeptical-reader)
+  - [R7. Verify independently](#r7-verify-independently)
+  - [R8. Read continuously and deliver](#r8-read-continuously-and-deliver)
 - [Acceptance gate](#acceptance-gate)
 
 ## Preserve branch
@@ -29,9 +27,7 @@ whatever the artifact's length.
 Preserve keeps a human draft's authorship intact while repairing reader-facing
 defects. The draft's own words stay in the majority; the model contributes
 deletions, reorderings, and small lexical edits, and nothing it composed from
-meaning alone. The result is honestly describable as human-written with AI
-assistance. The skill does not verify that the draft is human. It takes the
-caller's word and says so in its notes.
+meaning alone.
 
 Preserve works without the repair catalogs. Read the draft for defects a
 reader would notice, then repair each one within the edit policy. When a
@@ -76,11 +72,10 @@ permitted operations.
 ### P2. Budget
 
 `PRESERVE_BUDGET = 0.15`. Model-added tokens must be strictly fewer than the
-source's tokens and under 15% of the output's tokens. The constant lives
-here. A caller who needs a stricter budget states it in the brief, and the
-run honors the stricter number. A caller cannot loosen it; a draft that needs
-more change than the budget allows belongs in Recompose, and the notes say
-so.
+source's tokens and under 15% of the output's tokens. A caller who needs a
+stricter budget states it in the brief, and the run honors the stricter
+number. A caller cannot loosen it; a draft that needs more change than the
+budget allows belongs in Recompose, and the notes say so.
 
 The 15% figure is the share below which a window of text keeps one dominant
 provenance label in the labeling scheme Pangram publishes for mixed
@@ -133,9 +128,11 @@ high-risk semantic checks, and the human-integrity check in
 [verification.md](verification.md) on the output against the draft. Revert
 any change that fails one.
 
-Deliver the artifact, then the notes:
+Deliver by the entry point's
+[destination and delivery](../SKILL.md#destination-and-delivery) rules. The
+Preserve notes are:
 
-- the clause-diff summary from P3, unless the caller asked for the text alone
+- the clause-diff summary from P3
 - one line stating why Preserve ran: the caller's statement of authorship,
   which the run did not verify, or the caller's request to keep the wording
 - residual defects left unrepaired because of the edit policy or the budget,
@@ -146,43 +143,34 @@ Deliver the artifact, then the notes:
 Complete the Preserve branch when the artifact contains only permitted
 operations, the diff shows zero added clauses and a share under budget, every
 verification check passes, and the notes account for every residual defect
-and suggestion. The Recompose
-branch's acceptance gate applies with its Proportion check read as the
-Preserve edit policy.
+and suggestion.
 
 ## Recompose branch
 
-Use this branch for a draft a model produced, a draft of unstated origin, or
-a write job from a brief. The steps below are numbered to follow Frame as
-step 1.
+Recompose rebuilds the piece from its content. A findings-only run uses this
+branch as a diagnosis: it skips R3 and R4, runs every other step on the text
+as it stands, and reports each repair as a finding instead of applying it.
+R7 runs when there is a source and a revision to compare.
 
-## 2. Lock the content
+### R1. Lock the content
 
-For a rewrite, extract a compact content map from the source. For a write job,
-extract it from the brief and authorized supporting material.
-
-- propositions and actors
-- causal, temporal, contrastive, comparative, and conditional relationships
-- owned judgments and their strength
-- uncertainty, scope, exceptions, and negation
-- names, dates, numbers, units, places, terminology, quotations, citations,
-  URLs, and required examples or actions
-- promises, obligations, permissions, prohibitions, guarantees, and ownership
-- current, prior, proposed, hypothetical, and unknown states
-- unsupported or ambiguous source claims
+Build the content lock in
+[the content-lock schema](verification.md#1-content-lock-schema). For a
+rewrite, fill it from the source. For a write job, fill it from the brief and
+authorized supporting material.
 
 Apply the entry point's positive-scope test before locking a negative scope
 statement. Lock a decision-relevant constraint, prohibition, exclusion, or
 commitment. Put every true but decision-irrelevant non-goal, topic omission, or
 out-of-scope statement on a separate scaffolding discard list rather than in
-the content map. Its truth does not make it substantive. Do not replace it with
+the content lock. Its truth does not make it substantive. Do not replace it with
 a smoother sentence that announces the same omission.
 
-The content map governs the artifact. The original sentences do not. Complete
+The content lock governs the artifact. The original sentences do not. Complete
 the lock when every unique substantive item and protected exact element has
 been recorded once.
 
-## 3. Test sufficiency
+### R2. Test sufficiency
 
 Classify the material:
 
@@ -202,7 +190,7 @@ flag the missing actor, mechanism, changed step, metric, evidence, or owner.
 Complete the test when the material is classified and the permitted response
 to that classification is fixed.
 
-## 4. Design before drafting
+### R3. Design before drafting
 
 Build a new information hierarchy around the reader's needs:
 
@@ -223,9 +211,9 @@ paragraph.
 Complete the design when the reader path is clear and every planned omission
 is authorized by the content lock.
 
-## 5. Recompose
+### R4. Recompose
 
-Draft from the content map and plan. Consult the source only to verify
+Draft from the content lock and the design. Consult the source only to verify
 substance, not as a sentence skeleton.
 
 - state the main point early enough for the genre
@@ -265,104 +253,66 @@ Complete recomposition when every locked item is represented, every omission
 is authorized, no defect survives from inertia, and no working passage changed
 merely for consistency.
 
-## 6. Test authoredness
+### R5. Test authoredness
 
 Check whether the draft shows a coherent set of choices rather than polished
-sentences assembled into a template:
-
-- clear selection and hierarchy
-- supported specificity
-- visible but proportionate stance
-- real information movement
-- truthful constraints and trade-offs
-- rhythm driven by thought
-- non-mechanical paragraph shapes
-- a genre-native opening and ending
-- strong passages left intact, and recorded voice signals protected when the
-  caller supplied samples
-
-Check each property against its definition and genre defaults in
-[authoredness.md](authoredness.md), then run that file's continuous read
-tests.
+sentences assembled into a template. Test it against sections 1 through 11 of
+[authoredness.md](authoredness.md), then run every continuous read test in
+its section 12.
 
 Complete the test when every applicable property passes without manufactured
 quirks or changes to substance.
 
-## 7. Red-team the skeptical reader
+### R6. Red-team the skeptical reader
 
-Mask protected exact spans before either pass. A scan may observe their
-boundaries but must not diagnose or change their contents.
+Mask before either pass. Replace each protected exact span with a stable
+placeholder: every span type in the entry point's Precedence tier 3, plus
+caller-designated spans. Diagnose the surrounding prose, including a sentence
+that misuses a quotation or citation, and inspect a span's contents only when
+the caller targets it. Restore every placeholder exactly afterward. Masking
+keeps a diagnostic from rewriting a span; R7 still checks every span for
+exactness.
 
-### Cluster pass
+Run two passes:
 
-Review for mutually reinforcing structural choices:
+1. **Cluster pass.** Run every diagnostic in
+   [skeptic-patterns.md](skeptic-patterns.md) against the whole draft. When
+   two or more cues cluster, or local patches keep creating new mannerisms,
+   rebuild the affected section from the content lock.
+2. **Line sweep.** Check each unmasked sentence against every entry in
+   [tells.md](tells.md).
 
-- generic runway or closure
-- exposed scaffolding or exhaustive symmetry
-- pseudo-insight, importance inflation, or vague authority
-- polished abstraction without particulars
-- over-controlled transitions, recaps, or repeated sentence machinery
-- synthetic balance, borrowed intimacy, promotional voice, or session residue
-- staged rebuttals, fake alternatives, sloganized claims, or coined labels that
-  substitute for an argument
-- interchangeable blocks, list-shaped prose, or repeated metaphors and examples
-  doing the same work
-- formulaic challenges and outlook sections that manufacture conflict before a
-  vague optimistic close
+Classify each candidate from either pass:
 
-Run every diagnostic in [skeptic-patterns.md](skeptic-patterns.md) against
-the draft. When two or more cues cluster or local patches keep creating new
-mannerisms, rebuild the affected section.
+- `fix` when the form makes the piece generic, evasive, inflated, repetitive,
+  or poorly fitted to the reader
+- `retain` when it performs an observable genre, logical, precision, safety,
+  or source-voice function
+- `flag` when repair needs missing facts, sources, interpretation, or a
+  caller decision; the flag goes in the notes
 
-For prose longer than about one page, compare the claims made by distant
-sections. Merge or remove a later restatement that adds no condition,
-consequence, example, or requested summary. Preserve procedural repetition,
-defined terms, refrains, and intentionally modular sections.
+For each `retain`, record the span, the pattern it matched, the function that
+makes it legitimate, and the source or genre evidence for that function. A
+claim that the span sounds natural is not a function. Keep the record
+internal; report it only in a findings-only run or when the caller asked what
+changed.
 
-### Line sweep
+Complete the pass when every diagnostic and every entry has been applied,
+every candidate is classified, every `fix` is repaired, and clean or
+constrained prose remains untouched.
 
-Check each unmasked sentence against every entry in [tells.md](tells.md):
-AI-default vocabulary, fancy copulas, `not just X, but Y`, `the real X`,
-forced triads, false ranges, superficial `-ing` tails, filler, significance
-adverbs, false agency, clipped negations, unsupported verdicts, unmotivated
-passives, stacked declarations, feeling-instead-of-mechanism claims, and
-typographic or drafting residue.
+### R7. Verify independently
 
-Classify each candidate as `fix`, `retain`, or `flag`. Fix it only when the form
-is a defect rather than a specific genre, logical, precision, or voice choice.
-Record defensible false positives internally; report them only in a
-findings-only run or when the caller asked what changed.
-
-Complete the pass when every material cluster is repaired, no known tell
-survives without a defensible function, and clean or constrained prose remains
-untouched.
-
-## 8. Verify independently
-
-Compare the completed artifact with the content map, not only with memory.
-
-- map every output claim to source support
-- inspect additions, deletions, and strengthened or weakened claims
-- compare actors, modality, negation, scope, chronology, causation,
-  attribution, and evaluation
-- compare promises, obligations, permissions, guarantees, ownership, and the
-  status of proposed or hypothetical material
-- verify exact names, numbers, dates, units, quotations, citations, URLs, code,
-  and defined terms
-- confirm that no personal experience, source, stance, or imperfection was
-  invented
-- confirm that instructions and examples about the artifact did not leak into
-  it
-
-Run every check in [verification.md](verification.md). Verification is
-internal to the run. Its findings reach the caller only as notes, or as the
-whole response in a findings-only run.
+Compare the completed artifact with the content lock, not with memory of the
+source. Run every check in [verification.md](verification.md), in order.
+Verification is internal to the run. Its findings reach the caller only as
+notes, or as the whole response in a findings-only run.
 
 Complete verification when every locked item and output claim is accounted
 for, every exact element matches, and no unauthorized addition or deletion
 remains.
 
-## 9. Read continuously and deliver
+### R8. Read continuously and deliver
 
 Read at normal speed. Ask:
 
@@ -375,57 +325,67 @@ Repair the answers, along with predictable template movement, repeated
 announce-explain-recap paragraphs, slogan endings, and any repair that has
 become a new mannerism. Stop when the remaining candidates serve the piece.
 
-Before delivery, scan generated text for hidden Unicode residue and for dash
-characters the tier 8 default does not allow. Preserve and flag suspicious
-source characters rather than silently normalizing protected spans.
+After the last repair, scan the generated text again for Unicode residue and
+for dash characters the tier 8 default does not allow.
 
 Deliver by the entry point's
-[destination and delivery](../SKILL.md#destination-and-delivery) rules: the
-artifact alone when nothing requires reporting, notes after it when something
-does, and the notes alone in a findings-only run or when the artifact is
-unsafe.
-
-For file targets, edit only bounded prose and preserve frontmatter, code,
-structured data, and link targets outside scope. Keep source gaps, fidelity
-warnings, and explanations of removed source prose outside the artifact.
+[destination and delivery](../SKILL.md#destination-and-delivery) rules.
 Complete delivery when the artifact and every required note match those
-rules and the acceptance gate.
+rules.
 
 ## Acceptance gate
 
-The artifact is ready only when all applicable checks pass:
+The artifact is ready only when every check for its branch passes. A minor
+stylistic preference is not a blocker when the prose is clear, genre-native,
+and deliberate. In a findings-only run each failed check is a finding, and
+the gate passes when every check has been applied.
 
-- **Fidelity:** zero unauthorized substantive changes
+Every run:
+
+- **Completeness:** every step of the routed branch ran, whatever the
+  artifact's length
+- **Fidelity:** zero unauthorized substantive changes, including added or
+  removed commitments
+- **Exact spans:** every protected exact span is reproduced exactly, and the
+  revision introduced no unsupported Unicode residue
 - **Integrity:** zero invented experience, identity, source, quotation,
   evidence, preference, reaction, owned judgment, or error
 - **Boundary:** no brief, example, placeholder, or drafting instruction appears
   as artifact content; no hypothetical becomes fact
-- **Selection:** space and omission reflect consequence
-- **Grounding:** important claims connect to supported particulars or limits
-- **Stance:** judgment and uncertainty match the evidence
-- **Structure:** organization follows the reader's problem, not a stock template
-- **Movement:** each paragraph advances, qualifies, applies, or resolves
-- **Cadence:** syntax follows thought without mechanical repetition or random
-  variation
-- **Proportion:** under Recompose, no strong passage is regularized merely for
-  consistency; under Preserve, every change is a permitted operation, the
-  clause diff shows zero added clauses, and the model-token share is under
-  budget
+- **Stance:** judgment and uncertainty match the evidence and the genre's
+  authority
 - **Scope:** no negative scaffolding remains; every retained prohibition,
   exclusion, safety constraint, compatibility limit, or commitment changes a
   reader decision and has no lossless positive form
-- **Clarity:** when the profile applies, each sentence has one likely reading
-  and one main relationship bundle
 - **Genre:** formality, terminology, headings, citations, and explanation fit
-- **Skeptic pass:** no unresolved cluster of generic scaffolding, pseudo-insight,
-  vague authority, over-symmetry, slogan endings, or session residue
-- **Tells:** no known line-level tell survives without a genre, precision,
-  source-voice, or sentence-function justification
 - **Dashes:** generated prose follows the tier 8 default unless a stronger tier
   decided otherwise
 - **Detector silence:** no sentence describes the output's standing with any
   detector
 - **Unattended:** no question reached the caller, and each named default
   taken is stated in the notes
-- **Delivery:** output contains only the requested artifact and necessary
-  unresolved warnings, or only the notes in a findings-only run
+- **Delivery:** the output fits its destination and holds only the requested
+  artifact and the notes the entry point requires, or only the notes in a
+  findings-only run or when the artifact is unsafe
+
+Preserve only:
+
+- **Edit policy:** every change is a permitted operation, the clause diff
+  shows zero added clauses, and the model-token share is under budget;
+  residual defects are listed in the notes, not fixed over budget
+
+Recompose only:
+
+- **Selection:** space and omission reflect consequence
+- **Grounding:** important claims connect to supported particulars or limits
+- **Structure:** organization follows the reader's problem, not a stock template
+- **Movement:** each paragraph advances, qualifies, applies, or resolves
+- **Cadence:** syntax follows thought without mechanical repetition or random
+  variation
+- **Proportion:** no strong passage is regularized merely for consistency
+- **Clarity:** when the profile applies, each sentence has one likely reading
+  and one main relationship bundle
+- **Skeptic pass:** no unresolved cluster of generic scaffolding, pseudo-insight,
+  vague authority, over-symmetry, slogan endings, or session residue
+- **Tells:** no known line-level tell survives without a genre, precision,
+  source-voice, or sentence-function justification

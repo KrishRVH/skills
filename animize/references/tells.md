@@ -13,9 +13,7 @@ sweep flatten the piece into a second house style. See
 - [Vocabulary](#vocabulary)
 - [Sentence machinery](#sentence-machinery)
 - [Plain speech](#plain-speech)
-- [Protected spans](#protected-spans)
 - [Typography and formatting](#typography-and-formatting)
-- [Session residue](#session-residue)
 - [Overcorrection guard](#overcorrection-guard)
 
 ## Vocabulary
@@ -137,31 +135,12 @@ another project's docs says nothing about this one.
 relationship is clear. If the reader must backtrack to recover that
 relationship, split the sentence or remove nonessential clauses.
 
-## Protected spans
-
-Before the line sweep, replace protected exact spans with stable placeholders.
-Mask quotations, code, structured data, URLs, citation locators, published
-titles, proper names, defined terms, caller-designated spans, and other material
-whose exact form is outside the stylistic assignment. Diagnose the surrounding
-prose, then restore every placeholder exactly. Inspect a protected span only
-when the caller targets it.
-
-Masking does not exempt a span from fidelity verification. Compare protected
-source and output spans separately for exact preservation. If the surrounding
-sentence misuses a quotation or citation, diagnose that relationship without
-rewriting the protected contents.
-
 ## Typography and formatting
 
-**Dash characters.** The entry point's tier 8 house-style default is that
-generated output contains no `U+2013` or `U+2014`. A protected exact span, an
-explicit caller request, or a controlling style guide or sample set outranks
-the default. When unprotected source prose uses either character structurally,
-rebuild the sentence so its syntax carries the relationship. Do not
-mechanically exchange the character for a comma, colon, parenthesis, or
-hyphen. The default is a reader-facing preference about stacked asides. The
-presence or absence of either character is never evidence of human or machine
-authorship, and the default is never applied to change a score.
+**Dash characters.** `U+2013` or `U+2014` in generated prose. Apply the
+entry point's tier 8 default, including what outranks it. When unprotected
+source prose uses either character structurally, rebuild the sentence so its
+syntax carries the relationship.
 
 **Colon as mid-sentence connector.** Colons belong before a list, example, or
 quotation, not as glue between clauses that could stand as their own sentences.
@@ -190,34 +169,15 @@ tags in documentation, or repeated exclamation marks and ellipses in a quiet
 register expose the wrong delivery convention. Match the actual medium and
 supplied samples; do not enforce punctuation quotas.
 
-**Quotation marks and apostrophes.** Default to straight marks. Under
-Preserve, or when the caller supplied samples, follow the supplied pattern; a
-single new curly apostrophe in otherwise straight-punctuated prose is an integration seam.
-Do not normalize protected quoted material. Before delivery, scan for U+2018,
-U+2019, U+201C, and U+201D when straight marks are selected.
+**Quotation marks and apostrophes.** Default to straight marks. When the
+caller supplied samples, follow their pattern. A single new curly apostrophe
+in otherwise straight-punctuated prose is an integration seam. Leave protected
+quoted material as it is. Before delivery, scan for U+2018, U+2019, U+201C,
+and U+201D when straight marks are selected.
 
-**Invisible and confusable Unicode residue.** Scan for zero-width characters,
-`U+00AD` soft hyphens, `U+00A0` non-breaking spaces, and mixed-script
-homoglyphs. Determine whether each candidate came from the source or the
-revision. Remove introduced residue that has no linguistic or formatting job.
-Flag suspicious source material with its location and code point; never
-silently normalize a protected exact span.
-
-Defend legitimate uses instead of treating the scan as a deletion list. These
-include language-required joiners, intentional non-breaking spaces in
-typesetting, and exact characters inside names, identifiers, quotations, or
-code. A defense must name the character's function and its source support.
-
-## Session residue
-
-Chatbot phrases (`certainly`, `great question`, `I hope this helps`, offers to
-do more), sycophancy, cutoff disclaimers ("while specific details are
-limited…"), reasoning scaffolds, acknowledgment loops, restated briefs,
-unresolved placeholders, and leaked reference tokens are covered as skeptic
-pattern 16 in [skeptic-patterns.md](skeptic-patterns.md). Remove accidental
-wrappers after recovering any real limitation. Flag a questionable URL or
-citation for verification instead of silently changing protected exact
-material.
+**Invisible and confusable Unicode residue.** Zero-width characters, soft
+hyphens, non-breaking spaces, and mixed-script homoglyphs. Apply the Unicode
+scan in [verification.md](verification.md#4-exact-element-checks).
 
 ## Overcorrection guard
 
@@ -229,8 +189,7 @@ precision. Retain:
 - conventional passive voice in genres that require it
 - deliberate repetition, defined terms, and legal or technical modality
 - a colon or triad doing real work
-- clean grammar and complex formatting that fit the destination, subject to
-  hard generated-output character rules
+- clean grammar and complex formatting that fit the destination
 - genuine asides, fragments, self-corrections, contrasts, objections, and
   unusual details supported by the source or target samples
 
@@ -239,9 +198,3 @@ repair something a reader would notice, without changing what the text claims?
 If a formulaic sentence carries a unique judgment, repair its expression while
 preserving that judgment's force; do not delete it or replace it with a plausible
 new reaction.
-
-For every `retain` decision, record the exact candidate,
-the apparent rule match, the function that makes it legitimate, and the source
-or genre evidence for that function. "It sounds human" is not a defense. Report
-defended false positives only in a findings-only run or when notes would help the caller;
-do not turn them into rewrite commentary by default.
