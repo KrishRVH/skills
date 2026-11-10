@@ -43,11 +43,12 @@ clause); chatbot wrappers, acknowledgments, offers to do more, drafting
 residue; an unsupported "As a [role], I" opener; filler such as "it is
 important to note"; "simply", "just", or "easily" in an instruction; "not
 just X, but Y" or "X rather than Y" where nobody held X; every "do not" and
-"it is" spelled out in a message or email; "the real X" staged as a
-revelation; a trailing "-ing" clause that claims significance; a bold label
-that restates its own line; two thoughts whose relationship needs
-backtracking; "this" or "which" with no clear referent; a described symbol
-whose real name is visible.
+"it is" spelled out in a message or email, or a message clipped shorter
+than its writer would say it aloud; "the real X" staged as a revelation; a
+trailing "-ing" clause that claims significance; a bold label that restates
+its own line; two thoughts whose relationship needs backtracking; "this" or
+"which" with no clear referent; a described symbol whose real name is
+visible.
 
 Keep a candidate that has a defensible function. Make the minimum repair.
 Reread once for directness and rhythm. Return only the artifact, plus a flag

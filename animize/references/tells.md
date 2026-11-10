@@ -153,6 +153,15 @@ this in production", `must not`), in legal, academic, and formal reference
 prose, and wherever supplied samples or the destination's existing text
 write it out. A mix is normal: convert only what reads stiff.
 
+**Compressed speech.** A message, email, or comment trimmed past how its
+writer would say it aloud: a cause carried by a colon, a participle, or
+`due to` where a speaker says `because`; "three risks remain" where a
+speaker says "there are still three risks"; a dropped article, `that`, or
+verb. Write the sentence at speaking length, small words included. Keep the
+tight form in reference prose, headings, lists, commit subjects, and any
+register that is terse on purpose, and add no word that carries nothing a
+speaker would say.
+
 ## Typography and formatting
 
 **Dash characters.** `U+2013` or `U+2014` in generated prose. Apply the
