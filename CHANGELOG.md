@@ -1,5 +1,52 @@
 # Changelog
 
+## animize: trained-classifier column and blind rating (2026-11-09)
+
+Changes:
+
+- The Preserve edit policy gained one sentence: a lexical replacement must
+  repair a defect, and the author's diction, period idiom, spelling
+  conventions, and register are not defects. A blind rater preferred the
+  unedited draft where Preserve had swapped a period word for a modern near
+  synonym or inserted a word. Nothing else in the skill changed.
+- The evaluation protocol now says to show that a detector separates a
+  corpus's own source classes before reading anything into an unchanged
+  verdict, and describes the open models' training data and miss rate
+  correctly.
+- The harness scores with both open EditLens models the way the vendor's
+  reference script does, checks its scores against the vendor's published
+  ones, calibrates on one dataset split and verifies on another, samples a
+  second corpus cell from the gated dataset without committing its text,
+  and unblinds a rater's export.
+
+Measured, with full tables in `animize/references/evaluation-results.md`:
+
+- Reproduction: local scores match the published scores on 8,515 dataset
+  rows with a mean absolute gap of 0.0004 (RoBERTa) and 0.0007 (Llama).
+- Calibration, held out: 0.7% and 0.5% of human documents read as not
+  human; 99.9% and 100% of generated documents read as not human; 33% and
+  26% of AI-edited documents read as human.
+- Pilot corpus: the RoBERTa model reads the agent-written mirrors as human,
+  so it cannot test Recompose there. The Llama model reads them as
+  AI-assisted before and after Recompose, reads four of six defect-injected
+  drafts as AI-assisted, and reads all four as human after Preserve deletes
+  the injected sentences. Preserve moved one draft (Paine) from human to
+  AI-assisted.
+- Second cell, ten generated and ten human documents from the detector's
+  own test data: no Recompose output on generated text read as human on
+  either model. On Llama nine of ten scored lower and three moved from
+  AI-generated to AI-assisted. Preserve output on the human documents read
+  as human ten of ten on both models, with no added clause after hand
+  review of two flagged ones. Recompose output on the same human documents
+  also read as human ten of ten, so a human verdict from these models does
+  not certify an edit as light.
+- Blind rating, one expert rater: the Preserve output preferred on 6 of 6
+  defect drafts and 2 of 5 strong drafts; the Recompose output preferred on
+  4 of 6 generated drafts; all 17 pairs judged the same in meaning;
+  perceived authorship at parity with human controls. The rater's own edit
+  of a defect draft used deletions only and removed 4 of the 5 injected
+  defects; the skill's Preserve output removed 5.
+
 ## animize: two passes and a Preserve regime (2026-09-19)
 
 ### What changed

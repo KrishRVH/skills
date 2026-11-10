@@ -3,9 +3,9 @@
 No evaluation can prove that a text was written by a person. The useful
 questions are whether the skill produces prose that is as natural, deliberate,
 reader-specific, and publication-ready as a matched human edit while
-preserving substance, and whether its two regimes behave as documented: the
-Recompose regime leaves a trained classifier's verdict where it found it, and
-the Preserve regime produces the label its workflow honestly earns.
+preserving substance, and what its two regimes do to a trained classifier's
+reading: whether Recompose leaves a generated draft's verdict where it found
+it, and whether Preserve produces the label its workflow honestly earns.
 
 Measured results live in [evaluation-results.md](evaluation-results.md).
 
@@ -265,10 +265,12 @@ Use automation for hard invariants, not for final naturalness judgments:
 
 ## 8. Detector columns
 
-Detector scores are a diagnostic with two purposes. The negative: prove that
-the Recompose regime does not move a trained classifier's verdict. The
-positive: prove that the Preserve regime's output carries the label its
-workflow earns. Never use a score as an optimization target or a release
+Detector scores are a diagnostic with two purposes. The negative: test
+whether the Recompose regime moves a trained classifier's verdict. The
+positive: test whether the Preserve regime's output carries the label its
+workflow earns. First show that the detector separates the corpus's own
+source classes; an unchanged verdict on an output means nothing when the
+source was never detected. Never use a score as an optimization target or a release
 criterion for prose quality.
 
 Record three columns:
@@ -276,16 +278,18 @@ Record three columns:
 - **A trained classifier of the target family.** The Open Pangram release
   (two EditLens models: a LoRA adapter on `meta-llama/Llama-3.2-3B` and a
   `roberta-large` classifier, CC BY-NC-SA 4.0, noncommercial only) runs on one
-  24 GB consumer GPU. Both are Pangram 3 lineage, trained on a peer-review
-  edit dataset, with no humanizer head, no tokenwise decoding, and narrower
-  domain coverage than the production model. Use them for the negative check
+  24 GB consumer GPU. Both are Pangram 3 lineage, trained on human,
+  AI-edited, and AI-generated versions of news, educational web text,
+  reviews, and fiction written to prompts, with no humanizer head, no
+  tokenwise decoding, and narrower domain coverage than the production
+  model. Both read a quarter to a third of the AI-edited documents in their
+  own test split as human, so a human verdict cannot rule out light editing. Use them for the negative check
   and for AI-fraction estimates on Preserve output. Report their verdicts as
   EditLens verdicts, never as production verdicts. The vendor's free web
   checker can spot-check up to twenty final documents against the production
   model by hand; record those separately.
-- **A perplexity-family detector** (Binoculars, open source) to show that the
-  skill does move naive detectors and does not move trained classifiers. The
-  contrast is the clearest way to explain the skill's limits.
+- **A perplexity-family detector** (Binoculars, open source) to compare how
+  a perplexity score and a trained classifier respond to the same edit.
 - **An optional second trained classifier** from another lineage, as another
   "does not move" check on Recompose. Never a verdict source.
 
@@ -373,9 +377,11 @@ or detector.
 The scoring harness lives in the repository's `.eval/animize/` folder, outside
 the skill package. Its README gives the setup: a Python environment with CUDA
 torch, a Hugging Face login with the Open Pangram and Llama terms accepted,
-label inspection before any scoring, a five-document smoke test, threshold
-calibration on a held-out split at 1% and 0.5% false positive rates, and the
-run order for corpus build, scoring, clause diff, and report. Every result
+label inspection before any scoring, a check that local scores reproduce the
+vendor's published scores, a five-document smoke test, threshold calibration
+on one labeled split at 1% and 0.5% false positive rates with a check on a
+second split, and the run order for corpus build, scoring, clause diff, and
+report. Every result
 table cites the calibration file it used.
 
 Keep model caches and the working tree on the Linux filesystem when running
