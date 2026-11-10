@@ -84,10 +84,11 @@ repository. Ask when the evidence conflicts.
 
 The release stage decides what can hold a contract. A **pre-release** project
 has no users, so nothing it ever exposed protects a consumer: every
-compatibility layer, deprecation, migration guide, and name or prose that
-points at an earlier version is sediment, and code and documentation state only
-the current, idiomatic, stable design. In a released project, compatibility with a shape that never reached
-the default integration branch or a release protects no consumer; remove it.
+compatibility layer, deprecation, migration guide, and name or prose that points
+at an earlier version is sediment, and code and documentation state only the
+current, idiomatic, stable design. In a released project, compatibility with a
+shape that never reached the default integration branch or a release protects no
+consumer; remove it.
 
 Historical records keep their past by design: ADRs, changelogs, release notes,
 active migration guides, migration histories that tooling replays, and archived
@@ -193,8 +194,8 @@ run a repo-wide pass.
 5. Report adaptively.
    Report material changes, verification, skipped areas, and unresolved
    decisions, and name sediment seen outside scope. When the release stage
-   decided a removal, state the stage and its evidence. For repo-wide or blocked
-   passes, also
-   report scope, comparison base, and coverage. Omit empty sections,
-   placeholders, and the internal file ledger. Complete when the caller can
-   commit or resolve the named decisions without another audit summary.
+   decided a removal, state the stage and its evidence. For repo-wide or
+   blocked passes, also report scope, comparison base, and coverage. Omit empty
+   sections, placeholders, and the internal file ledger. Complete when the
+   caller can commit or resolve the named decisions without another audit
+   summary.

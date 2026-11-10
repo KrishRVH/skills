@@ -45,8 +45,8 @@ sorting only among true peers.
    scope and comparison base. When no base is given, compare `HEAD` with the
    merge base of the repository's default integration branch. Include staged,
    unstaged, and untracked work. For repo-wide scope, inventory every active
-   human-maintained configuration file, manifest, task, ignore rule, structured list,
-   source-ordering region, and layout surface.
+   human-maintained configuration file, manifest, task, ignore rule, structured
+   list, source-ordering region, and layout surface.
 
    Also inventory each scope mismatch. A scope mismatch is a coherent
    project-ecosystem or file-type policy family in repository-scoped
@@ -73,25 +73,20 @@ sorting only among true peers.
    are established.
 
 2. Classify ordering regions.
-   Tier 1 denotes layout-move candidates for direct application. A Tier 1
-   candidate may be applied only when every Step 3 application condition holds.
-   Tier 2 denotes caller decisions about the scope mismatches and ambiguities
-   enumerated in this step. Step 3 records those decisions without applying
-   corresponding changes, and Step 5 batches them for the caller.
-
    Classify regions, not whole files, as normalizer-owned, semantic or
    conventional order, true-peer sort, order-sensitive, already idiomatic,
-   layout Tier 1, or excluded. Flag every scope mismatch, plus every
+   layout move, or excluded. Flag every scope mismatch, plus every
    architectural, externally visible, or competing-convention membership or
-   placement ambiguity, as Tier 2. Complete when every candidate region is
-   classified and every Tier 2 decision is flagged.
+   placement ambiguity, as a caller decision. Complete when every candidate
+   region is classified and every caller decision is flagged.
 
 3. Normalize and organize.
    Run canonical normalizers for the regions they own, then hand-order the
-   remaining regions using the contract precedence. Apply a Tier 1 move only
+   remaining regions using the contract precedence. Apply a layout move only
    when it is mechanical and convention-backed, preserves the file's identity,
    has only discoverable repository references, shows no external path
-   contract, and can be verified. Record Tier 2 decisions without applying them.
+   contract, and can be verified. Record each caller decision without applying
+   it.
    Complete when every candidate region is normalized, improved, or
    intentionally preserved.
 4. Audit and verify.
@@ -107,8 +102,8 @@ sorting only among true peers.
    verification, and skipped areas. Report discovered semantic concerns
    separately.
    For repo-wide or blocked passes, also report scope, baseline, and coverage.
-   After completing unambiguous work, batch all Tier 2 decisions by policy or
-   region for the caller; defer any requested commit or push until they are
+   After completing unambiguous work, batch all caller decisions by policy or
+   region; defer any requested commit or push until they are
    resolved. Omit empty sections and placeholders. Complete when the caller can
    resolve each decision without another repository audit.
 

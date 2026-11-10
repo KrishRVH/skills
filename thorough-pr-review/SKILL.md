@@ -23,7 +23,8 @@ the last change tends to receive the thinnest pass.
   pre-existing defect the review uncovers goes to the caller report, never the
   publishable set. Unchanged code counts as activated when the diff points a new
   consumer at it or changes what it must satisfy. The consumer map decides.
-- Publish only Critical, High, and the publishable tier of Medium defined in Step 8. Report everything else to the caller.
+- Publish only Critical, High, and the publishable tier of Medium defined in
+  Step 8. Report everything else to the caller.
 - Write comments as a colleague's reading. Severity lives in the evidence, not
   in the tone.
 - An empty publishable set is a legitimate outcome. Report it as one rather than
@@ -41,10 +42,11 @@ metadata, canonical diff, and existing review threads through its available CLI
 or API, then fetch the head revision so surrounding code can be read at the
 exact revision under review. A repeat invocation on the same pull request must
 know what has already been raised: findings an existing thread already covers
-are referenced there, never re-posted. Keep the caller's active checkout untouched: read the fetched objects
-directly or use an isolated worktree, and save transient artifacts outside the
-repository. If the metadata, canonical diff, or head revision is unavailable,
-stop and report the missing access or artifact.
+are referenced there, never re-posted. Keep the caller's active checkout
+untouched: read the fetched objects directly or use an isolated worktree, and
+save transient artifacts outside the repository. If the metadata, canonical
+diff, or head revision is unavailable, stop and report the missing access or
+artifact.
 
 Read the repository's workspace instructions and whatever standards or workflow
 documents they route to; repository rules outrank this skill's defaults. Then
@@ -224,11 +226,11 @@ fixture has a traced producer, and every dismissal cites its deciding evidence.
 
 ### Step 7: Fan out the lenses, then refute
 
-**Give each specialist one lens in a clean context.** This is the load-bearing
-part. Two lenses and a specialist reverts to a generalist, whose attention goes
-uneven across the surface. That is the failure the shape exists to prevent. A single
-narrow mandate lets independent workers search reliably while the primary
-reviewer retains reconciliation and final judgment.
+**Give each specialist one lens in a clean context.** The rest of this step
+depends on it. Two lenses and a specialist reverts to a generalist, whose
+attention goes uneven across the surface. That is the failure the shape exists
+to prevent. A single narrow mandate lets independent workers search reliably
+while the primary reviewer retains reconciliation and final judgment.
 
 Dispatch one specialist per lens holding at least one applicable row in Step 5's
 table. Its brief contains the review metadata and spec, repository path and head
@@ -256,12 +258,11 @@ ones.
 
 Then run refutation, separately and last, over the merged candidate list. Merge
 the primary reviewer's candidates from Steps 3-6 with every specialist's
-returns.
-Dispatch one refuter per candidate, in parallel, each briefed with that
+returns. Dispatch one refuter per candidate, in parallel, each briefed with that
 candidate and its evidence pack and nothing from the others: a single refuter
-over the whole list re-creates the thin-tail attention the one-PR rule exists
-to prevent. When worker slots are scarce, fall back to refuters over small
-batches and say so in the report. Each refuter must:
+over the whole list re-creates the thin-tail attention the one-PR rule exists to
+prevent. When worker slots are scarce, fall back to refuters over small batches
+and say so in the report. Each refuter must:
 
 - try to disprove its candidate
 - classify it as confirmed, refuted, or unresolved
@@ -269,10 +270,10 @@ batches and say so in the report. Each refuter must:
 - name the cheapest check that would settle an unresolved verdict
 
 Run every settling check within the review's means, including file reads,
-fixture queries, and scratch executions, before letting a candidate stand as unresolved.
-An independent model's reading of the deciding evidence, where available, is a
-legitimate settling check, though weaker than a code trace. Report as
-unresolved only what settling would require access the review lacks.
+fixture queries, and scratch executions, before letting a candidate stand as
+unresolved. An independent model's reading of the deciding evidence, where
+available, is a legitimate settling check, though weaker than a code trace.
+Report as unresolved only what settling would require access the review lacks.
 
 Preserve each candidate's defect or spec ledger throughout refutation.
 
@@ -289,9 +290,9 @@ evidence or recorded as unresolved with the access that settling requires.
 ### Step 8: Reconcile and rate
 
 Reconcile the defect ledger across the primary pass, non-Spec specialists, and
-the refuters. Fan-out makes duplicates normal because several lenses reach one defect
-from different directions. Keep the finding with the wider blast radius, note
-the narrower one as subsumed, and carry the strongest evidence from either.
+the refuters. Fan-out makes duplicates normal because several lenses reach one
+defect from different directions. Keep the finding with the wider blast radius,
+note the narrower one as subsumed, and carry the strongest evidence from either.
 
 Where two lenses disagree about the same code, reopen the candidate. Resolve it
 against the code rather than averaging the claims or trusting the more confident
@@ -417,8 +418,8 @@ conclusion.
   candidate, or either holding the full candidate list.
 - Specialist output merged without each having filtered its own.
 - An ambiguous candidate recorded as refuted rather than unresolved.
-- A candidate whose failing input no traced producer actually emits, such as "what if
-  this is null" without the call site that makes it null.
+- A candidate whose failing input no traced producer actually emits, such as
+  "what if this is null" without the call site that makes it null.
 - A pre-existing defect ranked into the publishable set.
 - A comment claiming more than the evidence gathered for it, or vouching for part
   of the change as sound.
@@ -432,7 +433,7 @@ connects them to behavior that meets the severity bar.
 ## Cost
 
 Full-diff and history reading, producer tracing, execution of extractable logic,
-a twenty-six-class sweep, a reasoning audit, a parallel fan-out, per-candidate
+the full defect-class sweep, a reasoning audit, a parallel fan-out, per-candidate
 refuters with executed settling checks, and a pass over the drafted comments.
 
 Dispatch specialists in small concurrent waves that stay within the available
