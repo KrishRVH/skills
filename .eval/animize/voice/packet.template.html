@@ -128,6 +128,8 @@ table.sum { border-collapse: collapse; width: 100%; font-variant-numeric: tabula
 table.sum td { padding: 8px 0; border-top: 1px solid var(--rule); vertical-align: baseline; }
 table.sum tr:first-child td { border-top: 0; }
 table.sum td:last-child { text-align: right; font: 400 13px var(--mono); color: var(--ink-2); white-space: nowrap; padding-left: 12px; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 12px; }
+.version { background: var(--paper); border-radius: 4px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .backup { width: 100%; min-height: 9em; font: 400 12px/1.4 var(--mono); }
 @media (max-width: 480px) { h1 { font-size: 28px; } .lede { font-size: 17px; } .card-body { padding: 13px; } }
 @media (prefers-reduced-motion: no-preference) { .tab, .opt { transition: border-color .12s, background-color .12s, color .12s; } }
@@ -151,12 +153,14 @@ const DATA = /*__DATA__*/null;
 const SECTIONS = [
   { id: "start", label: "Start" },
   { id: "write", label: "1 · Write" },
-  { id: "rework", label: "2 · Rework" },
-  { id: "samples", label: "3 · Your writing" },
-  { id: "habits", label: "4 · Your habits" },
+  { id: "rough", label: "2 · Rough" },
+  { id: "rework", label: "3 · Rework" },
+  { id: "samples", label: "4 · Your writing" },
+  { id: "habits", label: "5 · Your habits" },
+  { id: "compare", label: "6 · Compare" },
   { id: "send", label: "Send" }
 ];
-const COLLS = ["meta", "writing", "edits", "samples", "voice"];
+const COLLS = ["meta", "writing", "rough", "edits", "samples", "voice", "reads"];
 const KINDS = ["Work email", "Message or chat (50 words or more)", "Explanation, report, feedback, or instructions", "Essay, article, or post", "Fiction", "Something else"];
 const TOOLS = ["No tools at all", "Spellcheck only", "A grammar tool, such as Grammarly", "An AI model touched it", "Not sure"];
 const MARKS = [["dash", "Long dash"], ["semi", "Semicolon"], ["paren", "Parentheses"], ["bang", "Exclamation mark"], ["dots", "Ellipsis"], ["colon", "Colon"]];
@@ -183,9 +187,9 @@ const QUESTIONS = [
   { id: "wrong", type: "text", q: "What would someone imitating you get wrong?" }
 ];
 const CONSENT = [
-  { id: "model", q: "My writing in this packet may be given to an AI model as examples of how I write." },
+  { id: "model", q: "My writing in this packet may be given to an AI model, as examples of how I write and as rough versions for it to finish." },
   { id: "detector", q: "My writing may be run through an AI-text detection service (Pangram) to see how it scores. This sends the text to that company." },
-  { id: "finetune", q: "A model may be trained further on the writing I paste in part 3, so that it writes more like me. This is optional and separate from the two above." }
+  { id: "finetune", q: "A model may be trained further on the writing I paste in part 4, so that it writes more like me. This is optional and separate from the two above." }
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -193,6 +197,7 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&
 const words = (s) => (String(s || "").trim().match(/\S+/g) || []).length;
 const norm = (s) => String(s || "").replace(/\s+/g, " ").trim();
 const plural = (n, one, many) => n.toLocaleString() + " " + (n === 1 ? one : many);
+const mmss = (sec) => Math.floor(sec / 60) + ":" + String(Math.floor(sec % 60)).padStart(2, "0");
 const clock = (d) => d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const clone = (o) => JSON.parse(JSON.stringify(o));
@@ -220,7 +225,7 @@ const collRef = (coll) => db.doc("runs/" + NS).collection(coll);
 const docRef = (coll, id) => collRef(coll).doc(id);
 function entry(coll, id) {
   const k = key(coll, id);
-  if (!docs.has(k)) docs.set(k, { coll, id, data: {}, dirty: false, saving: false, again: false, timer: null, error: null, retry: 0, savedAt: null, stored: false, deleted: false, lastInput: 0 });
+  if (!docs.has(k)) docs.set(k, { coll, id, data: {}, dirty: false, saving: false, again: false, timer: null, error: null, retry: 0, savedAt: null, stored: false, deleted: false, lastInput: 0, lastText: 0 });
   return docs.get(k);
 }
 const val = (coll, id, field) => { const e = docs.get(key(coll, id)); return e && !e.deleted ? e.data[field] : undefined; };
@@ -234,6 +239,10 @@ function setField(coll, id, field, value) {
   const now = Date.now();
   if (e.lastInput && now - e.lastInput < 60000) e.data.activeSec = Math.round(((e.data.activeSec || 0) + (now - e.lastInput) / 1000) * 10) / 10;
   e.lastInput = now;
+  if (coll === "rough" && field === "text") {
+    if (e.lastText && now - e.lastText < 60000) e.data.textSec = Math.round(((e.data.textSec || 0) + (now - e.lastText) / 1000) * 10) / 10;
+    e.lastText = now;
+  }
   e.data[field] = value;
   touch(e);
 }
@@ -330,6 +339,9 @@ const writeDone = (t) => !!val("writing", t.id, "skip") || words(val("writing", 
 const lightChanged = (t) => { const v = val("edits", t.id, "light"); return v !== undefined && norm(v) !== norm(t.draft); };
 const editDone = (t) => lightChanged(t) && words(val("edits", t.id, "full")) >= 50;
 const editStarted = (t) => lightChanged(t) || words(val("edits", t.id, "full")) > 0 || words(val("edits", t.id, "tells")) > 0;
+const roughDone = (t) => !!val("rough", t.id, "skip") || words(val("rough", t.id, "text")) >= 20;
+const readDone = (t) => !!val("reads", t.id, "pick") && !!val("reads", t.id, "pass");
+const readStarted = (t) => !!val("reads", t.id, "pick") || !!val("reads", t.id, "pass") || words(val("reads", t.id, "tells")) > 0;
 const samples = () => live("samples").filter((e) => e.id !== "_").sort((a, b) => (a.id < b.id ? -1 : 1));
 const sampleWords = () => samples().reduce((n, e) => n + words(e.data.text), 0);
 function answered() {
@@ -344,6 +356,8 @@ function counts() {
   return {
     written: DATA.write.filter(writeDone).length, writeTotal: DATA.write.length,
     ownConfirmed: DATA.write.filter((t) => val("writing", t.id, "own") === true).length,
+    rough: DATA.rough.filter(roughDone).length, roughTotal: DATA.rough.length,
+    compared: DATA.read.filter(readDone).length, compareTotal: DATA.read.length,
     reworked: DATA.edit.filter(editDone).length, editTotal: DATA.edit.length,
     samples: samples().filter((e) => words(e.data.text) > 0).length, sampleWords: sampleWords(),
     answered: answered(), questions: QUESTIONS.length
@@ -380,6 +394,8 @@ function paintDoc(e) {
   }
   if (e.coll === "writing") { const t = DATA.write.find((x) => x.id === e.id); if (t) paintWrite(t); }
   if (e.coll === "edits") { const t = DATA.edit.find((x) => x.id === e.id); if (t) paintEdit(t); }
+  if (e.coll === "rough") { const t = DATA.rough.find((x) => x.id === e.id); if (t) paintRough(t); }
+  if (e.coll === "reads") { const t = DATA.read.find((x) => x.id === e.id); if (t) paintRead(t); }
   if (e.coll === "samples") paintSampleTotals();
   if (e.coll === "voice") { const el = $("voice-count"); if (el) el.textContent = answered() + " of " + QUESTIONS.length + " answered"; }
 }
@@ -400,6 +416,16 @@ function paintWrite(t) {
   setChip("chip-writing-" + t.id, skip ? "Skipped" : words(text) >= 50 ? "Done" : words(text) ? "Started" : "");
   const why = $("f-writing-" + t.id + "-skipWhy"); if (why) why.hidden = !skip;
 }
+function paintRough(t) {
+  const text = val("rough", t.id, "text"), skip = !!val("rough", t.id, "skip"), sec = val("rough", t.id, "textSec") || 0;
+  paintCount("wc-rough-" + t.id, text, null);
+  setChip("chip-rough-" + t.id, skip ? "Skipped" : words(text) >= 20 ? "Done" : words(text) ? "Started" : "");
+  const why = $("f-rough-" + t.id + "-skipWhy"); if (why) why.hidden = !skip;
+  const tm = $("tm-rough-" + t.id); if (!tm) return;
+  tm.className = "count" + (sec >= 120 ? " off" : "");
+  tm.textContent = sec >= 120 ? "Typing time " + mmss(sec) + ". That is two minutes, so stop where you are." : sec ? "Typing time " + mmss(sec) + " of about 2:00" : "";
+}
+function paintRead(t) { setChip("chip-reads-" + t.id, readDone(t) ? "Done" : readStarted(t) ? "Started" : ""); }
 function paintEdit(t) {
   const light = val("edits", t.id, "light");
   paintCount("wc-edits-" + t.id + "-light", light === undefined ? t.draft : light, null);
@@ -414,7 +440,7 @@ function paintSampleTotals() {
 }
 function paintTabs() {
   const c = gate ? counts() : null;
-  const n = { write: c && c.written + "/" + c.writeTotal, rework: c && c.reworked + "/" + c.editTotal, samples: c && String(c.samples), habits: c && c.answered + "/" + c.questions };
+  const n = { write: c && c.written + "/" + c.writeTotal, rough: c && c.rough + "/" + c.roughTotal, rework: c && c.reworked + "/" + c.editTotal, samples: c && String(c.samples), habits: c && c.answered + "/" + c.questions, compare: c && c.compared + "/" + c.compareTotal };
   $("tabs").innerHTML = SECTIONS.map((s) =>
     '<button class="tab" data-go="' + s.id + '"' + (s.id === current ? ' aria-current="page"' : "") + (!gate && s.id !== "start" ? " disabled" : "") + ">" +
     esc(s.label) + (n[s.id] ? ' <span class="n">' + esc(n[s.id]) + "</span>" : "") + "</button>").join("");
@@ -435,11 +461,11 @@ function viewStart() {
     "</div></div>").join("");
 
   return '<div class="stack"><h1>How you write, in your own words</h1>' +
-    '<p class="lede">This packet collects your writing: eight short pieces written fresh, four machine drafts reworked by you, writing you already have, and a few questions about your habits. Allow about three hours. You can stop and come back, and everything saves as you type.</p></div>' +
+    '<p class="lede">This packet collects your writing: eight short pieces written fresh, eight rough versions of two minutes each, four machine drafts reworked by you, writing you already have, and a few questions about your habits. It ends with six pairs to compare. Allow about three and a half hours. You can stop and come back, and everything saves as you type.</p></div>' +
     saveBox +
     '<div class="stack"><h2>What this is for</h2>' +
     "<p>We are testing whether an AI model can learn to rewrite its own drafts so that they read as if a particular person wrote them. You are that person. Your writing is the target the model aims at, and the yardstick we measure it with.</p>" +
-    "<p>The result gets judged two ways. A reader says whether it sounds like a person, and you will be asked that yourself in a short second packet. An AI-text detector says whether it takes the text for human writing.</p></div>" +
+    "<p>The result gets judged two ways. A reader says whether it sounds like a person. You are asked that in part 6, and again in a short second packet. An AI-text detector says whether it takes the text for human writing.</p></div>" +
     '<div class="stack"><h2>How to write here</h2><ul class="plain">' +
     "<li>Write the way you really would. Do not perform a style, and do not polish more than you would for a real message of that kind.</li>" +
     "<li>Use no AI tool and no grammar tool. Your ordinary spellcheck is fine.</li>" +
@@ -454,7 +480,7 @@ function viewWrite() {
   const firstOpen = DATA.write.find((t) => !writeDone(t));
   return '<div class="stack"><h1>Write eight short pieces</h1>' +
     '<p class="lede">Each one gives you a situation and the facts. Write it as you would if it were yours to send. About 80 minutes in all.</p>' +
-    '<p class="muted">Do this part before part 2, so the machine drafts there do not colour what you write here.</p></div>' +
+    '<p class="muted">Do parts 1 and 2 before part 3, so the machine drafts there do not colour what you write.</p></div>' +
     DATA.write.map((t, i) =>
       '<details class="card" id="card-' + t.id + '"' + (firstOpen && firstOpen.id === t.id ? " open" : "") + ">" +
       '<summary><span class="num">' + (i + 1) + '</span><span class="sum-title">' + esc(t.title) + '</span><span class="sum-meta">' + t.words[0] + " to " + t.words[1] + ' words</span><span class="chip" id="chip-writing-' + t.id + '"></span></summary>' +
@@ -467,7 +493,26 @@ function viewWrite() {
       '<label class="check"><input type="checkbox" id="f-writing-' + t.id + '-skip" data-coll="writing" data-id="' + t.id + '" data-field="skip"> <span>Skip this one. I would never write this kind of piece.</span></label>' +
       '<input type="text" id="f-writing-' + t.id + '-skipWhy" placeholder="Why not? A few words." aria-label="Why you are skipping this piece" data-coll="writing" data-id="' + t.id + '" data-field="skipWhy" hidden>' +
       "</div></details>").join("") +
-    '<div class="btn-row"><button class="btn" data-go="rework">On to part 2</button></div>';
+    '<div class="btn-row"><button class="btn" data-go="rough">On to part 2</button></div>';
+}
+function viewRough() {
+  const firstOpen = DATA.rough.find((t) => !roughDone(t));
+  return '<div class="stack"><h1>Eight rough versions</h1>' +
+    '<p class="lede">Each one gives you a situation and the facts, as in part 1. This time, give it about two minutes and stop. Get it down the way it comes out: fragments, half-sentences, and typos are all fine. About 20 minutes in all.</p>' +
+    '<p class="muted">Do not tidy these, and do not go back over them. Later a model finishes each one while keeping your words, and we test whether the result still reads as yours.</p></div>' +
+    DATA.rough.map((t, i) =>
+      '<details class="card" id="card-' + t.id + '"' + (firstOpen && firstOpen.id === t.id ? " open" : "") + ">" +
+      '<summary><span class="num">' + (i + 1) + '</span><span class="sum-title">' + esc(t.title) + '</span><span class="sum-meta">about 2 minutes</span><span class="chip" id="chip-rough-' + t.id + '"></span></summary>' +
+      '<div class="card-body"><p class="situation">' + esc(t.situation) + "</p>" +
+      '<div class="facts"><div class="label">The facts</div><ul>' + t.notes.map((n) => "<li>" + esc(n) + "</li>").join("") + "</ul></div>" +
+      '<div class="step"><label class="label" for="f-rough-' + t.id + '-text">Your rough version</label>' +
+      '<textarea id="f-rough-' + t.id + '-text" rows="7" data-coll="rough" data-id="' + t.id + '" data-field="text"></textarea>' +
+      '<div class="meta-row"><span class="count" id="wc-rough-' + t.id + '"></span><span class="count" id="tm-rough-' + t.id + '"></span><span class="st" id="st-rough-' + t.id + '"></span></div></div>' +
+      '<label class="check"><input type="checkbox" id="f-rough-' + t.id + '-own" data-coll="rough" data-id="' + t.id + '" data-field="own"> <span>I typed this myself, with no AI tool and no grammar tool.</span></label>' +
+      '<label class="check"><input type="checkbox" id="f-rough-' + t.id + '-skip" data-coll="rough" data-id="' + t.id + '" data-field="skip"> <span>Skip this one. I would never write this kind of piece.</span></label>' +
+      '<input type="text" id="f-rough-' + t.id + '-skipWhy" placeholder="Why not? A few words." aria-label="Why you are skipping this piece" data-coll="rough" data-id="' + t.id + '" data-field="skipWhy" hidden>' +
+      "</div></details>").join("") +
+    '<div class="btn-row"><button class="btn" data-go="rework">On to part 3</button></div>';
 }
 function viewRework() {
   const firstOpen = DATA.edit.find((t) => !editDone(t));
@@ -493,7 +538,7 @@ function viewRework() {
       '<div class="step"><label class="label" for="f-edits-' + t.id + '-note">Anything to add about what you changed? Optional.</label>' +
       '<input type="text" id="f-edits-' + t.id + '-note" data-coll="edits" data-id="' + t.id + '" data-field="note"></div>' +
       "</div></details>").join("") +
-    '<div class="btn-row"><button class="btn" data-go="samples">On to part 3</button></div>';
+    '<div class="btn-row"><button class="btn" data-go="samples">On to part 4</button></div>';
 }
 function sampleCard(e, open) {
   const id = e.id, f = (name) => "f-samples-" + id + "-" + name, d = 'data-coll="samples" data-id="' + id + '"';
@@ -524,7 +569,7 @@ function viewSamples() {
     "<li>For big files, such as a manuscript or a folder of essays, send them straight to the person who invited you instead.</li></ul></div>" +
     '<div class="meta-row"><span id="sample-totals"></span><span></span></div>' +
     '<div class="stack" id="sample-list">' + list.map((e) => sampleCard(e, !words(e.data.text))).join("") + "</div>" +
-    '<div class="btn-row"><button class="btn" data-act="add-sample">Add a piece of writing</button><button class="btn quiet" data-go="habits">On to part 4</button></div>';
+    '<div class="btn-row"><button class="btn" data-act="add-sample">Add a piece of writing</button><button class="btn quiet" data-go="habits">On to part 5</button></div>';
 }
 function viewHabits() {
   const f = (qid, extra) => "f-voice-answers-" + qid + (extra ? "-" + extra : "");
@@ -539,6 +584,31 @@ function viewHabits() {
         MARKS.map((m) => "<span>" + esc(m[1]) + "</span>" + ["Often", "Sometimes", "Never"].map((o) => '<label><input type="radio" name="voice-marks-' + m[0] + '" id="' + f("marks_" + m[0], o) + '" value="' + o + '" aria-label="' + esc(m[1] + ": " + o) + '" ' + d + ' data-field="marks_' + m[0] + '"></label>').join("")).join("") + "</div>";
       return '<div class="q"><div class="q-text">' + esc(q.q) + "</div>" + body + "</div>";
     }).join("") + '</div><div class="meta-row"><span id="voice-count"></span><span class="st" id="st-voice-answers"></span></div></div>' +
+    '<div class="btn-row"><button class="btn" data-go="compare">On to part 6</button></div>';
+}
+function viewCompare() {
+  const firstOpen = DATA.read.find((t) => !readDone(t));
+  const d = (t) => 'data-coll="reads" data-id="' + t.id + '"';
+  const radios = (t, field, label, list) => '<div class="opts" role="radiogroup" aria-label="' + esc(label) + '">' + list.map((o) =>
+    '<label class="opt"><input type="radio" name="reads-' + t.id + "-" + field + '" id="f-reads-' + t.id + "-" + field + "-" + o[0] + '" value="' + o[0] + '" ' + d(t) + ' data-field="' + field + '"> ' + esc(o[1]) + "</label>").join("") + "</div>";
+  return '<div class="stack"><h1>Six pairs, side by side</h1>' +
+    '<p class="lede">Each pair is the same message written two ways. Both versions came from an AI model, and one of them was then revised. You are not told which. About 10 minutes.</p></div>' +
+    DATA.read.map((t, i) =>
+      '<details class="card" id="card-' + t.id + '"' + (firstOpen && firstOpen.id === t.id ? " open" : "") + ">" +
+      '<summary><span class="num">' + (i + 1) + '</span><span class="sum-title">' + esc(t.title) + '</span><span class="chip" id="chip-reads-' + t.id + '"></span></summary>' +
+      '<div class="card-body"><p class="situation">' + esc(t.what) + "</p>" +
+      '<div class="pair"><div class="version"><div class="label">Version A</div><div class="draft-text" id="ver-' + t.id + '-a"></div></div>' +
+      '<div class="version"><div class="label">Version B</div><div class="draft-text" id="ver-' + t.id + '-b"></div></div></div>' +
+      '<div class="step"><div class="step-head"><span class="step-n">1</span><span class="label">Which reads more like a person wrote it?</span></div>' +
+      radios(t, "pick", "Which reads more like a person wrote it?", [["A", "Version A"], ["B", "Version B"], ["Same", "No difference"]]) + "</div>" +
+      '<div class="step"><div class="step-head"><span class="step-n">2</span><span class="label">Would you believe a person wrote your pick?</span></div>' +
+      '<p class="hint">If you saw no difference, answer for both.</p>' +
+      radios(t, "pass", "Would you believe a person wrote your pick?", [["Yes", "Yes"], ["Maybe", "Maybe"], ["No", "No"]]) + "</div>" +
+      '<div class="step"><div class="step-head"><span class="step-n">3</span><label class="label" for="f-reads-' + t.id + '-tells">What gives the other one away?</label></div>' +
+      '<p class="hint">Quote the words or sentences, one to a line. If neither version convinces you, say what gives both away.</p>' +
+      '<textarea class="plain" id="f-reads-' + t.id + '-tells" rows="4" ' + d(t) + ' data-field="tells"></textarea>' +
+      '<div class="meta-row"><span></span><span class="st" id="st-reads-' + t.id + '"></span></div></div>' +
+      "</div></details>").join("") +
     '<div class="btn-row"><button class="btn" data-go="send">On to sending</button></div>';
 }
 function viewSend() {
@@ -549,9 +619,11 @@ function viewSend() {
     '<div class="panel"><table class="sum"><tbody>' +
     "<tr><td>Part 1. Pieces written or skipped</td><td>" + c.written + " of " + c.writeTotal + "</td></tr>" +
     "<tr><td>Part 1. Pieces confirmed as written without tools</td><td>" + c.ownConfirmed + " of " + c.writeTotal + "</td></tr>" +
-    "<tr><td>Part 2. Drafts reworked, both the light fix and your own version</td><td>" + c.reworked + " of " + c.editTotal + "</td></tr>" +
-    "<tr><td>Part 3. Pieces of your own writing</td><td>" + c.samples + " · " + c.sampleWords.toLocaleString() + " words</td></tr>" +
-    "<tr><td>Part 4. Questions answered</td><td>" + c.answered + " of " + c.questions + "</td></tr>" +
+    "<tr><td>Part 2. Rough versions written or skipped</td><td>" + c.rough + " of " + c.roughTotal + "</td></tr>" +
+    "<tr><td>Part 3. Drafts reworked, both the light fix and your own version</td><td>" + c.reworked + " of " + c.editTotal + "</td></tr>" +
+    "<tr><td>Part 4. Pieces of your own writing</td><td>" + c.samples + " · " + c.sampleWords.toLocaleString() + " words</td></tr>" +
+    "<tr><td>Part 5. Questions answered</td><td>" + c.answered + " of " + c.questions + "</td></tr>" +
+    "<tr><td>Part 6. Pairs compared</td><td>" + c.compared + " of " + c.compareTotal + "</td></tr>" +
     "<tr><td>Permissions on the Start page: model, detector, training</td><td>" + esc(consentRow) + "</td></tr>" +
     "</tbody></table>" +
     '<p class="muted">You can send with gaps and come back later. If the first two permissions are not answered, please answer them on the Start page first.</p>' +
@@ -561,7 +633,7 @@ function viewSend() {
     '<div class="stack"><h2>Keep your own copy</h2><p class="muted">Optional. This copies everything you wrote here as plain text.</p>' +
     '<div class="btn-row"><button class="btn quiet" data-act="backup">Copy everything I have written</button></div><div id="backup-slot"></div></div>';
 }
-const VIEWS = { start: viewStart, write: viewWrite, rework: viewRework, samples: viewSamples, habits: viewHabits, send: viewSend };
+const VIEWS = { start: viewStart, write: viewWrite, rough: viewRough, rework: viewRework, samples: viewSamples, habits: viewHabits, compare: viewCompare, send: viewSend };
 
 function autosize(ta) { ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, 96) + "px"; }
 function hydrate() {
@@ -576,9 +648,10 @@ function hydrate() {
     if (readOnly) el.disabled = true;
   });
   DATA.edit.forEach((t) => { const el = $("draft-" + t.id); if (el) el.textContent = t.draft; });
+  DATA.read.forEach((t) => { ["a", "b"].forEach((v) => { const el = $("ver-" + t.id + "-" + v); if (el) el.textContent = t[v]; }); });
   main.querySelectorAll("textarea").forEach(autosize);
   docs.forEach(paintDoc);
-  DATA.write.forEach(paintWrite); DATA.edit.forEach(paintEdit); paintSampleTotals();
+  DATA.write.forEach(paintWrite); DATA.rough.forEach(paintRough); DATA.edit.forEach(paintEdit); DATA.read.forEach(paintRead); paintSampleTotals();
   const vc = $("voice-count"); if (vc) vc.textContent = answered() + " of " + QUESTIONS.length + " answered";
 }
 function render() {
@@ -614,15 +687,17 @@ async function openGate(skipProbe) {
 function exportText() {
   const out = ["IN YOUR OWN WORDS, backup made " + new Date().toLocaleString(), ""];
   DATA.write.forEach((t, i) => { out.push("== PART 1, PIECE " + (i + 1) + " (" + t.id + "): " + t.title, val("writing", t.id, "skip") ? "[skipped] " + (val("writing", t.id, "skipWhy") || "") : (val("writing", t.id, "text") || ""), ""); });
+  DATA.rough.forEach((t, i) => { out.push("== PART 2, ROUGH VERSION " + (i + 1) + " (" + t.id + "): " + t.title, val("rough", t.id, "skip") ? "[skipped] " + (val("rough", t.id, "skipWhy") || "") : (val("rough", t.id, "text") || ""), ""); });
   DATA.edit.forEach((t, i) => {
-    out.push("== PART 2, DRAFT " + (i + 1) + " (" + t.id + "): " + t.title, "-- what gives it away", val("edits", t.id, "tells") || "", "-- lightest fix", val("edits", t.id, "light") === undefined ? "[unchanged]" : val("edits", t.id, "light"), "-- own version", val("edits", t.id, "full") || "", "-- note", val("edits", t.id, "note") || "", "");
+    out.push("== PART 3, DRAFT " + (i + 1) + " (" + t.id + "): " + t.title, "-- what gives it away", val("edits", t.id, "tells") || "", "-- lightest fix", val("edits", t.id, "light") === undefined ? "[unchanged]" : val("edits", t.id, "light"), "-- own version", val("edits", t.id, "full") || "", "-- note", val("edits", t.id, "note") || "", "");
   });
-  samples().forEach((e, i) => { out.push("== PART 3, PIECE " + (i + 1) + ": " + [e.data.kind, e.data.year, e.data.tools, e.data.context, e.data.edited ? "edited by someone else" : ""].filter(Boolean).join(" | "), e.data.text || "", ""); });
-  out.push("== PART 4");
+  samples().forEach((e, i) => { out.push("== PART 4, PIECE " + (i + 1) + ": " + [e.data.kind, e.data.year, e.data.tools, e.data.context, e.data.edited ? "edited by someone else" : ""].filter(Boolean).join(" | "), e.data.text || "", ""); });
+  out.push("== PART 5");
   QUESTIONS.forEach((q) => {
     if (q.type === "matrix") out.push(q.q, MARKS.map((m) => m[1] + ": " + (val("voice", "answers", "marks_" + m[0]) || "")).join("; "), "");
     else out.push(q.q, val("voice", "answers", q.id) || "", "");
   });
+  DATA.read.forEach((t, i) => { out.push("== PART 6, PAIR " + (i + 1) + " (" + t.id + "): " + t.title, "reads more like a person: " + (val("reads", t.id, "pick") || ""), "would believe a person wrote it: " + (val("reads", t.id, "pass") || ""), "-- what gives the other away", val("reads", t.id, "tells") || "", ""); });
   out.push("== PERMISSIONS"); CONSENT.forEach((c) => out.push(c.q + " " + (val("meta", "consent", c.id) || "not answered")));
   return out.join("\n");
 }
@@ -649,7 +724,7 @@ async function sendAll(btn) {
     }
     if (missing.length) return fail(plural(missing.length, "item", "items") + " on the server did not match this page: " + missing.slice(0, 6).join(", "));
     const c = counts();
-    msg.innerHTML = '<div class="panel ok"><h3>Received</h3><p>Sent at ' + esc(clock(new Date())) + " and checked against the server: " + plural(c.written, "written piece", "written pieces") + ", " + plural(c.reworked, "reworked draft", "reworked drafts") + ", " + plural(c.samples, "piece", "pieces") + " of your own writing (" + plural(c.sampleWords, "word", "words") + "), and " + plural(c.answered, "answer", "answers") + ". You can close this page. Thank you.</p></div>";
+    msg.innerHTML = '<div class="panel ok"><h3>Received</h3><p>Sent at ' + esc(clock(new Date())) + " and checked against the server: " + plural(c.written, "written piece", "written pieces") + ", " + plural(c.rough, "rough version", "rough versions") + ", " + plural(c.reworked, "reworked draft", "reworked drafts") + ", " + plural(c.samples, "piece", "pieces") + " of your own writing (" + plural(c.sampleWords, "word", "words") + "), " + plural(c.answered, "answer", "answers") + ", and " + plural(c.compared, "compared pair", "compared pairs") + ". You can close this page. Thank you.</p></div>";
     btn.disabled = false; paintTabs();
   } catch (err) { fail("The server could not be reached (" + ((err && err.code) || "unknown") + ")."); }
 }

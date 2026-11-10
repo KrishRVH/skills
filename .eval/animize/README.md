@@ -215,10 +215,15 @@ so no document is scored by a threshold it helped choose.
   cell, and the chat reply. `scores_pangram_source.jsonl` holds its reading
   of the chat reply's source. The other sources are in the files above.
 - `voice/`: the packet that collects one writer's voice. `scenarios.jsonl`
-  holds twelve invented scenarios: eight that the writer writes from the
-  facts, and four whose model draft the writer reworks. `drafts.jsonl` holds
-  a mid-tier model's draft of all twelve, and the writer sees only those
-  four. `build_packet.py` builds the page the writer fills in from
+  holds 26 invented scenarios in four parts. The writer writes eight from
+  the facts (`write`), gives eight more a rough version of about two minutes
+  each (`rough`), reworks the model draft of four (`edit`), and compares two
+  versions of six (`read`). `drafts.jsonl` holds a mid-tier model's draft of
+  all 26. The writer sees the four `edit` drafts and the six `read` drafts,
+  and none of the other sixteen. `reads.jsonl` holds this skill's revision
+  of each `read` draft, the notes that came with it, and which of the two
+  the page shows as version A. The page carries the two texts without saying
+  which is which. `build_packet.py` builds the page the writer fills in from
   `packet.template.html`. The writer's answers live in the published page's
   own store. An export of them goes in `voice/responses/`, which is ignored
   because it is the writer's own text.
