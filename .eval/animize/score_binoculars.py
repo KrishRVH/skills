@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 from _common import (
@@ -35,7 +34,6 @@ from _common import (
     WINDOW_STRIDE,
     WINDOW_TOKENS,
     die,
-    dtype_kwargs,
     hub_revision,
     is_gate_error,
     gate_message,
@@ -70,10 +68,9 @@ def load_pair(observer: str, performer: str, device: str):
         tok_o.pad_token = tok_o.eos_token
     tok_o.padding_side = "right"
 
-    kwargs = dtype_kwargs(torch.bfloat16)
     try:
-        model_o = AutoModelForCausalLM.from_pretrained(observer, **kwargs).to(device).eval()
-        model_p = AutoModelForCausalLM.from_pretrained(performer, **kwargs).to(device).eval()
+        model_o = AutoModelForCausalLM.from_pretrained(observer, dtype=torch.bfloat16).to(device).eval()
+        model_p = AutoModelForCausalLM.from_pretrained(performer, dtype=torch.bfloat16).to(device).eval()
     except Exception as exc:  # noqa: BLE001
         if is_gate_error(exc):
             die(gate_message(observer))
@@ -202,7 +199,7 @@ def main() -> None:
     n = write_jsonl(args.out, out)
     log(f"wrote {n} rows to {args.out}")
     for r in out:
-        print(f"{r.get('id')}\t{r['binoculars_score']:.4f}", file=sys.stdout)
+        print(f"{r.get('id')}\t{r['binoculars_score']:.4f}")
 
 
 if __name__ == "__main__":

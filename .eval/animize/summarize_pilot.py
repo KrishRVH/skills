@@ -19,18 +19,16 @@ from __future__ import annotations
 import argparse
 import glob
 import json
+import math
 import os
 import re
 import statistics
 from collections import defaultdict
 
+from _common import read_jsonl
+
 DASHES = "\u2013\u2014"
 NUM_RE = re.compile(r"\b\d[\d,.]*\b")
-
-
-def read_jsonl(path):
-    with open(path, encoding="utf-8") as fh:
-        return [json.loads(line) for line in fh if line.strip()]
 
 
 def mean(xs):
@@ -42,7 +40,7 @@ def median(xs):
 
 
 def fmt(x, nd=3):
-    return "n/a" if x != x else f"{x:.{nd}f}"
+    return "n/a" if math.isnan(x) else f"{x:.{nd}f}"
 
 
 def main():
@@ -57,8 +55,8 @@ def main():
 
     outputs = read_jsonl(args.outputs)
     src_scores = {r["id"]: r["binoculars_score"] for r in read_jsonl(args.source_scores)}
-    out_scores = {r.get("job_id", r["id"]): r["binoculars_score"] for r in read_jsonl(args.output_scores)}
-    diffs = {r.get("job_id", r["id"]): r for r in read_jsonl(args.diffs)}
+    out_scores = {r["job_id"]: r["binoculars_score"] for r in read_jsonl(args.output_scores)}
+    diffs = {r["job_id"]: r for r in read_jsonl(args.diffs)}
 
     strong_human = [v for k, v in src_scores.items() if "/human/" in k]
     ref_line = min(strong_human) if strong_human else float("nan")
@@ -91,7 +89,8 @@ def main():
         if not pairs:
             print(f"| {sc} | {rg} | {b} | 0 | | | | | scores missing |")
             continue
-        s_m = mean([s for s, _ in pairs]); t_m = mean([t for _, t in pairs])
+        s_m = mean([s for s, _ in pairs])
+        t_m = mean([t for _, t in pairs])
         d = mean([t - s for s, t in pairs])
         lower = sum(1 for s, t in pairs if t < s)
         below = sum(1 for _, t in pairs if t < ref_line)
@@ -114,7 +113,7 @@ def main():
         for d in ds:
             for k, v in d["counts"].items():
                 tot[k] += v
-            tot["reordered"] += d.get("reordered", 0)
+            tot["reordered"] += d["reordered"]
         shares = [d["model_token_share"] for d in ds]
         wb = sum(1 for d in ds if d["within_budget"])
         viol = sum(1 for d in ds if d["violation"])
@@ -142,7 +141,8 @@ def main():
         for (sc, rg, b), rows in sorted(groups.items()):
             if sc != "human_defect":
                 continue
-            hits = [0] * 5; allfive = 0
+            hits = [0] * len(labels)
+            allfive = 0
             for o in rows:
                 stem = o["id"].split("/")[-1]
                 inj = side.get(stem)
@@ -161,7 +161,8 @@ def main():
     print("| Source class | Regime | Budget | n | source numbers missing from output | outputs with a generated dash |")
     print("| --- | --- | --- | --- | --- | --- |")
     for (sc, rg, b), rows in sorted(groups.items()):
-        miss = 0; dash = 0
+        miss = 0
+        dash = 0
         for o in rows:
             src_nums = set(NUM_RE.findall(o["source_text"]))
             out_nums = set(NUM_RE.findall(o["output_text"]))

@@ -86,7 +86,6 @@ def score_head_buckets(adapter_repo: str) -> int:
             if "score" in key and key.endswith("linear.weight"):
                 return int(fh.get_slice(key).get_shape()[0])
     die(f"no score head weights found in {adapter_repo}")
-    return 0  # unreachable
 
 
 def load_model(which: str):

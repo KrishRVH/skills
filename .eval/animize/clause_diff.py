@@ -8,24 +8,28 @@ output clause is matched against the source using a similarity that is the
 mean of difflib's SequenceMatcher ratio on token lists and token-set Jaccard.
 
 Classes:
-  kept              similarity >= 0.9
-  lexically_edited  0.5 <= similarity < 0.9, matched to an unconsumed source clause
-  added             best similarity < 0.5
+  kept              matched to a source clause at similarity >= 0.9
+  lexically_edited  matched to a source clause at 0.5 <= similarity < 0.9
+  added             no unconsumed source clause at similarity >= 0.5
   deleted           source clauses no output clause matched
-Matches are assigned greedily by descending similarity so an early output
-clause cannot steal a later clause's best match. `reordered` counts matched
-output clauses that sit outside the longest in-order run of source matches.
+Each source clause is consumed by one match. Matches are assigned greedily
+by descending similarity so an early output clause cannot steal a later
+clause's best match. `reordered` counts matched output clauses that sit
+outside the longest in-order run of source matches.
 
-Model-added tokens = tokens of `added` clauses plus output-side tokens of
-insert and replace opcodes inside `lexically_edited` clauses.
+Two token counts are reported. `model_added_tokens` is the count the budget
+applies to: every token of an `added` clause, plus every token of a kept or
+edited clause that the whole source does not supply.
+`model_added_tokens_clause` is a clause-local diagnostic: tokens of `added`
+clauses plus the output-side tokens of insert and replace opcodes inside
+`lexically_edited` clauses. It runs high when a source sentence splits at a
+stray comma and the output rejoins the pieces.
 
-Per row the output has counts per class, `model_added_tokens` (tokens of
-added clauses plus tokens absent from the whole source; the clause-local
-count is kept as `model_added_tokens_clause`),
-`output_tokens`, `source_tokens`, `model_token_share`, `within_budget`
-(share < budget and model_added_tokens < source_tokens), `added_clauses`,
-and `violation` (regime is preserve and added_clauses is nonempty or the
-row is over budget).
+Per row the output also has counts per class, `reordered`, `output_tokens`,
+`source_tokens`, `model_token_share` (`model_added_tokens` over
+`output_tokens`), `within_budget` (share < budget and model_added_tokens <
+source_tokens), `added_clauses`, `deleted_clauses`, and `violation` (regime
+is preserve and added_clauses is nonempty or the row is over budget).
 
 Usage:
   python clause_diff.py --demo
@@ -41,7 +45,7 @@ import re
 import string
 from dataclasses import dataclass
 
-from _common import log, read_jsonl, write_jsonl
+from _common import PRESERVE_BUDGET, log, read_jsonl, write_jsonl
 
 MIN_CLAUSE_TOKENS = 4
 KEPT = 0.9
@@ -78,7 +82,8 @@ PRONOUN_SUBJECTS = {"i", "we", "you", "they", "he", "she", "it", "who", "which",
 
 # A sentence ends at terminal punctuation followed by whitespace, regardless
 # of the next character's case, so that an exclamation before a lowercase
-# continuation splits the same way in source and output (P3 step 1).
+# continuation splits the same way in source and output (procedure.md P3,
+# step 1).
 SENTENCE_RE = re.compile(r"(?<=[.!?])\s+")
 EM_DASH, EN_DASH = chr(0x2014), chr(0x2013)
 CURLY_QUOTES = "".join(chr(c) for c in (0x201C, 0x201D, 0x2018, 0x2019))
@@ -215,9 +220,9 @@ def diff_row(source_text: str, output_text: str) -> tuple[dict, list[ClauseResul
 
     output_tokens = sum(len(t) for t in out_tok)
     source_tokens = sum(len(t) for t in src_tok)
-    # Clause-local count (kept for reference): tokens in each output clause with
-    # no match in its aligned source clause. It over-counts when a source
-    # sentence was split at a stray comma and the output merges the pieces.
+    # Clause-local diagnostic: tokens in each output clause with no match in
+    # its aligned source clause. It over-counts when a source sentence was
+    # split at a stray comma and the output merges the pieces.
     model_added_clause = sum(r.added_tokens for r in results)
     # Policy count: every token of an added clause, plus tokens of kept or
     # edited clauses that do not exist anywhere in the source (multiset).
@@ -242,12 +247,11 @@ def diff_row(source_text: str, output_text: str) -> tuple[dict, list[ClauseResul
     return summary, results
 
 
-def finish(summary: dict, regime: str | None, budget: float) -> dict:
+def finish(summary: dict, regime: str | None, budget: float) -> None:
     within = summary["model_token_share"] < budget and summary["model_added_tokens"] < summary["source_tokens"]
     summary["budget"] = budget
     summary["within_budget"] = within
     summary["violation"] = bool(regime == "preserve" and (summary["added_clauses"] or not within))
-    return summary
 
 
 def print_table(results: list[ClauseResult], summary: dict) -> None:
@@ -290,7 +294,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--input", help="JSONL with source_text and output_text per row")
     ap.add_argument("--out", help="output JSONL path")
-    ap.add_argument("--budget", type=float, default=0.15, help="default model token share budget")
+    ap.add_argument("--budget", type=float, default=PRESERVE_BUDGET, help="default model token share budget")
     ap.add_argument("--demo", action="store_true", help="run the built-in example and print the table")
     args = ap.parse_args()
 
@@ -307,10 +311,9 @@ def main() -> None:
         if not src or not out:
             skipped += 1
             continue
-        regime = row.get("regime") or row.get("regime_assigned")
         budget = float(row.get("budget", args.budget))
         summary, _ = diff_row(src, out)
-        finish(summary, regime, budget)
+        finish(summary, row.get("regime"), budget)
         record = {k: v for k, v in row.items() if k not in {"source_text", "output_text", "text"}}
         record.update(summary)
         rows_out.append(record)

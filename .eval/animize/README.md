@@ -2,8 +2,9 @@
 
 Local harness for measuring what the `animize` skill does to prose: detector
 scores before and after, clause-level fidelity under the preserve regime,
-routing accuracy, and whether a run stayed unattended. It lives under `.eval/` because it is repo
-infrastructure, not a skill. Nothing here is committed by the scripts.
+routing accuracy, and whether a run stayed unattended. It lives under
+`.eval/` because it is repo infrastructure, not a skill. Nothing here is
+committed by the scripts.
 
 ## Setup
 
@@ -32,7 +33,7 @@ are gated, so once only:
    Qwen models: put `memory=32GB` (or more) and `swap=16GB` under
    `[wsl2]` in `%UserProfile%\.wslconfig`, then `wsl --shutdown`.
 
-Until step 1 and 2 are done, `inspect_labels.py`, `score_editlens.py`, and
+Until steps 1 and 2 are done, `inspect_labels.py`, `score_editlens.py`, and
 `sample_iclr.py` exit with a message naming the missing step instead of a
 traceback.
 
@@ -57,7 +58,7 @@ scores are tracked.
 | `summarize_pilot.py`    | Pilot summary: paired Binoculars deltas, Preserve accounting, injected-defect repair, routing accuracy              |
 | `summarize_editlens.py` | EditLens scores and calibrated verdicts for sources and outputs, per cell                                           |
 | `score_rater.py`        | Unblind one rater's reading-room export: pairwise preference, single-passage ratings, and the rater's own edit      |
-| `_common.py`            | Shared JSONL, windowing, and gate-check helpers                                                                     |
+| `_common.py`            | Shared JSONL, windowing, job-row, and gate-check helpers                                                            |
 
 Every script accepts `--help`.
 
@@ -104,15 +105,21 @@ other than the job's, and an `unstated` run without the origin note as
 failures.
 
 Repeat every `--model roberta` step with `--model llama` and `llama` in the
-file names. Calibrate on one split and check on another: thresholds picked on `val` are
-applied to `test`, and the sampled cell is drawn from `test`, so no document
-is scored by a threshold it helped choose.
+file names. Calibrate on one split and check on another: thresholds picked
+on `val` are applied to `test`, and the sampled cell is drawn from `test`,
+so no document is scored by a threshold it helped choose.
 
 ## Files
 
 - `corpus/pilot/human/`: six public-domain passages (Thoreau, Twain, Darwin,
   Franklin, Douglass, Paine), 200 to 400 words, book id in the sibling json.
-- `corpus/pilot/ai/`: empty except a README; the agent session fills it.
+- `corpus/pilot/ai/`: six agent-written mirrors of those passages, each on
+  its passage's topic and in its register, with the topic and generator in
+  the sibling json.
+- `corpus/pilot/human_defect/`: the six human passages with five defects
+  injected into each. The sibling json lists the inserted strings under
+  `injected`; `summarize_pilot.py` and `score_rater.py` count a defect as
+  repaired when its string is gone from the output.
 - `smoke.jsonl`: five documents for smoke tests. The two `ai_synthetic`
   rows are hand-written stand-ins in a generic corporate register about a
   fictional product, not real model outputs; do not treat their scores as
@@ -134,7 +141,8 @@ is scored by a threshold it helped choose.
   `scores_*_outputs.jsonl` files, and the two `iclr_scored_*.jsonl` files
   hold the runs of 2026-09-19 and 2026-11-09. Their job ids carry a
   `__deep__` segment and their job rows carry `pass` and `controls` fields,
-  the job format on those dates. `merge` reads both formats.
+  the job format on those dates. `merge` and every script after it read
+  both formats.
 
 ## Known failure points
 

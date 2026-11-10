@@ -25,7 +25,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from _common import read_jsonl
+from _common import PRESERVE_BUDGET, read_jsonl
 from clause_diff import diff_row
 
 STRENGTHS = ("toss", "slight", "clear", "strong")
@@ -107,8 +107,8 @@ def edit_section(edit: dict, ref: str, defects_dir: Path, outputs: list[dict]) -
     injected = json.loads((defects_dir / f"{stem}.json").read_text(encoding="utf-8"))["injected"]
     versions = {"rater edit": edit["text"].strip()}
     for o in outputs:
-        if o["id"] == ref and o["regime"] == "preserve" and o["budget"] == 0.15:
-            versions["skill, Preserve 0.15"] = o["output_text"]
+        if o["id"] == ref and o["regime"] == "preserve" and o["budget"] == PRESERVE_BUDGET:
+            versions[f"skill, Preserve {PRESERVE_BUDGET:g}"] = o["output_text"]
     print(f"### Edit of `{ref}`\n")
     print("| Version | " + " | ".join(DEFECT_LABELS) + " | Kept | Edited | Deleted | Added | Added-token share |")
     print("| --- | " + " | ".join("---" for _ in DEFECT_LABELS) + " | --- | --- | --- | --- | --- |")

@@ -1,18 +1,18 @@
 """Draw a seeded sample of the gated EditLens dataset as a second corpus cell.
 
 The pilot corpus is famous public-domain prose and agent-written mirrors of
-it. This cell replaces both weaknesses: its human documents are ordinary
+it. This cell has neither weakness: its human documents are ordinary
 unpublished writing, and its generated documents come from the detector's
 own labeled data. Rows are drawn at random from one split of
 pangram/editlens_iclr among `human_written` and `ai_generated` documents
 whose word count falls inside the given range. Nothing is selected on a
 detector score.
 
-Two files are written. The corpus (document text) and the job list go under
-`iclr/`, which is ignored by git because the dataset is gated and may not be
-redistributed. `iclr_sample.json` records the split, seed, and the ids,
-classes, sources, and word counts of the drawn rows, so the same sample can
-be rebuilt by anyone with dataset access.
+The corpus (document text) and the job list go under `iclr/`, which is
+ignored by git because the dataset is gated and may not be redistributed.
+`iclr_sample.json` records the split, seed, and the ids, classes, sources,
+and word counts of the drawn rows, so the same sample can be rebuilt by
+anyone with dataset access.
 
 Jobs: every generated document gets a job whose caller says a model wrote
 it. Every human document gets a job whose caller says they wrote it, which

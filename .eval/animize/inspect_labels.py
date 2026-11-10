@@ -1,9 +1,11 @@
 """Inspect the EditLens label space and the editlens_iclr dataset.
 
-Downloads only the config files of both Pangram models and prints
-num_labels, id2label, and problem_type, then loads pangram/editlens_iclr and
-prints its features, splits, and first row. Use the output to confirm the
-bucket count and to pick a calibration split for calibrate.py.
+Prints num_labels, id2label, and problem_type from the RoBERTa model's
+config, then the Llama adapter's adapter config. When the adapter repo has
+no config.json, its bucket count is read from the score head shape in
+adapter_model.safetensors. Then loads pangram/editlens_iclr and prints its
+features, splits, and first row. Use the output to confirm the bucket count
+and to pick a calibration split for calibrate.py.
 
 All three repos are gated. Without `hf auth login` and accepted terms the
 script exits with a message naming that step.

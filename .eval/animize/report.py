@@ -27,8 +27,8 @@ import pandas as pd
 
 from _common import log, read_jsonl
 
-SCORE_FIELDS = {"binoculars": ("binoculars_score", "lower_is_ai")}
-DEFAULT_SCORE = ("editlens_score", "higher_is_ai")
+SCORE_FIELDS = {"binoculars": "binoculars_score"}
+DEFAULT_SCORE_FIELD = "editlens_score"
 
 
 def load_scores(pattern: str, missing: list[str]) -> pd.DataFrame:
@@ -47,15 +47,11 @@ def load_scores(pattern: str, missing: list[str]) -> pd.DataFrame:
     return df
 
 
-def group_key(df: pd.DataFrame) -> list:
-    return [df["cell"], df["regime"]]
-
-
-def score_column(model: str, df: pd.DataFrame) -> tuple[str | None, str]:
-    field, direction = SCORE_FIELDS.get(model, DEFAULT_SCORE)
+def score_column(model: str, df: pd.DataFrame) -> str | None:
+    field = SCORE_FIELDS.get(model, DEFAULT_SCORE_FIELD)
     if field in df and df[field].notna().any():
-        return field, direction
-    return None, direction
+        return field
+    return None
 
 
 def verdict_rates(values: pd.Series, entry: dict) -> dict[str, str]:
@@ -94,7 +90,7 @@ def score_section(df: pd.DataFrame, calibration: dict, missing: list[str]) -> li
         return lines
     models = calibration.get("models") or {}
     for model, part in df.groupby("model"):
-        field, _ = score_column(model, part)
+        field = score_column(model, part)
         if field is None:
             missing.append(f"scores: model `{model}` has no score column")
             continue
@@ -104,7 +100,7 @@ def score_section(df: pd.DataFrame, calibration: dict, missing: list[str]) -> li
         lines += [f"### {model} ({field})", ""]
         lines.append("| cell | regime | n | mean | q25 | median | q75 | fpr_1pct | fpr_0_5pct | three_class |")
         lines.append("| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |")
-        for (cell, regime), g in part.groupby(group_key(part)):
+        for (cell, regime), g in part.groupby(["cell", "regime"]):
             v = g[field].dropna().astype(float)
             if v.empty:
                 continue
@@ -136,7 +132,7 @@ def diff_section(path: str | None, missing: list[str]) -> tuple[list[str], pd.Da
     df["added_zero"] = df["added_clauses"].apply(lambda a: len(a) == 0)
     lines.append("| cell | regime | n | added clauses zero | within budget | violations | mean token share | mean added tokens |")
     lines.append("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |")
-    for (cell, regime), g in df.groupby(group_key(df)):
+    for (cell, regime), g in df.groupby(["cell", "regime"]):
         lines.append(
             f"| {cell} | {regime} | {len(g)} | {g['added_zero'].mean():.0%} | {g['within_budget'].mean():.0%} | "
             f"{g['violation'].mean():.0%} | {g['model_token_share'].mean():.3f} | {g['model_added_tokens'].mean():.1f} |"

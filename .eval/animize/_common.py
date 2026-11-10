@@ -11,11 +11,15 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from typing import Iterable, Iterator
+from typing import Iterable, Iterator, NoReturn
 
 MIN_WORDS = 50
 WINDOW_TOKENS = 512
 WINDOW_STRIDE = 256
+
+# Both mirror the skill's own text: the budget is defined in
+# animize/references/procedure.md (P2), and the origin note opens with these
+# words in animize/SKILL.md.
 PRESERVE_BUDGET = 0.15
 ORIGIN_NOTE = "Origin note:"
 
@@ -50,10 +54,10 @@ def log(msg: str) -> None:
     print(msg, file=sys.stderr, flush=True)
 
 
-def die(msg: str, code: int = 2) -> None:
-    """Print an error to stderr and exit."""
+def die(msg: str) -> NoReturn:
+    """Print an error to stderr and exit with status 2."""
     print(f"error: {msg}", file=sys.stderr, flush=True)
-    sys.exit(code)
+    sys.exit(2)
 
 
 def word_count(text: str) -> int:
@@ -100,18 +104,6 @@ def iter_windows(
         starts.append(last)
     for start in starts:
         yield ids[start : start + size]
-
-
-def dtype_kwargs(dtype) -> dict:
-    """Return the from_pretrained keyword for a torch dtype.
-
-    transformers 5 renamed `torch_dtype` to `dtype`; older versions only
-    accept `torch_dtype`.
-    """
-    import transformers
-
-    major = int(transformers.__version__.split(".")[0])
-    return {"dtype": dtype} if major >= 5 else {"torch_dtype": dtype}
 
 
 def gate_message(repo: str, repo_type: str = "model") -> str:

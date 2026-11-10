@@ -58,7 +58,6 @@ def pick_score_field(rows: list[dict], requested: str | None) -> tuple[str, str]
     if any("binoculars_score" in r for r in rows):
         return "binoculars_score", "lower_is_ai"
     die("rows have neither editlens_score nor binoculars_score")
-    return "", ""  # unreachable
 
 
 def fpr_threshold(oriented: np.ndarray, labels: np.ndarray, target: float) -> dict:
