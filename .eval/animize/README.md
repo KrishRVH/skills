@@ -41,24 +41,33 @@ The Pangram models and dataset are CC BY-NC-SA 4.0, noncommercial only.
 Dataset text is never committed: `iclr/` is ignored by git and only ids and
 scores are tracked.
 
+The live detector is reached through Pangram's text API, which bills by the
+word (about $0.05 per 100 words) against prepaid credit. Save an API key
+from <https://www.pangram.com/apikey> to `~/.config/pangram/api_key`, mode
+600, or set `PANGRAM_API_KEY`. Do not script the web checker: Pangram's
+terms forbid using the service through anything but its own software.
+
 ## Scripts
 
-| Script                  | Purpose                                                                                                             |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `build_corpus.py`       | Assemble `corpus.jsonl` from `corpus/<cell>/<source_class>/*.txt`; `--fetch-pilot` downloads six Gutenberg passages |
-| `sample_iclr.py`        | Draw a seeded sample of the gated dataset into `iclr/` as a second corpus cell, with its job list                   |
-| `run_animize.py`        | `jobs` emits `jobs.jsonl` for the agent session; `merge` validates `outputs/*.jsonl` and counts unattended failures |
-| `inspect_labels.py`     | Print the EditLens bucket counts and the `editlens_iclr` dataset shape                                              |
-| `score_editlens.py`     | Score a JSONL file or a dataset split with `--model roberta` or `--model llama` (gated)                             |
-| `compare_reference.py`  | Check local EditLens scores against the scores Pangram published for the same rows                                  |
-| `score_binoculars.py`   | Score with the Binoculars ratio using Qwen2.5-1.5B base and Instruct (ungated)                                      |
-| `calibrate.py`          | Pick thresholds (1% and 0.5% FPR, macro-F1) from a labeled split into `calibration.json`; `--check` adds held-out   |
-| `clause_diff.py`        | Preserve-regime accounting: kept, edited, added, deleted clauses and model token share; `--demo` prints an example  |
-| `report.py`             | Markdown report per cell and regime; runs on partial inputs and lists what is missing                               |
-| `summarize_pilot.py`    | Pilot summary: paired Binoculars deltas, Preserve accounting, injected-defect repair, routing accuracy              |
-| `summarize_editlens.py` | EditLens scores and calibrated verdicts for sources and outputs, per cell                                           |
-| `score_rater.py`        | Unblind one rater's reading-room export: pairwise preference, single-passage ratings, and the rater's own edit      |
-| `_common.py`            | Shared JSONL, windowing, job-row, and gate-check helpers                                                            |
+| Script                    | Purpose                                                                                                                      |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `build_corpus.py`         | Assemble `corpus.jsonl` from `corpus/<cell>/<source_class>/*.txt`; `--fetch-pilot` downloads six Gutenberg passages          |
+| `sample_iclr.py`          | Draw a seeded sample of the gated dataset into `iclr/` as a second corpus cell, with its job list                            |
+| `run_animize.py`          | `jobs` emits `jobs.jsonl` for the agent session; `merge` validates `outputs/*.jsonl` and counts unattended failures          |
+| `inspect_labels.py`       | Print the EditLens bucket counts and the `editlens_iclr` dataset shape                                                       |
+| `score_editlens.py`       | Score a JSONL file or a dataset split with `--model roberta` or `--model llama` (gated)                                      |
+| `compare_reference.py`    | Check local EditLens scores against the scores Pangram published for the same rows                                           |
+| `score_binoculars.py`     | Score with the Binoculars ratio using Qwen2.5-1.5B base and Instruct (ungated)                                               |
+| `score_pangram.py`        | Score with Pangram's live model through its API; rows carry no text; `--max-words` caps spend; `--summarize` prints verdicts |
+| `calibrate.py`            | Pick thresholds (1% and 0.5% FPR, macro-F1) from a labeled split into `calibration.json`; `--check` adds held-out            |
+| `clause_diff.py`          | Preserve-regime accounting: kept, edited, added, deleted clauses and model token share; `--demo` prints an example           |
+| `construction_rates.py`   | Compare how often people and models use the constructions a rule targets, on one split of the gated dataset                  |
+| `contraction_variants.py` | Write each job's source and output with contractions inserted or spelled out, so a detector can score that one change        |
+| `report.py`               | Markdown report per cell and regime; runs on partial inputs and lists what is missing                                        |
+| `summarize_pilot.py`      | Pilot summary: paired Binoculars deltas, Preserve accounting, injected-defect repair, routing accuracy                       |
+| `summarize_editlens.py`   | EditLens scores and calibrated verdicts for sources and outputs, per cell                                                    |
+| `score_rater.py`          | Unblind one rater's reading-room export: pairwise preference, single-passage ratings, and the rater's own edit               |
+| `_common.py`              | Shared JSONL, windowing, job-row, and gate-check helpers                                                                     |
 
 Every script accepts `--help`.
 
@@ -94,7 +103,20 @@ python summarize_editlens.py --outputs iclr/outputs.jsonl --source-scores iclr/s
     --diffs iclr/diffs.jsonl --export iclr_scored_roberta.jsonl
 
 python score_rater.py --answers rater_answers.json
+
+python score_pangram.py --input workplace/corpus.jsonl --out workplace/scores_pangram_source.jsonl \
+    --ids workplace/ai/u03,workplace/ai/u07,workplace/ai/u08 --max-words 450 --dry-run
+python score_pangram.py --input workplace/outputs.jsonl --text-field output_text \
+    --out workplace/scores_pangram_outputs.jsonl --max-words 450
+python score_pangram.py --summarize workplace/scores_pangram_outputs.jsonl
 ```
+
+The live model is the benchmark and it costs money, so sample it sparingly:
+send the same few documents before and after a change, three at a time,
+and widen the sample only when a verdict moves. Run `--dry-run` first; it
+prints the word count and the cost. Score with the two EditLens models
+before spending anything, but only to rule a candidate out: they are more
+lenient than the live model.
 
 Each session gets the skill, the job's `source_text`, and the job's
 `caller_statement` as the caller's own words. An `unstated` job passes the
@@ -152,6 +174,54 @@ so no document is scored by a threshold it helped choose.
   untracked; `iclr_scored_roberta.jsonl` and `iclr_scored_llama.jsonl`
   beside it keep that cell's scores and clause-diff counts without text.
   Sources did not change, so the baseline's source scores apply.
+  `top/scores_pangram_outputs.jsonl` holds the live model's reading of
+  twenty of that tier's outputs, drawn with seed 20261109 across both
+  corpora.
+- `scores_pangram_source.jsonl`: the live model's reading of the eighteen
+  sources behind those twenty outputs. Rows from the sampled cell carry ids
+  and scores only.
+- `rebuild/`: the run of 2026-11-09 on a copy of the skill whose Recompose
+  step rebuilt every sentence; `rules.diff` is the whole difference from the
+  skill. It holds the pilot corpus's twelve Recompose jobs with their
+  outputs, clause diffs, and scores, the sampled cell's scores without
+  text, and `scores_pangram_outputs.jsonl` for fourteen of the outputs.
+- `workplace/`: a third corpus cell for the skill's main input, model-written
+  workplace text. `notes.jsonl` holds eight invented scenarios (three pull
+  request descriptions, two emails, an incident follow-up, a status update,
+  a chat message), `corpus.jsonl` the draft a mid-tier model wrote from each,
+  and `jobs.jsonl` one Recompose job per draft. The session that ran them
+  was also told what kind of text each draft is. `outputs.jsonl`,
+  `diffs.jsonl`, and the three open detectors' score files cover all eight
+  drafts. `scores_pangram_source.jsonl` and `scores_pangram_outputs.jsonl`
+  hold the live model's reading of three of them before and after the skill.
+- `construction_rates.json`: counts from `construction_rates.py` on the
+  dataset's test split: per construction, the share of human-written and
+  model-generated documents that contain it and its rate per 1,000 words,
+  plus sentence-length spread. It holds no text.
+- `idiom/`: the run of 2026-11-09 and 2026-11-10 on the skill after its
+  catalog was checked against labeled text, top tier only. It has the same
+  file names as the baseline for the pilot corpus, an untracked `iclr/`
+  subfolder for the sampled cell, and `iclr_scored_roberta.jsonl` and
+  `iclr_scored_llama.jsonl` with that cell's scores and clause-diff counts
+  without text. The Preserve rows are from the first of that run's three
+  freezes of the skill text, and every other row is from the last.
+  `workplace/` holds the eight workplace drafts' outputs, clause diffs, and
+  open-detector scores, plus `contractions.jsonl` from
+  `contraction_variants.py` and both EditLens models' scores for its four
+  variants of each draft. `probe.jsonl` is a fictional chat reply, with its
+  output, that quotes a notice carrying an instruction to automated
+  assistants. `scores_pangram_outputs.jsonl` holds the live model's reading
+  of eight outputs: three workplace drafts, four documents of the sampled
+  cell, and the chat reply. `scores_pangram_source.jsonl` holds its reading
+  of the chat reply's source. The other sources are in the files above.
+- `voice/`: the packet that collects one writer's voice. `scenarios.jsonl`
+  holds twelve invented scenarios: eight that the writer writes from the
+  facts, and four whose model draft the writer reworks. `drafts.jsonl` holds
+  a mid-tier model's draft of all twelve, and the writer sees only those
+  four. `build_packet.py` builds the page the writer fills in from
+  `packet.template.html`. The writer's answers live in the published page's
+  own store. An export of them goes in `voice/responses/`, which is ignored
+  because it is the writer's own text.
 
 ## Known failure points
 
@@ -167,6 +237,10 @@ so no document is scored by a threshold it helped choose.
 - EditLens lowercases and whitespace-normalizes text before scoring, and
   truncates at 512 tokens (roberta) or 1024 (llama). A longer document is
   scored on its opening only; the `truncated` field says when.
+- The EditLens models are more lenient than the live model. One fully
+  rebuilt mirror and two untouched workplace drafts scored as human on the
+  Llama model and as 100% AI-generated on the live model. A human reading
+  from either open model is a reason to spend on a live check, not a result.
 - The open RoBERTa model reads the pilot's agent-written mirrors as human.
   Detector sensitivity on a corpus has to be shown on its sources before
   an unchanged verdict on its outputs means anything.

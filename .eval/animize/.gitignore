@@ -4,3 +4,5 @@ report.md
 __pycache__/
 iclr/
 scores_*_iclr_*.jsonl
+# A writer's own text from the voice packet; never published
+voice/responses/

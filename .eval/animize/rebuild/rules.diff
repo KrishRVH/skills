@@ -1,0 +1,38 @@
+--- animize/references/procedure.md
++++ animize/references/procedure.md
+@@ -250,15 +250,15 @@
+ - follow the entry point's tier 8 dash default unless a stronger tier decides
+ - stop when the piece's final job is done
+ 
+-Retain an original sentence only when it is already exact, natural, and
+-structurally appropriate, not merely to minimize edits. Recomposition permits
+-structural rebuilding; it does not require changing an already deliberate,
+-genre-native passage. When the caller supplied writing samples, apply the
+-recorded voice signals to expression only.
++Compose every sentence anew from the content lock and the design. Carry over
++no sentence of the source: quotations, titles, names, figures, defined terms,
++and other protected spans from the content lock stay exact, and all other
++wording is new. When the caller supplied writing samples, apply the recorded
++voice signals to expression only.
+ 
+ Complete recomposition when every locked item is represented, every omission
+-is authorized, no defect survives from inertia, and no working passage changed
+-merely for consistency.
++is authorized, no defect survives from inertia, and no source sentence
++survives outside a protected span.
+ 
+ ### R5. Test authoredness
+ 
+--- animize/references/verification.md
++++ animize/references/verification.md
+@@ -242,8 +242,8 @@
+ - paragraph boundaries follow the new plan
+ - generic source scaffolding was not carried over by inertia
+ - sentence architecture was rebuilt where the source was mechanical
+-- preserved wording is retained because it is exact or protected, not because
+-  the agent failed to recompose
++- preserved wording is limited to protected spans; every other sentence was
++  composed anew
+ - brief instructions, sample text, and reasoning residue remain outside the
+   artifact
+ 

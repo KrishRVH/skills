@@ -1,0 +1,169 @@
+{
+ "dataset": "pangram/editlens_iclr",
+ "split": "test",
+ "tolerance": 0.2,
+ "classes": {
+  "human_written": {
+   "documents": 2038,
+   "words": 665755,
+   "constructions": {
+    "in order to": {
+     "share_of_documents": 0.0304,
+     "per_1000_words": 0.105
+    },
+    "the fact that": {
+     "share_of_documents": 0.0236,
+     "per_1000_words": 0.077
+    },
+    "there is/are/was/were": {
+     "share_of_documents": 0.292,
+     "per_1000_words": 1.347
+    },
+    "it is important to note": {
+     "share_of_documents": 0.001,
+     "per_1000_words": 0.003
+    },
+    "contraction": {
+     "share_of_documents": 0.6762,
+     "per_1000_words": 10.384
+    },
+    "rather than": {
+     "share_of_documents": 0.028,
+     "per_1000_words": 0.093
+    },
+    "instead of": {
+     "share_of_documents": 0.027,
+     "per_1000_words": 0.089
+    },
+    "not just/only/merely ... but": {
+     "share_of_documents": 0.0294,
+     "per_1000_words": 0.098
+    },
+    "negation, then correction": {
+     "share_of_documents": 0.0432,
+     "per_1000_words": 0.143
+    },
+    "should not be confused with": {
+     "share_of_documents": 0.0005,
+     "per_1000_words": 0.002
+    },
+    "perhaps/maybe/probably": {
+     "share_of_documents": 0.158,
+     "per_1000_words": 0.659
+    },
+    "tends to": {
+     "share_of_documents": 0.0157,
+     "per_1000_words": 0.05
+    },
+    "I think/guess/suppose": {
+     "share_of_documents": 0.1212,
+     "per_1000_words": 0.494
+    },
+    "please": {
+     "share_of_documents": 0.0554,
+     "per_1000_words": 0.222
+    },
+    "just": {
+     "share_of_documents": 0.3611,
+     "per_1000_words": 1.855
+    },
+    "simply": {
+     "share_of_documents": 0.0545,
+     "per_1000_words": 0.206
+    },
+    "because": {
+     "share_of_documents": 0.2419,
+     "per_1000_words": 1.063
+    }
+   },
+   "sentences": {
+    "documents_with_5_or_more": 1934,
+    "mean_length": 17.22,
+    "mean_spread": 0.539,
+    "share_with_run_of_3": 0.6039,
+    "share_with_run_of_4": 0.2952
+   }
+  },
+  "ai_generated": {
+   "documents": 2046,
+   "words": 778935,
+   "constructions": {
+    "in order to": {
+     "share_of_documents": 0.001,
+     "per_1000_words": 0.003
+    },
+    "the fact that": {
+     "share_of_documents": 0.0078,
+     "per_1000_words": 0.021
+    },
+    "there is/are/was/were": {
+     "share_of_documents": 0.1285,
+     "per_1000_words": 0.399
+    },
+    "it is important to note": {
+     "share_of_documents": 0.002,
+     "per_1000_words": 0.005
+    },
+    "contraction": {
+     "share_of_documents": 0.719,
+     "per_1000_words": 9.808
+    },
+    "rather than": {
+     "share_of_documents": 0.1144,
+     "per_1000_words": 0.383
+    },
+    "instead of": {
+     "share_of_documents": 0.043,
+     "per_1000_words": 0.119
+    },
+    "not just/only/merely ... but": {
+     "share_of_documents": 0.1437,
+     "per_1000_words": 0.478
+    },
+    "negation, then correction": {
+     "share_of_documents": 0.0733,
+     "per_1000_words": 0.231
+    },
+    "should not be confused with": {
+     "share_of_documents": 0.0,
+     "per_1000_words": 0.0
+    },
+    "perhaps/maybe/probably": {
+     "share_of_documents": 0.1926,
+     "per_1000_words": 0.836
+    },
+    "tends to": {
+     "share_of_documents": 0.0112,
+     "per_1000_words": 0.032
+    },
+    "I think/guess/suppose": {
+     "share_of_documents": 0.0435,
+     "per_1000_words": 0.154
+    },
+    "please": {
+     "share_of_documents": 0.0215,
+     "per_1000_words": 0.063
+    },
+    "just": {
+     "share_of_documents": 0.5034,
+     "per_1000_words": 2.464
+    },
+    "simply": {
+     "share_of_documents": 0.1124,
+     "per_1000_words": 0.33
+    },
+    "because": {
+     "share_of_documents": 0.0806,
+     "per_1000_words": 0.268
+    }
+   },
+   "sentences": {
+    "documents_with_5_or_more": 2023,
+    "mean_length": 17.46,
+    "mean_spread": 0.467,
+    "share_with_run_of_3": 0.7024,
+    "share_with_run_of_4": 0.3213
+   }
+  }
+ }
+}

@@ -1,0 +1,728 @@
+<title>In Your Own Words</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap">
+<style>
+/* Layout: one reading column under a sticky bar that carries the section tabs and the save state. */
+:root {
+  --paper: #f3f5f8;
+  --surface: #ffffff;
+  --ink: #16202b;
+  --ink-2: #4d5c6b;
+  --rule: #d3dae2;
+  --pencil: #2251c2;
+  --pencil-soft: #e7eefc;
+  --ok: #17704a;
+  --ok-soft: #e1f2e9;
+  --warn: #8f4f00;
+  --warn-soft: #fbefd8;
+  --bad: #b0241c;
+  --bad-soft: #fbe5e3;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10151b; --surface: #171f29; --ink: #e8eef4; --ink-2: #a1b1c2; --rule: #2b3643;
+    --pencil: #8fb0ff; --pencil-soft: #1c2947; --ok: #63d49c; --ok-soft: #143224;
+    --warn: #f1ba66; --warn-soft: #392b12; --bad: #ff8d83; --bad-soft: #3f1a17;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10151b; --surface: #171f29; --ink: #e8eef4; --ink-2: #a1b1c2; --rule: #2b3643;
+  --pencil: #8fb0ff; --pencil-soft: #1c2947; --ok: #63d49c; --ok-soft: #143224;
+  --warn: #f1ba66; --warn-soft: #392b12; --bad: #ff8d83; --bad-soft: #3f1a17;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 400 15px/1.55 var(--sans); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--surface); border-bottom: 1px solid var(--rule); }
+.bar-in, .tabs, .wrap, .alert-in {
+  max-width: 800px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.bar-in { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding-block: 10px 4px; }
+.brand { font: 600 19px/1.2 var(--serif); letter-spacing: .005em; }
+.savestate { font: 500 12.5px/1.3 var(--mono); color: var(--ink-2); }
+.savestate.ok { color: var(--ok); } .savestate.busy { color: var(--warn); } .savestate.bad { color: var(--bad); }
+.tabs { display: flex; flex-wrap: wrap; gap: 2px 4px; padding-block: 4px 0; }
+.tab { appearance: none; border: 0; background: none; color: var(--ink-2); font: 500 13.5px/1.2 var(--sans); padding: 8px 10px 9px; border-bottom: 2px solid transparent; cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; }
+.tab:hover:not(:disabled) { color: var(--ink); }
+.tab[aria-current="page"] { color: var(--ink); border-bottom-color: var(--pencil); }
+.tab:disabled { opacity: .45; cursor: not-allowed; }
+.tab .n { font: 400 11.5px var(--mono); color: var(--ink-2); }
+.alert { background: var(--bad-soft); color: var(--bad); border-bottom: 1px solid var(--bad); }
+.alert-in { padding-block: 12px; display: flex; flex-direction: column; gap: 8px; font-weight: 500; }
+.wrap { padding-block: 28px 80px; display: flex; flex-direction: column; gap: 22px; }
+h1 { font: 500 34px/1.12 var(--serif); margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+h2 { font: 500 24px/1.2 var(--serif); margin: 0; text-wrap: balance; }
+h3 { font: 600 14px/1.3 var(--sans); margin: 0; }
+p { margin: 0; max-width: 66ch; }
+.lede { font: 400 18px/1.5 var(--serif); color: var(--ink); }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.stack-lg { display: flex; flex-direction: column; gap: 20px; }
+.muted { color: var(--ink-2); }
+.label { font: 600 11.5px/1.3 var(--sans); letter-spacing: .07em; text-transform: uppercase; color: var(--ink-2); }
+.panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.panel.ok { border-color: var(--ok); background: var(--ok-soft); }
+.panel.bad { border-color: var(--bad); background: var(--bad-soft); }
+.panel.note { border-color: var(--pencil); background: var(--pencil-soft); }
+ul.plain { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 5px; max-width: 66ch; }
+button.btn { appearance: none; font: 600 14px/1.2 var(--sans); padding: 10px 16px; border-radius: 4px; border: 1px solid var(--pencil); background: var(--pencil); color: var(--surface); cursor: pointer; }
+button.btn.quiet { background: transparent; color: var(--pencil); }
+button.btn.small { padding: 6px 10px; font-size: 12.5px; }
+button.btn.danger { border-color: var(--bad); color: var(--bad); background: transparent; }
+button.btn:disabled { opacity: .5; cursor: progress; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+:focus-visible { outline: 2px solid var(--pencil); outline-offset: 2px; }
+details.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; }
+details.card > summary { list-style: none; cursor: pointer; padding: 13px 16px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+details.card > summary::-webkit-details-marker { display: none; }
+details.card[open] > summary { border-bottom: 1px solid var(--rule); }
+.num { font: 500 12.5px var(--mono); color: var(--ink-2); min-width: 2ch; }
+.sum-title { font: 500 17px/1.25 var(--serif); flex: 1 1 12ch; min-width: 0; }
+.sum-meta { font: 400 12px var(--mono); color: var(--ink-2); }
+.chip { font: 500 11.5px/1 var(--mono); padding: 4px 7px; border-radius: 3px; background: var(--paper); color: var(--ink-2); }
+.chip:empty { display: none; }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.part { background: var(--warn-soft); color: var(--warn); }
+.card-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.situation { font: 400 18px/1.45 var(--serif); }
+.facts { background: var(--paper); border-radius: 4px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.facts ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.draft { background: var(--pencil-soft); border-radius: 4px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.draft-text { font: 400 16.5px/1.55 var(--serif); white-space: pre-wrap; overflow-wrap: anywhere; max-width: 66ch; }
+.step { display: flex; flex-direction: column; gap: 7px; }
+.step-head { display: flex; gap: 10px; align-items: baseline; }
+.step-n { font: 500 12.5px var(--mono); color: var(--pencil); }
+.hint { color: var(--ink-2); font-size: 13.5px; max-width: 66ch; }
+textarea, input[type="text"], input[type="number"], select {
+  width: 100%; max-width: 100%; font: 400 15px/1.5 var(--sans); color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: 4px; padding: 9px 11px;
+}
+textarea { font: 400 17px/1.55 var(--serif); resize: vertical; min-height: 7.5em; overflow-wrap: anywhere; }
+textarea.plain { font: 400 15px/1.5 var(--sans); min-height: 4.5em; }
+textarea:disabled, input:disabled, select:disabled { opacity: .75; }
+.meta-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font: 400 12px/1.3 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.count.ok { color: var(--ok); } .count.off { color: var(--warn); }
+.st.ok { color: var(--ok); } .st.busy { color: var(--warn); } .st.bad { color: var(--bad); font-weight: 500; }
+.check { display: flex; gap: 9px; align-items: flex-start; font-size: 14.5px; cursor: pointer; }
+.check input { margin-top: 3px; flex: none; width: 16px; height: 16px; accent-color: var(--pencil); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field > span { font: 500 13px/1.3 var(--sans); }
+.q { display: flex; flex-direction: column; gap: 8px; padding-block: 14px; border-top: 1px solid var(--rule); }
+.q:first-child { border-top: 0; padding-top: 0; }
+.q-text { font: 500 17px/1.35 var(--serif); max-width: 62ch; }
+.opts { display: flex; flex-wrap: wrap; gap: 6px 8px; }
+.opt { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--rule); border-radius: 4px; padding: 6px 10px; background: var(--surface); font-size: 14px; cursor: pointer; }
+.opt input { accent-color: var(--pencil); margin: 0; }
+.opt:has(input:checked) { border-color: var(--pencil); background: var(--pencil-soft); }
+.matrix { display: grid; grid-template-columns: minmax(9ch, 1fr) repeat(3, auto); gap: 6px 14px; align-items: center; font-size: 14px; max-width: 460px; }
+.matrix .mh { font: 500 11.5px var(--mono); color: var(--ink-2); text-align: center; }
+.matrix label { display: flex; justify-content: center; padding: 4px 8px; cursor: pointer; }
+.matrix input { accent-color: var(--pencil); width: 16px; height: 16px; margin: 0; }
+table.sum { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+table.sum td { padding: 8px 0; border-top: 1px solid var(--rule); vertical-align: baseline; }
+table.sum tr:first-child td { border-top: 0; }
+table.sum td:last-child { text-align: right; font: 400 13px var(--mono); color: var(--ink-2); white-space: nowrap; padding-left: 12px; }
+.backup { width: 100%; min-height: 9em; font: 400 12px/1.4 var(--mono); }
+@media (max-width: 480px) { h1 { font-size: 28px; } .lede { font-size: 17px; } .card-body { padding: 13px; } }
+@media (prefers-reduced-motion: no-preference) { .tab, .opt { transition: border-color .12s, background-color .12s, color .12s; } }
+</style>
+
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand">In Your Own Words</div>
+    <div id="savestate" class="savestate" role="status" aria-live="polite">Saving not checked yet</div>
+  </div>
+  <nav id="tabs" class="tabs" aria-label="Sections"></nav>
+</header>
+<div id="alert" class="alert" hidden role="alert"><div class="alert-in" id="alert-in"></div></div>
+<main id="main" class="wrap"></main>
+
+<script>
+(function () {
+"use strict";
+const DATA = /*__DATA__*/null;
+
+const SECTIONS = [
+  { id: "start", label: "Start" },
+  { id: "write", label: "1 · Write" },
+  { id: "rework", label: "2 · Rework" },
+  { id: "samples", label: "3 · Your writing" },
+  { id: "habits", label: "4 · Your habits" },
+  { id: "send", label: "Send" }
+];
+const COLLS = ["meta", "writing", "edits", "samples", "voice"];
+const KINDS = ["Work email", "Message or chat (50 words or more)", "Explanation, report, feedback, or instructions", "Essay, article, or post", "Fiction", "Something else"];
+const TOOLS = ["No tools at all", "Spellcheck only", "A grammar tool, such as Grammarly", "An AI model touched it", "Not sure"];
+const MARKS = [["dash", "Long dash"], ["semi", "Semicolon"], ["paren", "Parentheses"], ["bang", "Exclamation mark"], ["dots", "Ellipsis"], ["colon", "Colon"]];
+const QUESTIONS = [
+  { id: "open", type: "text", q: "You are emailing a colleague you know a little. Type the first line or two the way you would really open." },
+  { id: "close", type: "text", q: "How do you sign off a work email? Type it as you would." },
+  { id: "ask", type: "choice", q: "When an email asks for something, where does the ask usually go?", options: ["First line", "After a line or two of context", "At the end", "It varies"] },
+  { id: "contractions", type: "choice", q: "Contractions (don't, it's, we'll) in work writing:", options: ["Always", "Mostly", "Rarely", "Never"] },
+  { id: "length", type: "choice", q: "Your sentences, left to themselves, run:", options: ["Short", "Mixed, leaning short", "Mixed, leaning long", "Long"] },
+  { id: "marks", type: "matrix", q: "How often do you reach for each of these?" },
+  { id: "chatcase", type: "choice", q: "In chat, your capitals and punctuation are:", options: ["Full and correct", "Mostly correct", "Loose", "Lowercase and minimal"] },
+  { id: "emoji", type: "choice", q: "Emoji, \"haha\", or \"lol\" in work chat:", options: ["Never", "Rarely", "Sometimes", "Often"] },
+  { id: "lists", type: "choice", q: "A work message has four separate points. You write them as:", options: ["Bullets", "A numbered list", "Paragraphs", "It depends"] },
+  { id: "hedge", type: "choice", q: "\"I think\", \"maybe\", \"probably\": how much do you soften?", options: ["I say it flat", "A little", "A fair amount", "A lot"] },
+  { id: "humor", type: "choice", q: "Humor in work writing:", options: ["None", "A dry aside now and then", "Often"] },
+  { id: "spelling", type: "choice", q: "Your spelling is:", options: ["American", "British", "A mix", "Something else"] },
+  { id: "oxford", type: "choice", q: "The comma before \"and\" in a list of three:", options: ["Always", "Never", "Whatever looks right"] },
+  { id: "overuse", type: "text", q: "Words, phrases, or moves you know you overuse." },
+  { id: "never", type: "text", q: "Words or phrases you would never write." },
+  { id: "registers", type: "text", q: "How does your writing change between a chat message, a work email, and an essay?" },
+  { id: "edits", type: "text", q: "When you edit someone else's work message, what do you change first?" },
+  { id: "tell", type: "text", q: "What is the fastest way to tell that a machine wrote something?" },
+  { id: "voice", type: "text", q: "Describe your writing voice in a few sentences, as you would to someone thinking of hiring you." },
+  { id: "wrong", type: "text", q: "What would someone imitating you get wrong?" }
+];
+const CONSENT = [
+  { id: "model", q: "My writing in this packet may be given to an AI model as examples of how I write." },
+  { id: "detector", q: "My writing may be run through an AI-text detection service (Pangram) to see how it scores. This sends the text to that company." },
+  { id: "finetune", q: "A model may be trained further on the writing I paste in part 3, so that it writes more like me. This is optional and separate from the two above." }
+];
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const words = (s) => (String(s || "").trim().match(/\S+/g) || []).length;
+const norm = (s) => String(s || "").replace(/\s+/g, " ").trim();
+const plural = (n, one, many) => n.toLocaleString() + " " + (n === 1 ? one : many);
+const clock = (d) => d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const clone = (o) => JSON.parse(JSON.stringify(o));
+function limit(p, ms) {
+  return new Promise((res, rej) => {
+    const t = setTimeout(() => rej({ code: "timeout" }), ms);
+    p.then((v) => { clearTimeout(t); res(v); }, (e) => { clearTimeout(t); rej(e); });
+  });
+}
+
+let db = null, userCap = null, owner = false, capsReady = false;
+let NS = "live", readOnly = false, gate = false, fatal = null, lastSaved = null, busyGate = false;
+let current = "start";
+const docs = new Map();
+
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* drafts are a convenience */ } }
+function lsDel(k) { try { localStorage.removeItem(k); } catch (e) { /* same */ } }
+function ssGet(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+function ssSet(k, v) { try { sessionStorage.setItem(k, v); } catch (e) { /* same */ } }
+const lsKey = (e) => "iyow:" + NS + ":" + e.coll + "/" + e.id;
+
+const key = (coll, id) => coll + "/" + id;
+const collRef = (coll) => db.doc("runs/" + NS).collection(coll);
+const docRef = (coll, id) => collRef(coll).doc(id);
+function entry(coll, id) {
+  const k = key(coll, id);
+  if (!docs.has(k)) docs.set(k, { coll, id, data: {}, dirty: false, saving: false, again: false, timer: null, error: null, retry: 0, savedAt: null, stored: false, deleted: false, lastInput: 0 });
+  return docs.get(k);
+}
+const val = (coll, id, field) => { const e = docs.get(key(coll, id)); return e && !e.deleted ? e.data[field] : undefined; };
+const live = (coll) => [...docs.values()].filter((e) => e.coll === coll && !e.deleted);
+
+/* ---------- saving ---------- */
+function setField(coll, id, field, value) {
+  if (readOnly || !gate) return;
+  const e = entry(coll, id);
+  if (e.data[field] === value) return;
+  const now = Date.now();
+  if (e.lastInput && now - e.lastInput < 60000) e.data.activeSec = Math.round(((e.data.activeSec || 0) + (now - e.lastInput) / 1000) * 10) / 10;
+  e.lastInput = now;
+  e.data[field] = value;
+  touch(e);
+}
+function touch(e) {
+  e.data.updatedAt = new Date().toISOString();
+  e.dirty = true;
+  lsSet(lsKey(e), JSON.stringify({ data: e.data }));
+  schedule(e, 900);
+  paintDoc(e); paintSave(); paintTabs();
+}
+function schedule(e, ms) { clearTimeout(e.timer); e.timer = setTimeout(() => flush(e), ms); }
+async function flush(e) {
+  if (!gate || readOnly || fatal || !db) return;
+  if (e.saving) { e.again = true; return; }
+  clearTimeout(e.timer); e.timer = null;
+  if (!e.dirty) return;
+  const payload = clone(e.data);
+  if (!e.deleted && new Blob([JSON.stringify(payload)]).size > 240000) { e.error = "long"; paintDoc(e); paintSave(); return; }
+  e.saving = true; e.dirty = false; e.error = null; paintDoc(e); paintSave();
+  try {
+    if (e.deleted) await limit(docRef(e.coll, e.id).delete(), 30000);
+    else await limit(docRef(e.coll, e.id).set(payload), 30000);
+    e.savedAt = new Date(); e.stored = !e.deleted; e.retry = 0; lastSaved = e.savedAt;
+    if (!e.dirty) lsDel(lsKey(e));
+  } catch (err) {
+    e.dirty = true;
+    const code = (err && err.code) || "unavailable";
+    if (code === "unavailable" || code === "resource_exhausted" || code === "timeout") {
+      e.error = "retry"; e.retry += 1;
+      e.timer = setTimeout(() => flush(e), [2000, 5000, 15000, 30000][Math.min(e.retry - 1, 3)]);
+    } else { e.error = "refused"; setFatal(code); }
+  } finally {
+    e.saving = false;
+    if (e.again) { e.again = false; if (!fatal) schedule(e, 0); }
+    paintDoc(e); paintSave(); paintTabs();
+  }
+}
+async function settle(ms) {
+  const t0 = Date.now();
+  for (const e of docs.values()) if (e.dirty && !e.saving && e.error !== "long") flush(e);
+  while (Date.now() - t0 < ms) {
+    if (![...docs.values()].some((e) => (e.dirty && e.error !== "long") || e.saving)) return true;
+    if (fatal) return false;
+    await sleep(250);
+  }
+  return false;
+}
+function setFatal(code) {
+  fatal = code;
+  $("alert").hidden = false;
+  $("alert-in").innerHTML = "<div>Saving has stopped (" + esc(code) + "). Please stop writing here. What you typed is still on this screen and in this browser. Copy a backup below and tell the person who sent you this page.</div>" +
+    '<div class="btn-row"><button class="btn small danger" data-act="backup">Copy everything I have written</button></div><div id="backup-slot-alert"></div>';
+  paintSave();
+}
+function mergeLocal() {
+  let keys = [];
+  try { for (let i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i)); } catch (e) { keys = []; }
+  const prefix = "iyow:" + NS + ":";
+  for (const k of keys) {
+    if (!k || k.indexOf(prefix) !== 0) continue;
+    let parsed = null;
+    try { parsed = JSON.parse(lsGet(k)); } catch (e) { parsed = null; }
+    if (!parsed || !parsed.data) continue;
+    const [coll, id] = k.slice(prefix.length).split("/");
+    if (COLLS.indexOf(coll) < 0 || !id) continue;
+    const e = entry(coll, id);
+    const serverAt = e.data.updatedAt || "";
+    if ((parsed.data.updatedAt || "") > serverAt) { e.data = parsed.data; e.dirty = true; schedule(e, 300); }
+    else lsDel(k);
+  }
+}
+async function loadAll() {
+  docs.clear();
+  for (const coll of COLLS) {
+    const snap = await limit(collRef(coll).get(), 12000);
+    snap.docs.forEach((d) => {
+      const e = entry(coll, d.id);
+      e.data = clone(d.data() || {}); e.stored = true;
+      e.savedAt = e.data.updatedAt ? new Date(e.data.updatedAt) : null;
+    });
+  }
+  if (!readOnly) mergeLocal();
+}
+async function probe() {
+  const n = Math.random().toString(36).slice(2);
+  const r = docRef("meta", "probe");
+  await limit(r.set({ n: n, at: new Date().toISOString() }), 20000);
+  const s = await limit(r.get(), 20000);
+  if (!s.exists || (s.data() || {}).n !== n) throw { code: "mismatch" };
+}
+
+/* ---------- progress ---------- */
+const writeDone = (t) => !!val("writing", t.id, "skip") || words(val("writing", t.id, "text")) >= 50;
+const lightChanged = (t) => { const v = val("edits", t.id, "light"); return v !== undefined && norm(v) !== norm(t.draft); };
+const editDone = (t) => lightChanged(t) && words(val("edits", t.id, "full")) >= 50;
+const editStarted = (t) => lightChanged(t) || words(val("edits", t.id, "full")) > 0 || words(val("edits", t.id, "tells")) > 0;
+const samples = () => live("samples").filter((e) => e.id !== "_").sort((a, b) => (a.id < b.id ? -1 : 1));
+const sampleWords = () => samples().reduce((n, e) => n + words(e.data.text), 0);
+function answered() {
+  let n = 0;
+  for (const q of QUESTIONS) {
+    if (q.type === "matrix") { if (MARKS.every((m) => val("voice", "answers", "marks_" + m[0]))) n += 1; }
+    else if (norm(val("voice", "answers", q.id))) n += 1;
+  }
+  return n;
+}
+function counts() {
+  return {
+    written: DATA.write.filter(writeDone).length, writeTotal: DATA.write.length,
+    ownConfirmed: DATA.write.filter((t) => val("writing", t.id, "own") === true).length,
+    reworked: DATA.edit.filter(editDone).length, editTotal: DATA.edit.length,
+    samples: samples().filter((e) => words(e.data.text) > 0).length, sampleWords: sampleWords(),
+    answered: answered(), questions: QUESTIONS.length
+  };
+}
+
+/* ---------- painting ---------- */
+function paintSave() {
+  const el = $("savestate"); let cls = "", text = "";
+  if (readOnly) { text = "Review mode: nothing you type is saved"; }
+  else if (!gate) { text = "Saving not checked yet"; }
+  else if (fatal) { cls = "bad"; text = "Saving has stopped"; }
+  else {
+    const all = [...docs.values()];
+    const waiting = all.filter((e) => e.dirty || e.saving).length;
+    if (all.some((e) => e.error === "retry")) { cls = "bad"; text = "Not saved yet. Trying again."; }
+    else if (all.some((e) => e.error === "long")) { cls = "bad"; text = "One box is too long to save"; }
+    else if (waiting) { cls = "busy"; text = "Saving " + waiting + (waiting === 1 ? " change" : " changes"); }
+    else { cls = "ok"; text = lastSaved ? "All saved at " + clock(lastSaved) : "Saving works"; }
+  }
+  el.className = "savestate " + cls; el.textContent = text;
+}
+function paintDoc(e) {
+  const st = $("st-" + e.coll + "-" + e.id);
+  if (st) {
+    let cls = "", text = "";
+    if (readOnly) text = e.savedAt ? "Saved " + e.savedAt.toLocaleString() : "";
+    else if (e.error === "long") { cls = "bad"; text = "Too long to save. Split it into two pieces."; }
+    else if (e.error === "retry") { cls = "bad"; text = "Not saved yet. Trying again."; }
+    else if (e.error === "refused") { cls = "bad"; text = "Not saved"; }
+    else if (e.saving || e.dirty) { cls = "busy"; text = "Saving"; }
+    else if (e.savedAt) { cls = "ok"; text = "Saved " + clock(e.savedAt); }
+    st.className = "st " + cls; st.textContent = text;
+  }
+  if (e.coll === "writing") { const t = DATA.write.find((x) => x.id === e.id); if (t) paintWrite(t); }
+  if (e.coll === "edits") { const t = DATA.edit.find((x) => x.id === e.id); if (t) paintEdit(t); }
+  if (e.coll === "samples") paintSampleTotals();
+  if (e.coll === "voice") { const el = $("voice-count"); if (el) el.textContent = answered() + " of " + QUESTIONS.length + " answered"; }
+}
+function paintCount(id, text, range) {
+  const el = $(id); if (!el) return;
+  const n = words(text);
+  if (!range) { el.className = "count"; el.textContent = n + (n === 1 ? " word" : " words"); return; }
+  el.className = "count " + (n >= range[0] && n <= range[1] ? "ok" : n ? "off" : "");
+  el.textContent = n + (n === 1 ? " word" : " words") + " · aim for " + range[0] + " to " + range[1];
+}
+function setChip(id, state) {
+  const el = $(id); if (!el) return;
+  el.className = "chip " + (state === "Done" || state === "Skipped" ? "ok" : state ? "part" : ""); el.textContent = state;
+}
+function paintWrite(t) {
+  const text = val("writing", t.id, "text"), skip = !!val("writing", t.id, "skip");
+  paintCount("wc-writing-" + t.id, text, t.words);
+  setChip("chip-writing-" + t.id, skip ? "Skipped" : words(text) >= 50 ? "Done" : words(text) ? "Started" : "");
+  const why = $("f-writing-" + t.id + "-skipWhy"); if (why) why.hidden = !skip;
+}
+function paintEdit(t) {
+  const light = val("edits", t.id, "light");
+  paintCount("wc-edits-" + t.id + "-light", light === undefined ? t.draft : light, null);
+  paintCount("wc-edits-" + t.id + "-full", val("edits", t.id, "full"), t.words);
+  setChip("chip-edits-" + t.id, editDone(t) ? "Done" : editStarted(t) ? "Started" : "");
+}
+function paintSampleTotals() {
+  const el = $("sample-totals"); if (!el) return;
+  const list = samples().filter((e) => words(e.data.text) > 0);
+  el.textContent = list.length + (list.length === 1 ? " piece" : " pieces") + " · " + sampleWords().toLocaleString() + " words";
+  samples().forEach((e) => paintCount("wc-samples-" + e.id, e.data.text, null));
+}
+function paintTabs() {
+  const c = gate ? counts() : null;
+  const n = { write: c && c.written + "/" + c.writeTotal, rework: c && c.reworked + "/" + c.editTotal, samples: c && String(c.samples), habits: c && c.answered + "/" + c.questions };
+  $("tabs").innerHTML = SECTIONS.map((s) =>
+    '<button class="tab" data-go="' + s.id + '"' + (s.id === current ? ' aria-current="page"' : "") + (!gate && s.id !== "start" ? " disabled" : "") + ">" +
+    esc(s.label) + (n[s.id] ? ' <span class="n">' + esc(n[s.id]) + "</span>" : "") + "</button>").join("");
+}
+
+/* ---------- sections ---------- */
+function viewStart() {
+  let saveBox = "";
+  if (!capsReady) saveBox = '<div class="panel"><h3>Checking whether this page can save your work</h3><p class="muted">This takes a few seconds.</p></div>';
+  else if (gate && readOnly) saveBox = '<div class="panel note"><h3>You own this page, so you are in review mode</h3><p>The other sections show what the writer has saved. Nothing you type there is kept, so you cannot overwrite the answers by accident.</p><div class="btn-row"><button class="btn quiet" data-act="mode-test">Try the packet yourself, in a separate test copy</button></div></div>';
+  else if (gate) saveBox = '<div class="panel ok"><h3>Saving works</h3><p>A test note was saved to the server and read back. Everything you type from here is saved a second after you stop typing, and each box shows when it was last saved.</p><div class="btn-row"><button class="btn" data-go="write">Go to part 1</button>' + (owner ? '<button class="btn quiet" data-act="mode-review">Back to reviewing the answers</button>' : "") + "</div></div>";
+  else if (!db) saveBox = '<div class="panel bad"><h3>This page cannot save your work yet. Please do not start.</h3><p>Saving needs two things: you are signed in to Claude, and you opened this page from the email invitation that names you as an editor. A public link does not save anything.</p><p>Sign in, open the page from the invitation, and load it again. If you still see this message, tell the person who sent it that the page says: saving unavailable.</p></div>';
+  else saveBox = '<div class="panel" id="gate-panel"><h3>First, check that saving works</h3><p>The page saves a test note to the server and reads it back. Nothing else unlocks until that succeeds.</p><div class="btn-row"><button class="btn" data-act="gate"' + (busyGate ? " disabled" : "") + ">" + (busyGate ? "Checking" : "Check that saving works") + '</button></div><div id="gate-msg"></div></div>';
+
+  const consent = CONSENT.map((c) =>
+    '<div class="q"><div class="q-text">' + esc(c.q) + '</div><div class="opts">' +
+    ["Yes", "No"].map((o) => '<label class="opt"><input type="radio" name="consent-' + c.id + '" id="f-meta-consent-' + c.id + "-" + o + '" value="' + o + '" data-coll="meta" data-id="consent" data-field="' + c.id + '"> ' + o + "</label>").join("") +
+    "</div></div>").join("");
+
+  return '<div class="stack"><h1>How you write, in your own words</h1>' +
+    '<p class="lede">This packet collects your writing: eight short pieces written fresh, four machine drafts reworked by you, writing you already have, and a few questions about your habits. Allow about three hours. You can stop and come back, and everything saves as you type.</p></div>' +
+    saveBox +
+    '<div class="stack"><h2>What this is for</h2>' +
+    "<p>We are testing whether an AI model can learn to rewrite its own drafts so that they read as if a particular person wrote them. You are that person. Your writing is the target the model aims at, and the yardstick we measure it with.</p>" +
+    "<p>The result gets judged two ways. A reader says whether it sounds like a person, and you will be asked that yourself in a short second packet. An AI-text detector says whether it takes the text for human writing.</p></div>" +
+    '<div class="stack"><h2>How to write here</h2><ul class="plain">' +
+    "<li>Write the way you really would. Do not perform a style, and do not polish more than you would for a real message of that kind.</li>" +
+    "<li>Use no AI tool and no grammar tool. Your ordinary spellcheck is fine.</li>" +
+    "<li>Use the facts you would use and leave out what you would leave out. Do not make facts up.</li>" +
+    "<li>If you would never write a certain kind of piece, skip it and say why. That is useful too.</li>" +
+    "<li>There is no time limit. The page notes roughly how long each piece took.</li></ul></div>" +
+    '<div class="stack"><h2>How your writing is used</h2>' +
+    "<p>Your text stays private. It is not published and is not added to any public repository. Results may be shared as scores, without your text and without your name.</p>" +
+    '<div class="panel"><div>' + consent + '</div><div class="meta-row"><span></span><span class="st" id="st-meta-consent"></span></div></div></div>';
+}
+function viewWrite() {
+  const firstOpen = DATA.write.find((t) => !writeDone(t));
+  return '<div class="stack"><h1>Write eight short pieces</h1>' +
+    '<p class="lede">Each one gives you a situation and the facts. Write it as you would if it were yours to send. About 80 minutes in all.</p>' +
+    '<p class="muted">Do this part before part 2, so the machine drafts there do not colour what you write here.</p></div>' +
+    DATA.write.map((t, i) =>
+      '<details class="card" id="card-' + t.id + '"' + (firstOpen && firstOpen.id === t.id ? " open" : "") + ">" +
+      '<summary><span class="num">' + (i + 1) + '</span><span class="sum-title">' + esc(t.title) + '</span><span class="sum-meta">' + t.words[0] + " to " + t.words[1] + ' words</span><span class="chip" id="chip-writing-' + t.id + '"></span></summary>' +
+      '<div class="card-body"><p class="situation">' + esc(t.situation) + "</p>" +
+      '<div class="facts"><div class="label">The facts</div><ul>' + t.notes.map((n) => "<li>" + esc(n) + "</li>").join("") + "</ul></div>" +
+      '<div class="step"><label class="label" for="f-writing-' + t.id + '-text">Your version</label>' +
+      '<textarea id="f-writing-' + t.id + '-text" rows="9" data-coll="writing" data-id="' + t.id + '" data-field="text"></textarea>' +
+      '<div class="meta-row"><span class="count" id="wc-writing-' + t.id + '"></span><span class="st" id="st-writing-' + t.id + '"></span></div></div>' +
+      '<label class="check"><input type="checkbox" id="f-writing-' + t.id + '-own" data-coll="writing" data-id="' + t.id + '" data-field="own"> <span>I wrote this myself, with no AI tool and no grammar tool.</span></label>' +
+      '<label class="check"><input type="checkbox" id="f-writing-' + t.id + '-skip" data-coll="writing" data-id="' + t.id + '" data-field="skip"> <span>Skip this one. I would never write this kind of piece.</span></label>' +
+      '<input type="text" id="f-writing-' + t.id + '-skipWhy" placeholder="Why not? A few words." aria-label="Why you are skipping this piece" data-coll="writing" data-id="' + t.id + '" data-field="skipWhy" hidden>' +
+      "</div></details>").join("") +
+    '<div class="btn-row"><button class="btn" data-go="rework">On to part 2</button></div>';
+}
+function viewRework() {
+  const firstOpen = DATA.edit.find((t) => !editDone(t));
+  return '<div class="stack"><h1>Rework four machine drafts</h1>' +
+    '<p class="lede">An AI model wrote each draft below from a short list of facts. For each one, mark what gives it away, fix it with the lightest touch, then write your own version. About 55 minutes in all.</p></div>' +
+    DATA.edit.map((t, i) =>
+      '<details class="card" id="card-' + t.id + '"' + (firstOpen && firstOpen.id === t.id ? " open" : "") + ">" +
+      '<summary><span class="num">' + (i + 1) + '</span><span class="sum-title">' + esc(t.title) + '</span><span class="chip" id="chip-edits-' + t.id + '"></span></summary>' +
+      '<div class="card-body"><p class="situation">' + esc(t.situation) + "</p>" +
+      '<div class="draft"><div class="label">The model\'s draft</div><div class="draft-text" id="draft-' + t.id + '"></div></div>' +
+      '<details><summary class="hint">The facts the model was given</summary><ul class="plain">' + t.notes.map((n) => "<li>" + esc(n) + "</li>").join("") + "</ul></details>" +
+      '<div class="step"><div class="step-head"><span class="step-n">1</span><label class="label" for="f-edits-' + t.id + '-tells">What gives it away?</label></div>' +
+      '<p class="hint">Quote the words or sentences that sound machine-made, one to a line. Say why if you like.</p>' +
+      '<textarea class="plain" id="f-edits-' + t.id + '-tells" rows="4" data-coll="edits" data-id="' + t.id + '" data-field="tells"></textarea></div>' +
+      '<div class="step"><div class="step-head"><span class="step-n">2</span><label class="label" for="f-edits-' + t.id + '-light">The lightest fix</label></div>' +
+      '<p class="hint">Edit the draft in place. Change as little as you can, and stop as soon as you would be willing to send it under your name.</p>' +
+      '<textarea id="f-edits-' + t.id + '-light" rows="10" data-coll="edits" data-id="' + t.id + '" data-field="light"></textarea>' +
+      '<div class="meta-row"><span class="count" id="wc-edits-' + t.id + '-light"></span><span id="reset-' + t.id + '"><button class="btn small quiet" data-act="reset" data-id="' + t.id + '">Start again from the model\'s draft</button></span></div></div>' +
+      '<div class="step"><div class="step-head"><span class="step-n">3</span><label class="label" for="f-edits-' + t.id + '-full">Your own version</label></div>' +
+      '<p class="hint">Now set the draft\'s wording aside. Same facts, written the way you would have written it from the start.</p>' +
+      '<textarea id="f-edits-' + t.id + '-full" rows="9" data-coll="edits" data-id="' + t.id + '" data-field="full"></textarea>' +
+      '<div class="meta-row"><span class="count" id="wc-edits-' + t.id + '-full"></span><span class="st" id="st-edits-' + t.id + '"></span></div></div>' +
+      '<div class="step"><label class="label" for="f-edits-' + t.id + '-note">Anything to add about what you changed? Optional.</label>' +
+      '<input type="text" id="f-edits-' + t.id + '-note" data-coll="edits" data-id="' + t.id + '" data-field="note"></div>' +
+      "</div></details>").join("") +
+    '<div class="btn-row"><button class="btn" data-go="samples">On to part 3</button></div>';
+}
+function sampleCard(e, open) {
+  const id = e.id, f = (name) => "f-samples-" + id + "-" + name, d = 'data-coll="samples" data-id="' + id + '"';
+  const sel = (name, list) => '<select id="' + f(name) + '" ' + d + ' data-field="' + name + '"><option value="">Choose</option>' + list.map((o) => '<option value="' + esc(o) + '">' + esc(o) + "</option>").join("") + "</select>";
+  return '<details class="card" id="card-' + id + '"' + (open ? " open" : "") + ">" +
+    '<summary><span class="sum-title" id="title-' + id + '">' + esc(e.data.kind || "A piece of your writing") + '</span><span class="sum-meta count" id="wc-samples-' + id + '"></span></summary>' +
+    '<div class="card-body"><div class="grid2">' +
+    '<label class="field"><span>What is it?</span>' + sel("kind", KINDS) + "</label>" +
+    '<label class="field"><span>Year you wrote it</span><input type="number" min="1980" max="2026" inputmode="numeric" placeholder="For example 2019" id="' + f("year") + '" ' + d + ' data-field="year"></label>' +
+    '<label class="field"><span>Tools that touched it</span>' + sel("tools", TOOLS) + "</label></div>" +
+    '<label class="field"><span>Who was it for? Optional.</span><input type="text" placeholder="For example: my editor, a client, a group chat" id="' + f("context") + '" ' + d + ' data-field="context"></label>' +
+    '<label class="check"><input type="checkbox" id="' + f("edited") + '" ' + d + ' data-field="edited"> <span>Someone else edited this before it went out.</span></label>' +
+    '<div class="step"><label class="label" for="' + f("text") + '">Paste it here</label>' +
+    '<textarea id="' + f("text") + '" rows="10" ' + d + ' data-field="text"></textarea>' +
+    '<div class="meta-row"><span id="remove-' + id + '"><button class="btn small quiet" data-act="remove" data-id="' + id + '">Remove this piece</button></span><span class="st" id="st-samples-' + id + '"></span></div></div>' +
+    "</div></details>";
+}
+function viewSamples() {
+  const list = samples();
+  return '<div class="stack"><h1>Writing you already have</h1>' +
+    '<p class="lede">Paste in things you wrote before today. This is the part the model learns your voice from, so more is better. About 30 minutes.</p></div>' +
+    '<div class="stack"><ul class="plain">' +
+    "<li>Aim for 5,000 words or more in total. Ordinary, unpolished writing is as useful as your best work.</li>" +
+    "<li>Most useful first: work emails you sent, messages of 50 words or more, explanations or feedback you wrote for someone, then essays, articles, and posts.</li>" +
+    "<li>Writing from before 2023 is ideal, because no AI model can have touched it. Say what year each piece is from.</li>" +
+    "<li>Swap other people's names for [name] if you want to. Leave your own wording alone.</li>" +
+    "<li>One piece to a box. A very long piece can go in as two or three boxes.</li>" +
+    "<li>For big files, such as a manuscript or a folder of essays, send them straight to the person who invited you instead.</li></ul></div>" +
+    '<div class="meta-row"><span id="sample-totals"></span><span></span></div>' +
+    '<div class="stack" id="sample-list">' + list.map((e) => sampleCard(e, !words(e.data.text))).join("") + "</div>" +
+    '<div class="btn-row"><button class="btn" data-act="add-sample">Add a piece of writing</button><button class="btn quiet" data-go="habits">On to part 4</button></div>';
+}
+function viewHabits() {
+  const f = (qid, extra) => "f-voice-answers-" + qid + (extra ? "-" + extra : "");
+  const d = 'data-coll="voice" data-id="answers"';
+  return '<div class="stack"><h1>Your habits</h1>' +
+    '<p class="lede">Quick questions about how you write. Go with your first answer. About 15 minutes.</p></div>' +
+    '<div class="panel"><div>' + QUESTIONS.map((q) => {
+      let body = "";
+      if (q.type === "text") body = '<textarea class="plain" rows="3" id="' + f(q.id) + '" aria-label="' + esc(q.q) + '" ' + d + ' data-field="' + q.id + '"></textarea>';
+      else if (q.type === "choice") body = '<div class="opts">' + q.options.map((o, i) => '<label class="opt"><input type="radio" name="voice-' + q.id + '" id="' + f(q.id, String(i)) + '" value="' + esc(o) + '" ' + d + ' data-field="' + q.id + '"> ' + esc(o) + "</label>").join("") + "</div>";
+      else body = '<div class="matrix"><span></span><span class="mh">Often</span><span class="mh">Sometimes</span><span class="mh">Never</span>' +
+        MARKS.map((m) => "<span>" + esc(m[1]) + "</span>" + ["Often", "Sometimes", "Never"].map((o) => '<label><input type="radio" name="voice-marks-' + m[0] + '" id="' + f("marks_" + m[0], o) + '" value="' + o + '" aria-label="' + esc(m[1] + ": " + o) + '" ' + d + ' data-field="marks_' + m[0] + '"></label>').join("")).join("") + "</div>";
+      return '<div class="q"><div class="q-text">' + esc(q.q) + "</div>" + body + "</div>";
+    }).join("") + '</div><div class="meta-row"><span id="voice-count"></span><span class="st" id="st-voice-answers"></span></div></div>' +
+    '<div class="btn-row"><button class="btn" data-go="send">On to sending</button></div>';
+}
+function viewSend() {
+  const c = counts(), sub = val("meta", "submission", "submittedAt");
+  const consentRow = CONSENT.map((x) => val("meta", "consent", x.id) || "not answered").join(" · ");
+  return '<div class="stack"><h1>Send your answers</h1>' +
+    '<p class="lede">Everything is already saved as you go. Sending tells us you are finished and checks that every piece arrived.</p></div>' +
+    '<div class="panel"><table class="sum"><tbody>' +
+    "<tr><td>Part 1. Pieces written or skipped</td><td>" + c.written + " of " + c.writeTotal + "</td></tr>" +
+    "<tr><td>Part 1. Pieces confirmed as written without tools</td><td>" + c.ownConfirmed + " of " + c.writeTotal + "</td></tr>" +
+    "<tr><td>Part 2. Drafts reworked, both the light fix and your own version</td><td>" + c.reworked + " of " + c.editTotal + "</td></tr>" +
+    "<tr><td>Part 3. Pieces of your own writing</td><td>" + c.samples + " · " + c.sampleWords.toLocaleString() + " words</td></tr>" +
+    "<tr><td>Part 4. Questions answered</td><td>" + c.answered + " of " + c.questions + "</td></tr>" +
+    "<tr><td>Permissions on the Start page: model, detector, training</td><td>" + esc(consentRow) + "</td></tr>" +
+    "</tbody></table>" +
+    '<p class="muted">You can send with gaps and come back later. If the first two permissions are not answered, please answer them on the Start page first.</p>' +
+    '<div class="btn-row"><button class="btn" data-act="send"' + (readOnly ? " disabled" : "") + ">Send my answers</button></div>" +
+    '<div id="send-msg">' + (sub ? '<p class="muted">Last sent ' + esc(new Date(sub).toLocaleString()) + ". Send again after any change.</p>" : "") + "</div></div>" +
+    '<div class="stack"><h2>What happens next</h2><p>A second, shorter packet will follow. It pairs pieces of yours with the model\'s attempts at your voice and asks whether you can tell which is which.</p></div>' +
+    '<div class="stack"><h2>Keep your own copy</h2><p class="muted">Optional. This copies everything you wrote here as plain text.</p>' +
+    '<div class="btn-row"><button class="btn quiet" data-act="backup">Copy everything I have written</button></div><div id="backup-slot"></div></div>';
+}
+const VIEWS = { start: viewStart, write: viewWrite, rework: viewRework, samples: viewSamples, habits: viewHabits, send: viewSend };
+
+function autosize(ta) { ta.style.height = "auto"; ta.style.height = Math.max(ta.scrollHeight + 2, 96) + "px"; }
+function hydrate() {
+  const main = $("main");
+  main.querySelectorAll("[data-field]").forEach((el) => {
+    const coll = el.dataset.coll, id = el.dataset.id, field = el.dataset.field;
+    let v = val(coll, id, field);
+    if (coll === "edits" && field === "light" && v === undefined) { const t = DATA.edit.find((x) => x.id === id); v = t ? t.draft : ""; }
+    if (el.type === "checkbox") el.checked = v === true;
+    else if (el.type === "radio") el.checked = v === el.value;
+    else el.value = v === undefined || v === null ? "" : v;
+    if (readOnly) el.disabled = true;
+  });
+  DATA.edit.forEach((t) => { const el = $("draft-" + t.id); if (el) el.textContent = t.draft; });
+  main.querySelectorAll("textarea").forEach(autosize);
+  docs.forEach(paintDoc);
+  DATA.write.forEach(paintWrite); DATA.edit.forEach(paintEdit); paintSampleTotals();
+  const vc = $("voice-count"); if (vc) vc.textContent = answered() + " of " + QUESTIONS.length + " answered";
+}
+function render() {
+  if (!gate && current !== "start") current = "start";
+  $("main").innerHTML = VIEWS[current]();
+  hydrate(); paintTabs(); paintSave();
+}
+function go(id) {
+  if (!VIEWS[id]) id = "start";
+  docs.forEach((e) => { if (e.dirty && !e.saving) flush(e); });
+  current = id;
+  if (location.hash !== "#" + id) { try { history.replaceState(null, "", "#" + id); } catch (e) { location.hash = id; } }
+  render(); window.scrollTo(0, 0);
+}
+
+/* ---------- actions ---------- */
+async function openGate(skipProbe) {
+  busyGate = true; if (current === "start") render();
+  let msg = "";
+  try {
+    if (!skipProbe && !readOnly) await probe();
+    await loadAll();
+    gate = true;
+    if (!readOnly) ssSet("iyow:gate:" + NS, "1");
+  } catch (err) {
+    const code = (err && err.code) || "unknown";
+    msg = code === "timeout" ? "The server did not answer in time. Check your connection and try again."
+      : "The test note could not be saved (" + code + "). Please do not start. You need to be signed in and to have opened this page from the email invitation that names you as an editor. Tell the person who sent it what this message says.";
+  }
+  busyGate = false; render();
+  if (msg && $("gate-msg")) $("gate-msg").innerHTML = '<p class="st bad">' + esc(msg) + "</p>";
+}
+function exportText() {
+  const out = ["IN YOUR OWN WORDS, backup made " + new Date().toLocaleString(), ""];
+  DATA.write.forEach((t, i) => { out.push("== PART 1, PIECE " + (i + 1) + " (" + t.id + "): " + t.title, val("writing", t.id, "skip") ? "[skipped] " + (val("writing", t.id, "skipWhy") || "") : (val("writing", t.id, "text") || ""), ""); });
+  DATA.edit.forEach((t, i) => {
+    out.push("== PART 2, DRAFT " + (i + 1) + " (" + t.id + "): " + t.title, "-- what gives it away", val("edits", t.id, "tells") || "", "-- lightest fix", val("edits", t.id, "light") === undefined ? "[unchanged]" : val("edits", t.id, "light"), "-- own version", val("edits", t.id, "full") || "", "-- note", val("edits", t.id, "note") || "", "");
+  });
+  samples().forEach((e, i) => { out.push("== PART 3, PIECE " + (i + 1) + ": " + [e.data.kind, e.data.year, e.data.tools, e.data.context, e.data.edited ? "edited by someone else" : ""].filter(Boolean).join(" | "), e.data.text || "", ""); });
+  out.push("== PART 4");
+  QUESTIONS.forEach((q) => {
+    if (q.type === "matrix") out.push(q.q, MARKS.map((m) => m[1] + ": " + (val("voice", "answers", "marks_" + m[0]) || "")).join("; "), "");
+    else out.push(q.q, val("voice", "answers", q.id) || "", "");
+  });
+  out.push("== PERMISSIONS"); CONSENT.forEach((c) => out.push(c.q + " " + (val("meta", "consent", c.id) || "not answered")));
+  return out.join("\n");
+}
+function showBackup(slotId, text) {
+  const slot = $(slotId) || $("backup-slot"); if (!slot) return;
+  slot.innerHTML = '<p class="hint" id="backup-hint">Your text is in the box below. Select it all and copy it.</p><textarea class="backup" id="backup-text" readonly aria-label="Backup of everything you wrote"></textarea>';
+  const ta = $("backup-text"); ta.value = text; ta.focus(); ta.select();
+}
+async function sendAll(btn) {
+  const msg = $("send-msg");
+  btn.disabled = true; msg.innerHTML = '<p class="st busy">Sending and checking</p>';
+  const fail = (text) => { msg.innerHTML = '<div class="panel bad"><h3>Not everything arrived</h3><p>' + esc(text) + "</p><p>Your writing is still on this page. Try again in a minute. If it keeps failing, use the copy button below and tell the person who sent you this page.</p></div>"; btn.disabled = false; };
+  try {
+    if (!(await settle(30000))) return fail("Some boxes could not be saved.");
+    const sub = entry("meta", "submission");
+    sub.data = { submittedAt: new Date().toISOString(), times: (sub.data.times || 0) + 1, counts: counts() };
+    touch(sub);
+    if (!(await settle(30000))) return fail("The final note could not be saved.");
+    const missing = [];
+    for (const coll of COLLS) {
+      const snap = await limit(collRef(coll).get(), 20000);
+      const server = {}; snap.docs.forEach((d) => { server[d.id] = d.data() || {}; });
+      live(coll).forEach((e) => { if (e.id === "probe") return; if (!server[e.id] || server[e.id].updatedAt !== e.data.updatedAt) missing.push(coll + "/" + e.id); });
+    }
+    if (missing.length) return fail(plural(missing.length, "item", "items") + " on the server did not match this page: " + missing.slice(0, 6).join(", "));
+    const c = counts();
+    msg.innerHTML = '<div class="panel ok"><h3>Received</h3><p>Sent at ' + esc(clock(new Date())) + " and checked against the server: " + plural(c.written, "written piece", "written pieces") + ", " + plural(c.reworked, "reworked draft", "reworked drafts") + ", " + plural(c.samples, "piece", "pieces") + " of your own writing (" + plural(c.sampleWords, "word", "words") + "), and " + plural(c.answered, "answer", "answers") + ". You can close this page. Thank you.</p></div>";
+    btn.disabled = false; paintTabs();
+  } catch (err) { fail("The server could not be reached (" + ((err && err.code) || "unknown") + ")."); }
+}
+function setMode(mode) {
+  NS = mode === "test" ? "test" : "live"; readOnly = owner && mode !== "test"; gate = false; fatal = null; $("alert").hidden = true; docs.clear();
+  ssSet("iyow:mode", mode);
+  if (readOnly) openGate(true); else if (ssGet("iyow:gate:" + NS) === "1") openGate(true); else render();
+}
+
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("[data-go],[data-act]"); if (!t) return;
+  if (t.dataset.go) { if (gate || t.dataset.go === "start") go(t.dataset.go); return; }
+  const act = t.dataset.act, id = t.dataset.id;
+  if (act === "gate") { if (!busyGate) openGate(false); }
+  else if (act === "mode-test") setMode("test");
+  else if (act === "mode-review") setMode("review");
+  else if (act === "add-sample") {
+    if (readOnly) return;
+    const e = entry("samples", "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5));
+    e.data = { createdAt: new Date().toISOString() }; touch(e);
+    $("sample-list").insertAdjacentHTML("beforeend", sampleCard(e, true));
+    const ta = $("f-samples-" + e.id + "-text"); autosize(ta); $("f-samples-" + e.id + "-kind").focus(); paintSampleTotals();
+  }
+  else if (act === "remove") { $("remove-" + id).innerHTML = '<span class="btn-row"><span class="hint">Remove it for good?</span><button class="btn small danger" data-act="remove-yes" data-id="' + esc(id) + '">Remove</button><button class="btn small quiet" data-act="remove-no" data-id="' + esc(id) + '">Keep</button></span>'; }
+  else if (act === "remove-no") { $("remove-" + id).innerHTML = '<button class="btn small quiet" data-act="remove" data-id="' + esc(id) + '">Remove this piece</button>'; }
+  else if (act === "remove-yes") {
+    if (readOnly) return;
+    const e = entry("samples", id); e.deleted = true; e.dirty = true; lsDel(lsKey(e)); schedule(e, 0);
+    const card = $("card-" + id); if (card) card.remove(); paintSampleTotals(); paintSave(); paintTabs();
+  }
+  else if (act === "reset") { $("reset-" + id).innerHTML = '<span class="btn-row"><span class="hint">Throw away your light fix?</span><button class="btn small danger" data-act="reset-yes" data-id="' + esc(id) + '">Start again</button><button class="btn small quiet" data-act="reset-no" data-id="' + esc(id) + '">Keep mine</button></span>'; }
+  else if (act === "reset-no" || act === "reset-yes") {
+    if (act === "reset-yes" && !readOnly) { const t2 = DATA.edit.find((x) => x.id === id); const ta = $("f-edits-" + id + "-light"); ta.value = t2.draft; setField("edits", id, "light", t2.draft); autosize(ta); }
+    $("reset-" + id).innerHTML = '<button class="btn small quiet" data-act="reset" data-id="' + esc(id) + '">Start again from the model\'s draft</button>';
+  }
+  else if (act === "send") { if (!readOnly) sendAll(t); }
+  else if (act === "backup") {
+    const text = exportText(), slot = t.closest(".alert") ? "backup-slot-alert" : "backup-slot";
+    showBackup(slot, text);
+    let p = null; try { p = navigator.clipboard.writeText(text); } catch (e) { p = null; }
+    if (p && p.then) p.then(() => { const h = $("backup-hint"); if (h) h.textContent = "Copied. The same text is in the box below."; }, () => {});
+  }
+});
+function onField(ev) {
+  const el = ev.target; if (!el.dataset || !el.dataset.field) return;
+  let v;
+  if (el.type === "checkbox") v = el.checked; else if (el.type === "radio") { if (!el.checked) return; v = el.value; } else v = el.value;
+  setField(el.dataset.coll, el.dataset.id, el.dataset.field, v);
+  if (el.tagName === "TEXTAREA") autosize(el);
+  if (el.dataset.coll === "samples" && el.dataset.field === "kind") { const tt = $("title-" + el.dataset.id); if (tt) tt.textContent = v || "A piece of your writing"; }
+}
+document.addEventListener("input", onField);
+document.addEventListener("change", onField);
+document.addEventListener("focusout", (ev) => { const el = ev.target; if (el.dataset && el.dataset.field) { const e = docs.get(key(el.dataset.coll, el.dataset.id)); if (e && e.dirty) flush(e); } });
+document.addEventListener("toggle", (ev) => { if (ev.target.tagName === "DETAILS" && ev.target.open) ev.target.querySelectorAll("textarea").forEach(autosize); }, true);
+document.addEventListener("visibilitychange", () => { if (document.hidden) docs.forEach((e) => { if (e.dirty) flush(e); }); });
+window.addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id && id !== current && VIEWS[id]) go(id); });
+
+/* ---------- boot ---------- */
+async function boot() {
+  const h = location.hash.slice(1); if (VIEWS[h]) current = h;
+  render();
+  try {
+    const use = window.claude && window.claude.use ? (n) => window.claude.use(n) : () => Promise.resolve(null);
+    [db, userCap] = await Promise.all([use("db").catch(() => null), use("user").catch(() => null)]);
+    owner = userCap ? !!(await userCap.isOwner()) : false;
+  } catch (e) { db = null; }
+  capsReady = true;
+  if (!db) { render(); return; }
+  if (owner) setMode(ssGet("iyow:mode") === "test" ? "test" : "review");
+  else if (ssGet("iyow:gate:live") === "1") openGate(true);
+  else render();
+}
+boot();
+})();
+</script>
