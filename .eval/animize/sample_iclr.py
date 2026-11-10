@@ -14,9 +14,10 @@ redistributed. `iclr_sample.json` records the split, seed, and the ids,
 classes, sources, and word counts of the drawn rows, so the same sample can
 be rebuilt by anyone with dataset access.
 
-Jobs: every generated document gets a deep Recompose job. Every human
-document gets a deep Preserve job at the default budget and a deep
-Recompose job (the misrouting comparison).
+Jobs: every generated document gets a job whose caller says a model wrote
+it. Every human document gets a job whose caller says they wrote it, which
+selects Preserve, and a job with no statement, which measures what the
+unstated-origin default costs a human draft.
 
 Usage:
   python sample_iclr.py --split test --per-class 10 --seed 20261109
@@ -29,26 +30,10 @@ import json
 import random
 from pathlib import Path
 
-from _common import die, gate_message, is_gate_error, log, word_count, write_jsonl
+from _common import die, gate_message, is_gate_error, log, make_job, word_count, write_jsonl
 
 DATASET = "pangram/editlens_iclr"
 CLASSES = {"human_written": "human", "ai_generated": "ai"}
-BUDGET = 0.15
-
-
-def job(doc: dict, regime: str) -> dict:
-    voice = "preserve" if regime == "preserve" else "rebuild"
-    return {
-        "job_id": f"{doc['id']}__deep__{regime}__{BUDGET:g}",
-        "id": doc["id"],
-        "cell": doc["cell"],
-        "source_class": doc["source_class"],
-        "pass": "deep",
-        "regime": regime,
-        "budget": BUDGET,
-        "controls": {"pass": "deep", "voice": voice, "regime": regime},
-        "source_text": doc["text"],
-    }
 
 
 def main() -> None:
@@ -101,9 +86,9 @@ def main() -> None:
     jobs = []
     for d in docs:
         if d["source_class"] == "ai":
-            jobs.append(job(d, "recompose"))
+            jobs.append(make_job(d, "generated"))
         else:
-            jobs += [job(d, "preserve"), job(d, "recompose")]
+            jobs += [make_job(d, "own"), make_job(d, "unstated")]
     write_jsonl(out_dir / "jobs.jsonl", jobs)
 
     sample = {

@@ -2,7 +2,7 @@
 
 Local harness for measuring what the `animize` skill does to prose: detector
 scores before and after, clause-level fidelity under the preserve regime,
-and routing accuracy. It lives under `.eval/` because it is repo
+routing accuracy, and whether a run stayed unattended. It lives under `.eval/` because it is repo
 infrastructure, not a skill. Nothing here is committed by the scripts.
 
 ## Setup
@@ -46,7 +46,7 @@ scores are tracked.
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `build_corpus.py`       | Assemble `corpus.jsonl` from `corpus/<cell>/<source_class>/*.txt`; `--fetch-pilot` downloads six Gutenberg passages |
 | `sample_iclr.py`        | Draw a seeded sample of the gated dataset into `iclr/` as a second corpus cell, with its job list                   |
-| `run_animize.py`        | `jobs` emits `jobs.jsonl` for the agent session; `merge` validates `outputs/*.jsonl` into `outputs.jsonl`           |
+| `run_animize.py`        | `jobs` emits `jobs.jsonl` for the agent session; `merge` validates `outputs/*.jsonl` and counts unattended failures |
 | `inspect_labels.py`     | Print the EditLens bucket counts and the `editlens_iclr` dataset shape                                              |
 | `score_editlens.py`     | Score a JSONL file or a dataset split with `--model roberta` or `--model llama` (gated)                             |
 | `compare_reference.py`  | Check local EditLens scores against the scores Pangram published for the same rows                                  |
@@ -65,8 +65,8 @@ Every script accepts `--help`.
 
 ```sh
 python build_corpus.py --fetch-pilot                  # corpus/pilot/human + corpus.jsonl
-python run_animize.py jobs --passes quick,deep --regimes preserve,recompose --budgets 0.05,0.15,0.30
-# ... the agent session runs the skill and writes outputs/*.jsonl ...
+python run_animize.py jobs --origins own,generated,unstated --budgets 0.05,0.15,0.30
+# ... one agent session per job runs the skill and writes outputs/*.jsonl ...
 python run_animize.py merge --outputs 'outputs/*.jsonl' --out outputs.jsonl
 python clause_diff.py --input outputs.jsonl --out diffs.jsonl
 python score_binoculars.py --input outputs.jsonl --text-field output_text --out scores_binoculars_outputs.jsonl
@@ -95,6 +95,14 @@ python summarize_editlens.py --outputs iclr/outputs.jsonl --source-scores iclr/s
 python score_rater.py --answers rater_answers.json
 ```
 
+Each session gets the skill, the job's `source_text`, and the job's
+`caller_statement` as the caller's own words. An `unstated` job passes the
+text with a bare request and nothing else. The session records the regime it
+ran (`regime_assigned`), whether it put a question to the caller
+(`asked_question`), and its `notes`. `merge` counts a question, a regime
+other than the job's, and an `unstated` run without the origin note as
+failures.
+
 Repeat every `--model roberta` step with `--model llama` and `llama` in the
 file names. Calibrate on one split and check on another: thresholds picked on `val` are
 applied to `test`, and the sampled cell is drawn from `test`, so no document
@@ -122,6 +130,11 @@ is scored by a threshold it helped choose.
   identified only as `R1`. `rater_edit.jsonl` is that rater's own edit as a
   scoreable row.
 - `outputs/`: where the agent session drops its `*.jsonl` files.
+- `jobs.jsonl`, `outputs/`, `outputs.jsonl`, `diffs.jsonl`, the
+  `scores_*_outputs.jsonl` files, and the two `iclr_scored_*.jsonl` files
+  hold the runs of 2026-09-19 and 2026-11-09. Their job ids carry a
+  `__deep__` segment and their job rows carry `pass` and `controls` fields,
+  the job format on those dates. `merge` reads both formats.
 
 ## Known failure points
 

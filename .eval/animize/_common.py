@@ -1,8 +1,9 @@
 """Shared helpers for the Animize evaluation harness.
 
-Provides JSONL I/O, word counting, token windowing, and the Hugging Face
-gate check that turns authentication failures into a short actionable
-message instead of a traceback. Every script in this folder imports it.
+Provides JSONL I/O, word counting, token windowing, the job row builder, and
+the Hugging Face gate check that turns authentication failures into a short
+actionable message instead of a traceback. Every script in this folder
+imports it.
 """
 
 from __future__ import annotations
@@ -15,6 +16,34 @@ from typing import Iterable, Iterator
 MIN_WORDS = 50
 WINDOW_TOKENS = 512
 WINDOW_STRIDE = 256
+PRESERVE_BUDGET = 0.15
+ORIGIN_NOTE = "Origin note:"
+
+# The skill takes no settings. What the caller says about who wrote the draft
+# is the only thing a job varies, and it fixes the regime the run must select.
+CALLER_STATEMENTS = {
+    "own": "I wrote this draft myself.",
+    "generated": "A model generated this draft.",
+    "unstated": None,
+}
+
+
+def make_job(doc: dict, origin: str, budget: float = PRESERVE_BUDGET) -> dict:
+    """Build one job row for a corpus document and a caller statement."""
+    regime = "preserve" if origin == "own" else "recompose"
+    return {
+        "job_id": f"{doc['id']}__{origin}__{budget:g}",
+        "id": doc["id"],
+        "cell": doc.get("cell"),
+        "source_class": doc.get("source_class"),
+        "origin": origin,
+        "caller_statement": CALLER_STATEMENTS[origin],
+        "regime": regime,
+        "regime_expected": regime,
+        "budget": budget,
+        "source_text": doc["text"],
+    }
+
 
 def log(msg: str) -> None:
     """Print a status line to stderr."""
