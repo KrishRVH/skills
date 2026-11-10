@@ -139,17 +139,19 @@ Preserve, default budget.
 
 ### After: sleep study
 
-> We investigated the relationship between sleep duration and recall
-> performance in 212 undergraduate students. Prior work in this area has been
-> mixed. Participants who reported sleeping fewer than six hours performed
-> worse on the recall task, with a mean difference of 4.1 items (95% CI 2.3
-> to 5.9). Sleep duration was self-reported, which is a limitation.
+> We sought to investigate the relationship between sleep duration and recall
+> performance in undergraduate students. Prior work in this area has been
+> somewhat mixed. Our sample consisted of 212 participants. Participants who
+> reported sleeping fewer than six hours performed worse on the recall task,
+> with a mean difference of 4.1 items (95% CI 2.3 to 5.9). Sleep duration was
+> self-reported, which is a limitation.
 
-Clause diff: 8 source clauses; 6 kept, 2 lexically edited, 1 deleted ("It is
-worth noting that"), 1 merged ("Our sample consisted of 212 participants"
-into the first sentence), 0 added. Model-added tokens: 1 of 63 output tokens
-(share 0.02). The author's hedge "somewhat" was cut as a lexical edit; every
-number, the confidence interval, and the limitation are unchanged.
+Clause diff: 8 source clauses; 3 kept, 4 lexically edited, 1 deleted, 0
+added. Model-added tokens: 0 of 64 output tokens. Every edit is a cut: "In
+this study,", "It is worth noting that", "We found that", and "It should be
+noted, however, that". The hedge "somewhat" stays because it calibrates the
+claim, and every number, the confidence interval, and the limitation are
+unchanged.
 
 ## 6. Policy text (Recompose)
 
@@ -193,14 +195,16 @@ Preserve, default budget. The caller asked for a tighter opening paragraph.
 
 ### After: radio
 
-> I keep the broken radio. It doesn't work, and it takes up half the shelf.
-> My grandfather built it in 1961 from a kit, and honestly I think it's the
-> only thing he ever finished. It sits there. I dust it sometimes. I have
-> never once tried to fix it, which probably says something about me, though
-> I'm not sure what.
+> I have been thinking about why I keep the broken radio. It doesn't work,
+> and it takes up half the shelf. My grandfather built it in 1961 from a kit,
+> and honestly I think it's the only thing he ever finished. It sits there. I
+> dust it sometimes. I have never once tried to fix it, which probably says
+> something about me, though I'm not sure what.
 
-Clause diff: 9 source clauses; 7 kept, 1 lexically edited ("I have been
-thinking a lot lately about why I keep" to "I keep"), 1 deleted ("Anyway"),
-0 added. Model-added tokens: 0. The asides, the "honestly", and the
-unresolved ending are the author's and stay. A Recompose run would have been
-wrong here: the roughness is the voice.
+Clause diff: 9 source clauses; 5 kept, 3 lexically edited, 1 deleted, 0
+added. Model-added tokens: 0 of 67 output tokens. The cuts are "a lot
+lately", "obviously", and "Anyway". Cutting the opening down to "I keep the
+broken radio" would leave under half of that clause, which the diff counts as
+a new clause. The asides, the "honestly", and the unresolved ending are the
+author's and stay. A Recompose run would have been wrong here: the roughness
+is the voice.

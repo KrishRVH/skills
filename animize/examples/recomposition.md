@@ -199,33 +199,35 @@ real safety prohibition, not scaffolding.
 
 ### Preserve output for the incident summary
 
-> We had an outage on Tuesday that lasted about forty minutes. The cause took
-> us a while to find: the config push at 09:10 included a typo in the region
-> name, and the service in eu-west-2 kept trying to reach a region that
-> doesn't exist. The on-call pager went off at 09:14. The fix itself was
-> trivial once we saw it. We reverted the push at 09:48 and everything came
-> back within two minutes. We're going to add a validation step to the push
-> pipeline that checks region names against the list of regions we actually
-> run in.
+> We had an outage on Tuesday, and it lasted about forty minutes. The cause,
+> which took us a while to find, was that the config push at 09:10 included a
+> typo in the region name, and the service in eu-west-2 kept trying to reach
+> a region that doesn't exist. We noticed because the on-call pager went off
+> at 09:14. The fix itself was trivial once we saw it. We reverted the push
+> at 09:48 and everything came back within two minutes. We're going to add a
+> validation step to the push pipeline that checks region names against the
+> list of regions we actually run in.
 
 ### Notes returned with the incident summary
 
-> Treated as your own draft on your word; the skill did not verify it.
+> Clause diff: 11 source clauses. Kept 8, lexically edited 3, deleted 0,
+> reordered 0, added 0. Model-added tokens: 0 of 108 output tokens (share
+> 0.00, budget 0.15). Source tokens: 123.
+> Edits: cut "So the short version is that" and "It's worth mentioning
+> that", and trimmed "What we're going to do about it is add" to "We're going
+> to add".
 >
-> Clause diff: 12 source clauses. Kept 8, lexically edited 3, deleted 2 ("So
-> the short version is that", "It's worth mentioning that"), reordered 0,
-> added 0. Model-added tokens: 3 of 96 output tokens (share 0.03, budget
-> 0.15). Source tokens: 118.
+> Treated as your own draft on your word; the skill did not verify it.
 >
 > Left as written: "about forty minutes" is approximate while every other
 > time is exact. If you have the recovery timestamp, "09:50" would let a
 > reader compute the duration.
 
 Every clause in the output is recognizable as a source clause. The three
-edits are within clauses: "which took us a while to find" folded into its
-neighbor, "We noticed because" cut, and "What we're going to do about it is
-add" tightened to "We're going to add". The approximate duration stays
-because replacing it would require a fact the draft does not hold.
+edits cut words inside a clause, so the model added no token. "We noticed
+because" stays: it says how the team found out, which is substance. The
+approximate duration stays because replacing it would require a fact the
+draft does not hold.
 
 ## 8. A missing opening becomes a note, not a clause
 
@@ -251,11 +253,12 @@ because replacing it would require a fact the draft does not hold.
 
 ### Notes returned with the report
 
-> Treated as your own draft on your word; the skill did not verify it.
->
 > Clause diff: 4 source clauses. Kept 3, lexically edited 1, deleted 0,
 > reordered 0, added 0. Model-added tokens: 0 of 48 output tokens (share
 > 0.00, budget 0.15).
+> Edit: cut "which is" before "above the 85% we projected".
+>
+> Treated as your own draft on your word; the skill did not verify it.
 >
 > The report has no opening. Writing one would add clauses with no anchor in
 > your draft, so the artifact is delivered without it. A suggestion, in your
