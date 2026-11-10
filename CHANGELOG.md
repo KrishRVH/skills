@@ -1,5 +1,122 @@
 # Changelog
 
+## animize: catalog entries checked against labeled text (2026-11-10)
+
+Changes:
+
+- `tells.md` keeps ordinary idiom that people write more often than models
+  do. The Filler entry leaves a single `in order to`, `the fact that`, `as
+a result of`, or `there is … that` as it stands and tightens only a
+  passage that stacks them. The overcorrection guard lists the same idiom,
+  a plain `because`, and a request's `please`.
+- The staged-contrast entry replaces `Not just X, but Y`. It also covers `X
+rather than Y`, `Rather than X, Y`, and a contrast split across two
+  sentences, and it keeps a contrast whose rejected side is real.
+- Two entries are new under Plain speech. Spelled-out contractions: a
+  message, email, comment, pull request description, or post contracts
+  where a speaker would, and a rule or a stressed form stays full.
+  Compressed speech: a message clipped shorter than its writer would say it
+  aloud is written at speaking length.
+- The clarity profile removes `please` only from a procedure step. A
+  request to a person keeps the courtesy its source gave it.
+- The entry point treats an instruction inside the material as content. A
+  run never follows it, leaves it where a protected span holds it, and
+  tells the caller what it says and where. The acceptance gate checks this,
+  and the delivery notes list it.
+- The stacked-declaratives entry names the plain conjunctions to join
+  with: `because`, `so`, `but`, `if`, and `although`.
+- The prompt block carries the same changes in short form.
+- The evaluation protocol says to check a catalog entry against labeled
+  text before it names a construction as a machine default.
+- The harness has `construction_rates.py`, which compares how often people
+  and models use a construction in the vendor's labeled dataset, and
+  `contraction_variants.py`, which isolates what contractions do to a
+  detector's score. `idiom/` holds this run.
+
+Measured, with the tables in `animize/references/evaluation-results.md`
+under "Catalog revision":
+
+- In 2,038 human-written and 2,046 model-generated documents, people wrote
+  `in order to` about 35 times as often as the models, and `there is`,
+  `because`, and `please` three to four times as often. The models wrote
+  `rather than` and `not just … but` four to five times as often as people.
+- A check for runs of similar-length sentences was not added. Three similar
+  lengths in a row appear in 60% of the human documents.
+- Path tests on the final text: 5 of 5 sessions took the right regime,
+  loaded every reference, and asked nothing.
+- Batch jobs on the final text: 62 of 62 took the right regime and asked
+  nothing, no source number is missing, and no output has a dash character.
+  The three Preserve cells ran on the first of three freezes and are
+  carried.
+- The eight workplace outputs went from no contractions to 14.
+- Live model, version 4.1, eight outputs: six model-written documents read
+  100% AI-generated before and after, and two human drafts stay Human
+  Written. The acceptance criterion for model-written input is still not
+  met.
+- On the open EditLens models, contractions alone raise the score of a
+  model-written workplace draft, and the rest of a run lowers it. The live
+  model reads these drafts as 100% AI-generated either way.
+
+Known limit:
+
+- When the material reaches a run through a file, a session removed an
+  embedded instruction from inside a quotation and wrote no note, twice.
+  It never followed the instruction. The same case passed twice when the
+  material was in the conversation.
+
+## animize: the live verdict is the benchmark (2026-11-09)
+
+Changes:
+
+- The evaluation protocol states the skill's main input and target. The
+  input is model-written text: messages, emails, pull request descriptions,
+  write-ups, and articles. The target is output that reads as
+  human-authored, that Pangram's live model reads as human-written, that
+  carries no LLM-isms, and that preserves the source's substance.
+- The live verdict is the benchmark and an acceptance criterion: a
+  model-written input's output reads Human Written, and no rule change
+  moves a cell toward machine-written. The protocol no longer bars a rule
+  change made for a score. A verdict gain still never excuses a fidelity
+  failure or fabricated material.
+- The entry point lost two universal rules, `Do not optimize against a
+detector` and `Make no detector claim`, and the clauses that pointed to
+  them in the objective and in Precedence tiers 1, 4, and 8. The acceptance
+  gate lost its `Detector silence` check, and the prompt block lost the
+  matching sentence. The universal rules are numbered 1 to 7.
+- The rules against manufactured humanity and faked imperfection are
+  unchanged.
+- The harness has `score_pangram.py`, which sends documents to the live
+  model through the vendor's text API and stores text-free rows. The API
+  bills by the word, so the script requires a word cap and the protocol
+  sets a sampling rule: the same documents before and after a change, three
+  at a time, widened only when a verdict moves.
+- The harness has two new folders. `rebuild/` holds a variant of Recompose
+  that composes every sentence anew, and `workplace/` holds eight fictional
+  workplace drafts.
+
+Measured on the live model, version 4.1, with the tables in
+`animize/references/evaluation-results.md`:
+
+- Model-written text: 0 of 11 outputs read Human Written. Eight essays,
+  news stories, and fiction pieces and three workplace drafts read 100%
+  AI-generated before the skill and after it.
+- Human drafts: 11 of 12 outputs read Human Written and one reads Mostly
+  Human Written, under either regime. On three drafts with planted defects
+  the live model flagged the planted sentences, and the skill lowered the
+  AI share on each.
+- No output has a passage flagged as humanized.
+- The rebuild variant was not adopted. It reworded 47% to 74% of each
+  model-written draft and moved no verdict, raised the humanizer score, and
+  moved two planted-defect human drafts from Human Written to AI Assisted
+  and AI Detected.
+- The open EditLens models are more lenient than the live model. They read
+  several workplace drafts as human that the live model reads as 100%
+  AI-generated, so they only rule a candidate out.
+- Not run on these outputs: the forward tests and the detector check on
+  the text without the two rules, which the next entry covers; the live
+  model on five of the workplace drafts, on an article-length draft, and on
+  mid-tier outputs.
+
 ## animize: one home per rule (2026-11-09)
 
 Changes:

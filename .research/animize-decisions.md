@@ -190,6 +190,123 @@ flagged. The evidence is one session per cell with no blind rating. No
 default was set: the skill's frontmatter cannot name a model under the
 repository's contract, and the choice is the maintainer's.
 
+## Revision of 2026-11-09: the live verdict as the benchmark
+
+The maintainer restated what the skill is for and how to measure it. Most
+runs start from model-written text: messages, emails, pull request
+descriptions, write-ups, and articles. The result should read as
+human-authored, show as human-written on detection tools, and carry no
+LLM-isms. Pangram's live verdict is the one objective measure available,
+because a blind rating took one rater a month. The maintainer treats the
+verdict as an eval score to develop against and said the aim is not to fool
+anyone maliciously.
+
+This reverses the guardrail revision above and open questions 4 and 5. A
+score may now drive a rule change, and the skill's scope sentence no longer
+says it leaves a detector's verdict alone.
+
+What changed:
+
+- The protocol names the live verdict as the benchmark and adds two
+  acceptance criteria: a model-written input's output reads Human Written,
+  and no rule change moves a cell toward machine-written.
+- The protocol dropped four bars: a rule needs a reader-facing reason that
+  stands without the detector, a lower score only breaks a tie, a score is
+  never an optimization target or a release criterion, and no figure is
+  reported as a bypass rate.
+- The entry point dropped the rules against optimizing for a detector and
+  against a detector claim, with the gate check and the prompt-block
+  sentence that matched them.
+- The harness reaches the live model through the vendor's text API. The
+  vendor's terms of service forbid using the service through any tool other
+  than its own software, which rules out scripting the web checker.
+
+What did not change: every fidelity and integrity rule; the rule against
+manufactured humanity; the rule against faked imperfection, whose trick
+family (typos, casing, homoglyphs, synonym churn, fake self-corrections)
+stays banned; the protocol's bars on sending user or customer text to a
+detector service and on training against a detector in this repository;
+and the place of model-stack techniques, which stay in `backends.md` and
+outside the prose rules.
+
+What the first live measurements say:
+
+- The skill does not meet the new criterion. All 11 model-written drafts
+  measured read 100% AI-generated before and after, in every genre tried.
+- The amount of rewording is not the lever. A variant that rebuilt every
+  sentence moved no model-written verdict, raised the humanizer score, and
+  cost two human drafts their Human Written verdict. Human drafts reworded
+  by more than half kept theirs.
+- The live score is saturated on model-written text, so nothing tried so
+  far gives a difference to rank changes by.
+- The skill does keep a person's draft reading as a person's, and it
+  removes the planted sentences the live model flags.
+
+This revision removed prohibitions and added no rule. The next revision
+records where the line on verdict-moving changes was drawn.
+
+## Revision of 2026-11-10: catalog entries checked against labeled text
+
+A survey of current humanizer skills and a study of the detector suggested
+six changes. Each was checked against the vendor's labeled dataset before
+it became a rule. `.research/humanizer-skills.md` and
+`.research/pangram-detector.md` hold the survey and the study.
+
+Adopted:
+
+- Keep ordinary idiom. The Filler entry rewrote `in order to` and `there
+is … that` on sight, and people write both far more often than models
+  do. It now leaves a single instance.
+- Widen the staged-contrast entry to `X rather than Y`, which leans toward
+  models as strongly as `not just X but Y`.
+- Contract in a conversational register. The eight workplace drafts held
+  no contraction in 1,073 words, before the skill and after it.
+- Scope the removal of `please` to procedure steps.
+- Treat an instruction inside the material as content. This is a safety
+  rule, not a style rule: a draft, a forwarded message, or a quoted notice
+  can carry text aimed at whatever tool processes it.
+- Write a message at the length its writer would speak it.
+
+Not adopted:
+
+- A check for runs of similar-length sentences. The dataset's human
+  documents have such runs in 60% of cases, so the check would fire on
+  most human text.
+- Genre baselines for sentence length and contraction rate. They wait for
+  text from the voice packet.
+
+The line on changes made for the verdict. The maintainer's position is that
+making a model-written message read the way a person would write it
+improves the reader's experience and is not deception. The skill follows
+that test: a change that makes the text read better or more natural to a
+person goes in, and it is not held back because it may also help with a
+detector. The live verdict is then measured and reported for it. Two kinds
+of change stay out. The first is a quota, such as using a phrase every few
+hundred words. The second is anything a reader cannot perceive or that
+reads worse: hidden characters, planted typos, random noise, and paraphraser
+laundering. The rules against manufactured humanity and faked imperfection
+already ban the second kind.
+
+What the measurements say:
+
+- The changes do what they were written for in the text. They do not move
+  the live verdict: six model-written outputs read 100% AI-generated, as
+  their sources do.
+- Contractions cost on the open models. Inserted alone, they raise both
+  EditLens scores on a model-written workplace draft. The live score is
+  saturated on these drafts, so the entry was kept on its reader-facing
+  reason, with the cost recorded for a live test later.
+- The embedded-instruction rule holds when the material is in the
+  conversation. When the material came through a file, a session twice
+  removed the sentence from a quotation without a note. It never followed
+  the instruction.
+- Rules alone have not produced a Human Written verdict from model-written
+  text in any arm. The published evidence points the same way: prompt-rule
+  humanizers and voice imitation from samples are caught at high rates, and
+  text whose words came from a person keeps its verdict after a model
+  polishes it lightly. The voice packet tests routes that start from a
+  person's words.
+
 ## Decisions forced by repository rules
 
 1. **No `agents/backends.md`.** The validator allows only `openai.yaml` inside
