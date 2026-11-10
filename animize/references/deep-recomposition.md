@@ -46,7 +46,11 @@ Permitted, in order of preference:
 2. **Reorder.** Move sentences, paragraphs, and sections.
 3. **Lexically edit within a clause.** Replace a word, fix agreement, tighten
    a phrase, or cut a modifier. The clause stays recognizable as the source
-   clause: most of its tokens survive in order.
+   clause: most of its tokens survive in order. Every replacement repairs a
+   defect: an error, an ambiguity, a word that says the wrong thing. The
+   author's diction, period idiom, spelling conventions, and register are
+   not defects. Never trade a word for a near synonym, modernize it, or
+   insert a word the clause is complete without.
 4. **Merge or split at clause boundaries.** Join two source clauses with a
    conjunction or a period, or separate them, without introducing a clause
    that has no source.
