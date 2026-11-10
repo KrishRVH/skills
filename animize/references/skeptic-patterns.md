@@ -41,7 +41,7 @@ For each plausible cluster, choose `fix`, `retain`, or `flag`.
 
 ## Diagnostic controls
 
-Before a deep diagnostic, mask protected exact spans with stable placeholders.
+Before a diagnostic, mask protected exact spans with stable placeholders.
 Inspect quotations, code, structured data, URLs, citation locators, published
 titles, proper names, defined terms, and caller-designated spans only when the
 caller includes them in scope. Restore masked contents exactly after inspecting
@@ -101,8 +101,8 @@ when it clarifies a real comparison.
 ## 5. Pseudo-insight
 
 **Cues:** `what most people miss`, `the deeper issue`, `at its core`, `the real
-question`, self-answered rhetorical questions, or `not X but Y` used to stage
-an ordinary distinction as revelation.
+X` (question, problem, story, work), self-answered rhetorical questions, or
+`not X but Y` used to stage an ordinary distinction as revelation.
 
 **Effect:** performs discovery instead of providing it.
 
@@ -222,8 +222,8 @@ motive, trend, or symbolism.
 
 **Effect:** changes substance while appearing to improve prose.
 
-**Repair:** restore the source boundary. Ask for evidence, qualify, separate the
-facts, or flag the gap.
+**Repair:** restore the source boundary. Qualify the claim, separate the
+facts, or flag the missing evidence in the notes.
 
 ## 16. Session and format residue
 

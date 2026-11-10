@@ -32,7 +32,7 @@ Evaluate at least:
 1. Original draft
 2. Generic prompt: `Make this sound more human`
 3. Line-edit-only version of the skill
-4. The quick core alone ([examples/quick-core.md](../examples/quick-core.md))
+4. The prompt block alone ([examples/prompt-block.md](../examples/prompt-block.md))
 5. Recompose core without references
 6. Full skill with authoredness and skeptical-reader passes
 7. Full skill plus an independent verifier
@@ -43,27 +43,37 @@ Include ordinary agent replies without an explicit Animize invocation. They
 should remain outside the skill. For invoked cases, evaluate only the writing
 the caller selected.
 
-### Control matrix
+### Unattended-run matrix
 
-Exercise every applicable combination of:
+Run each case as a bare request: the artifact, an instruction to run the
+skill on it, and nothing else unless the case names it.
 
-- `voice: auto | preserve | rebuild | match`
-- `clarity: auto | plain | off`
-- `delivery: adaptive | clean | with_notes`
-- regime: Preserve or Recompose, as routed from the source class, plus the
-  explicit `quick` and `deep` overrides and a findings-only request
+- origin: the caller says the draft is their own writing; the caller asks to
+  keep its wording; the session shows a model producing the draft; a brief
+  with no draft; origin unstated, including first-person drafts holding
+  particulars a model could not have supplied
+- a possessive with no statement of authorship, such as `my PR description`
+- genre: one artifact the clear-communication profile applies to and one it
+  leaves alone
+- writing samples supplied
+- a request for the text alone, and a request for a change summary
+- a findings-only request
+- material that leaves a framing question open
+- length: a three-sentence message and a multi-page document
 
-Test `auto` values against requests whose correct resolution is unambiguous,
-then test each explicit value against the same material. `voice: preserve` on
-a source the caller has not called their own, and `voice: rebuild` on a source
-the caller has called their own, are conflicts the skill must report rather
-than resolve silently. Record invalid or inapplicable combinations instead of
-treating them as another setting.
+For every run record the regime, the files loaded, the steps run, every
+question put to the caller, and the notes. Each of these is a failure:
 
-Instrument file reads. A `quick` run must load no file under
-`animize/references/` or `animize/examples/`; all required quick behavior must
-come from the entry point. Measure its output quality and fidelity separately
-so a cheap run cannot pass merely because it skipped work.
+- a question put to the caller
+- Preserve assigned without a caller statement
+- an unstated-origin run with no origin note
+- a named default (an unstated origin or an open framing question) taken
+  and left out of the notes
+- loaded files that differ from the branch's fixed set in the entry point
+- a step skipped because the artifact is short
+
+Measure output quality and fidelity on the short cases separately, so a run
+cannot pass merely because it skipped work.
 
 ## 2. Test corpus
 
@@ -88,18 +98,19 @@ The last class measures over-editing.
 
 Add these cells for the regime work:
 
-- human drafts with known reader-facing defects, run through `deep` under the
-  Preserve regime at budgets 0.05, 0.15, and 0.30 (vary the constant for the
+- human drafts with known reader-facing defects, run under the Preserve
+  regime at budgets 0.05, 0.15, and 0.30 (vary the constant for the
   experiment only)
-- the same drafts run through `deep` under the Recompose regime, to measure
-  what routing gets wrong when a human draft is misclassified
+- the same drafts run under the Recompose regime, to measure what the
+  unstated-origin default costs a human draft whose author does not say they
+  wrote it
 - matched pairs produced by synthetic mirroring of a human document (ask a
   model for the topic, then for an article on that topic at the same length
   and register), so the skill's treatment of a mirror can be compared with its
   treatment of the original
 - academic and second-language human samples with no edits, to measure
-  whether `clarity: plain` output moves human text toward registers that
-  detectors have flagged in human writing
+  whether the clear-communication profile moves human text toward registers
+  that detectors have flagged in human writing
 
 Use at least 100 documents per cell and at least 200 words each. Detectors
 need 50 words; longer documents give more precise estimates.
@@ -210,7 +221,8 @@ Ask pairwise questions as well:
 Require raters to highlight any span that feels generic, assembled, inflated,
 or unnatural and to name the reason. This produces actionable diagnostics.
 
-For `preserve` and `match`, give raters the source samples separately.
+For Preserve cells and sample-led cells, give raters the source samples
+separately.
 Require the system to identify three to five observable voice signals before
 rewriting, then ask raters whether the revision remains recognizable as the same
 writer without relying on topic vocabulary, copied catchphrases, or invented
@@ -256,10 +268,11 @@ Use automation for hard invariants, not for final naturalness judgments:
 - introduced zero-width characters, `U+00AD`, `U+00A0`, and mixed-script
   confusables, with source provenance recorded for retained candidates
 - paired source/revision fidelity-finding fields
-- file-read traces proving a `quick` run loaded no Animize reference
+- file-read traces showing each run loaded exactly its branch's fixed set
+- any question put to the caller during a run
 - the Preserve clause diff: added clauses, model-token share, and the
-  budget check, computed by the procedure in
-  [the deep pass](deep-recomposition.md#p3-clause-diff)
+  budget check, computed by the steps in
+  [the procedure](procedure.md#p3-clause-diff)
 - any sentence in an output that describes the output's standing with a
   detector
 
@@ -323,28 +336,29 @@ comparable only within a version.
 
 ## 9. Primary metrics
 
-| Dimension              | Metric                                                           |
-| ---------------------- | ---------------------------------------------------------------- |
-| Critical fidelity      | Count of unauthorized proposition changes; target: 0             |
-| Exact integrity        | Protected-element error rate; target: 0                          |
-| Fabricated humanity    | Invented experience, identity, source, or error count; target: 0 |
-| Naturalness            | Blind human rating and pairwise preference                       |
-| Reader fit             | Blind rating for stated audience and genre                       |
-| Deliberateness         | Blind rating plus highlighted generic spans                      |
-| Publication readiness  | Pairwise preference against baseline and human edit              |
-| Over-editing           | Unnecessary-change rate on strong human controls                 |
-| Control conformance    | Correct pass, regime, `voice`, `clarity`, and delivery behavior  |
-| Routing accuracy       | Correct regime without asking; question asked when it should be  |
-| Voice recognition      | Signal accuracy and blinded same-writer recognition              |
-| False-positive defense | Correct retains with an evidence-backed functional reason        |
-| Destination fit        | Correct medium, formatting, stance, and explanation behavior     |
-| Quick isolation        | Reference loads during a `quick` run; target: 0                  |
-| Verdict distribution   | Human / AI-assisted / AI-generated / humanized per cell          |
-| Humanizer positives    | Rate above baseline on any cell; target: 0                       |
-| Detector guardrail     | Score and verdict shift per cell after a rule change             |
-| Preserve accounting    | Added clauses (target: 0) and model-token share under budget     |
-| Reliability            | Variance across genres, lengths, models, and repeated runs       |
-| Efficiency             | Tokens, latency, and number of passes                            |
+| Dimension              | Metric                                                            |
+| ---------------------- | ----------------------------------------------------------------- |
+| Critical fidelity      | Count of unauthorized proposition changes; target: 0              |
+| Exact integrity        | Protected-element error rate; target: 0                           |
+| Fabricated humanity    | Invented experience, identity, source, or error count; target: 0  |
+| Naturalness            | Blind human rating and pairwise preference                        |
+| Reader fit             | Blind rating for stated audience and genre                        |
+| Deliberateness         | Blind rating plus highlighted generic spans                       |
+| Publication readiness  | Pairwise preference against baseline and human edit               |
+| Over-editing           | Unnecessary-change rate on strong human controls                  |
+| Unattended conformance | Questions put to the caller (target: 0); defaults stated in notes |
+| Routing accuracy       | Preserve only on a caller statement; origin note when unstated    |
+| Unstated-origin cost   | Model-token share and reader preference on recomposed human text  |
+| Voice recognition      | Signal accuracy and blinded same-writer recognition               |
+| False-positive defense | Correct retains with an evidence-backed functional reason         |
+| Destination fit        | Correct medium, formatting, stance, and explanation behavior      |
+| Fixed loading          | Runs whose loaded files differ from the branch's set; target: 0   |
+| Verdict distribution   | Human / AI-assisted / AI-generated / humanized per cell           |
+| Humanizer positives    | Rate above baseline on any cell; target: 0                        |
+| Detector guardrail     | Score and verdict shift per cell after a rule change              |
+| Preserve accounting    | Added clauses (target: 0) and model-token share under budget      |
+| Reliability            | Variance across genres, lengths, models, and repeated runs        |
+| Efficiency             | Tokens and latency per run                                        |
 
 Report the over-edit rate on strong human prose beside the verdict shift on
 the same cell. The two failure modes trade off, and a run that wins one by
@@ -362,10 +376,12 @@ A production candidate should meet all of these:
 - materially fewer highlighted generic spans than both the original draft and
   generic-prompt baseline
 - low unnecessary-change rate on already strong human prose
-- zero material control, regime, or voice conformance failures on the matrix
+- zero failures on the unattended-run matrix: no question to the caller, no
+  wrong regime, no missing note
 - the tier 8 dash default applied unless a stronger tier decided
 - exact preservation of protected dash and Unicode spans
-- zero Animize reference loads during a `quick` run
+- every run loads exactly its branch's fixed set and runs every step, at
+  every artifact length
 - defended false positives remain intact, including real prohibitions,
   supported recommendations, and coherent long sentences
 - material distant duplication is removed without damaging legitimate
@@ -381,10 +397,10 @@ A production candidate should meet all of these:
   and a fidelity pass rate at or above Recompose's
 - human preference for Preserve output over the unedited draft at or above
   60% on defect-injected drafts and no higher than 45% on strong drafts
-- routing accuracy at or above 90% on the labeled corpus, with the remaining
-  cases resolved by the single question rather than a wrong guess
-- the quick core alone matches the full skill's rate on the controlled defect
-  suite for short written artifacts
+- routing on the labeled corpus: Preserve assigned only on a caller
+  statement, and the origin note present on every unstated-origin run
+- the prompt block alone matches the full skill's local-defect repair rate on
+  the controlled defect suite for short written artifacts
 
 Do not declare the skill perfected from a single model, genre, evaluator group,
 or detector.
@@ -430,7 +446,8 @@ For every failed item, classify the root cause:
 - distant-duplication miss or legitimate-repetition damage
 - unsupported persona or voice-recognition failure
 - destination mismatch
-- regime-routing or quick-reference-load failure
+- regime-routing, fixed-loading, or unattended-run failure (a question, a
+  skipped step, or a missing note)
 - Preserve edit-policy violation (added clause or budget overrun)
 - undefended false positive
 - genre mismatch

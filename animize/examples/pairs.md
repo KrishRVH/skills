@@ -1,14 +1,14 @@
 # Paired examples by genre
 
 Each pair shows a draft with a reader-facing defect and the same content after
-the pass. The source boundary is stated so a reader can check fidelity. None
+a run. The source boundary is stated so a reader can check fidelity. None
 of the rewrites adds a fact, a reaction, or a source. Model imitation of shape
 is the point: read the pair, then write to the after-shape, not to the rule
 list.
 
 ## Contents
 
-- [1. Professional email (quick)](#1-professional-email-quick)
+- [1. Professional email (Recompose)](#1-professional-email-recompose)
 - [2. Technical explanation (Recompose)](#2-technical-explanation-recompose)
 - [3. Product copy (Recompose)](#3-product-copy-recompose)
 - [4. Analytical newsletter (Recompose)](#4-analytical-newsletter-recompose)
@@ -16,7 +16,7 @@ list.
 - [6. Policy text (Recompose)](#6-policy-text-recompose)
 - [7. Personal essay (Preserve)](#7-personal-essay-preserve)
 
-## 1. Professional email (quick)
+## 1. Professional email (Recompose)
 
 Source boundary: the vendor's invoice 4471 is 23 days overdue; the contract
 allows a 1.5% monthly late fee after 30 days; the sender wants payment by

@@ -1,6 +1,6 @@
 # Recomposition examples
 
-These examples demonstrate both regimes of the deep pass. Under Recompose:
+These examples demonstrate both branches of the procedure. Under Recompose:
 preserve the content boundary, discard generic expression, design a new
 information hierarchy, and write from that plan. Under Preserve: keep the
 human draft's own clauses, and change only by deleting, reordering, editing
@@ -12,7 +12,7 @@ within a clause, or merging and splitting at clause boundaries.
 - [2. Thin source material](#2-thin-source-material)
 - [3. Recompose versus Preserve on a personal draft](#3-recompose-versus-preserve-on-a-personal-draft)
 - [4. Ending without a manufactured moral](#4-ending-without-a-manufactured-moral)
-- [5. Quick issue comment](#5-quick-issue-comment)
+- [5. Short issue comment](#5-short-issue-comment)
 - [6. Negative scope and a real prohibition](#6-negative-scope-and-a-real-prohibition)
 - [7. Human draft under Preserve with the diff summary](#7-human-draft-under-preserve-with-the-diff-summary)
 - [8. A missing opening becomes a note, not a clause](#8-a-missing-opening-becomes-a-note-not-a-clause)
@@ -88,26 +88,31 @@ not human.
 > that should have been obvious, then found a second one after the backfill
 > started. The good news is that the rollback worked exactly as designed.
 
-### Recompose (`voice: rebuild`, origin not stated)
+### Recompose (origin not stated)
 
 > The migration was rough. We lost most of Tuesday to a schema issue that should
 > have been obvious and found another after the backfill began. The good news
-> was that the rollback worked exactly as designed.
+> is that the rollback worked exactly as designed.
+>
+> Origin note: this draft's origin was not stated, so it was fully
+> recomposed. If you wrote it, say so and the next run keeps your wording.
 
-When the caller does not say the draft is theirs and the routing question
-goes unasked because the draft could be either, Recompose treats the cadence
-as editable. The actor, owned judgments, and evaluative force remain.
+The caller did not say who wrote the draft, and the session does not show a
+model producing it. The first-person voice does not settle it, so Recompose
+runs, treats the cadence as editable, and reports the default in the origin
+note. The actor, owned judgments, and evaluative force remain.
 
 ### Preserve (the caller says the draft is theirs)
 
-> The migration was rough, honestly. We lost most of Tuesday to one schema issue
-> that should have been obvious, then found another after the backfill started.
-> At least the rollback worked exactly as designed.
+> The migration was rough, honestly. We lost most of Tuesday to a schema issue
+> that should have been obvious, then found a second one after the backfill
+> started. The good news is that the rollback worked exactly as designed.
 
-The directness, the aside, and the rough register are the author's. Every
-change is a deletion or an edit within a clause: "most of Tuesday to a schema
-issue" gained "one", "then found a second one" became "then found another",
-and "The good news is that" became "At least". Zero clauses were added.
+The run returns the draft as written and says so in its notes. The
+directness, the aside, and the rough register are the author's, and the draft
+holds no defect a reader would notice. Trading "a second one" for "another"
+or "The good news is that" for "At least" would swap the author's words for
+near synonyms, which the edit policy does not count as a repair.
 
 ## 4. Ending without a manufactured moral
 
@@ -129,7 +134,7 @@ and "The good news is that" became "At least". Zero clauses were added.
 
 The supported result and remaining limit provide their own ending.
 
-## 5. Quick issue comment
+## 5. Short issue comment
 
 ### Available evidence
 
@@ -142,15 +147,17 @@ The supported result and remaining limit provide their own ending.
 
 > Write a short issue comment reporting the flaky checkout test fix.
 
-### Quick comment
+### Issue comment
 
 > Fixed the flaky `checkout.test.ts` test. Its mock clock never advanced past
 > the 300 ms debounce window. I set the debounce to zero in `setup.ts:12`. All
 > 34 tests pass.
 
-The quick path writes in the destination's form. It uses the real identifiers,
-cause, change, and result without exposing its checks or invoking deep
-recomposition.
+A four-sentence artifact runs the same procedure as a long one: the content
+lock holds four items, verification compares four exact tokens, and the gate
+still applies. The output shows none of that work. It carries the real
+identifiers, cause, change, and result in the destination's form, and nothing
+required a note.
 
 ## 6. Negative scope and a real prohibition
 
@@ -240,16 +247,15 @@ because replacing it would require a fact the draft does not hold.
 > Enrollment reached 84 of the planned 120 participants by the end of month
 > six. Retention is 91%, above the 85% we projected. The two sites in the
 > north cohort started four weeks late because the ethics amendment took
-> longer than we budgeted, and their enrollment is behind by about the same
-> margin.
+> longer than we budgeted, and their enrollment is correspondingly behind.
 
 ### Notes returned with the report
 
 > Treated as your own draft on your word; the skill did not verify it.
 >
-> Clause diff: 6 source clauses. Kept 4, lexically edited 2, deleted 0,
-> reordered 0, added 0. Model-added tokens: 5 of 64 output tokens (share
-> 0.08, budget 0.15).
+> Clause diff: 4 source clauses. Kept 3, lexically edited 1, deleted 0,
+> reordered 0, added 0. Model-added tokens: 0 of 48 output tokens (share
+> 0.00, budget 0.15).
 >
 > The report has no opening. Writing one would add clauses with no anchor in
 > your draft, so the artifact is delivered without it. A suggestion, in your
@@ -263,6 +269,6 @@ because replacing it would require a fact the draft does not hold.
 > accept or not.
 
 Under Recompose the opening would have been written into the artifact. Under
-Preserve the pass drafts it as a marked suggestion and keeps the artifact to
-the author's clauses. The "correspondingly behind" edit is within a clause
-and states the same relationship in plainer words.
+Preserve the run drafts it as a marked suggestion and keeps the artifact to
+the author's clauses. The one edit cuts "which is" inside a clause.
+"Correspondingly behind" stays: it is the author's diction, not a defect.

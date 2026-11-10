@@ -2,8 +2,7 @@
 
 Use this profile to make prose understandable on the first read without
 simplifying away precision. It governs document shape, reader address,
-sentence load, and ambiguity inside Animize. It does not select the pass,
-the regime, or `voice`.
+sentence load, and ambiguity inside Animize. It does not select the regime.
 
 ## Contents
 
@@ -21,27 +20,14 @@ the regime, or `voice`.
 
 ## When the profile applies
 
-Treat `clarity` as independent of the pass and `voice`:
+[The entry point](../SKILL.md#clear-communication-profile) decides whether
+the profile applies: a caller request or a project style guide first, then
+the artifact's genre. Where the profile is inactive, Animize's fidelity and
+integrity rules still apply.
 
-- `plain` applies this profile.
-- `off` leaves its preferences inactive. Animize's fidelity and integrity
-  rules still apply.
-- `auto` resolves from the caller's request first, then a caller or project
-  style guide, then the destination and genre.
-
-Under `auto`, apply the profile to agent replies and to technical,
-instructional, reporting, reference, how-to, and tutorial prose. Leave it off
-for essays, fiction, marketing, and personal prose unless the caller or a
-controlling style guide requests plain language.
-
-Use the same profile under `quick` and `deep`; the pass changes the amount
-of work, not the clarity standard. For a findings-only clarity review, inspect
-and report without rewriting. Under the Preserve regime, repair a clarity
-defect only within the clause-level edit policy and list the rest in the
-notes.
-
-Complete routing when `clarity` is resolved and the applicable destination and
-genre are known or can be inferred safely.
+For a findings-only clarity review, inspect and report without rewriting.
+Under the Preserve regime, repair a clarity defect only within the
+clause-level edit policy and list the rest in the notes.
 
 ## Precedence and Orwell escape rule
 
@@ -51,7 +37,8 @@ Apply clarity rules in this order:
    [verification](verification.md) for fact-bearing rewrites.
 2. Follow the caller's explicit constraints and the caller or project style
    guide.
-3. Under `preserve` or `match`, retain evidence-backed voice traits.
+3. Under Preserve, or when the caller supplied writing samples, retain
+   evidence-backed voice traits.
 4. Apply destination and genre conventions.
 5. Apply this profile's house preferences.
 
@@ -79,8 +66,8 @@ contract or prevents a concrete loss of clarity, fidelity, precision, or fit.
 ## Establish the brief
 
 Identify the audience, purpose, format, tone, destination, and controlling
-style guide from the request or source. Ask only when a missing choice would
-materially change the result.
+style guide from the request or source. When a choice is missing, take the
+destination's convention.
 
 - For new prose, use concrete subjects, active verbs, and enough supported
   detail to fulfill the brief.

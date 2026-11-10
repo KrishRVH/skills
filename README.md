@@ -61,10 +61,11 @@ link, spelling, and secret checks.
 ## Writing And Editing
 
 - **animize** - Writes, revises, or assesses lasting prose artifacts such as PR
-  descriptions, comments, documents, and messages to be sent or published. A
-  quick pass handles short artifacts; the deep pass recomposes generated drafts
-  or edits a human draft at clause level so its authorship stays intact.
-  Findings-only requests return notes and withhold the artifact.
+  descriptions, comments, documents, and messages to be sent or published.
+  Every invocation runs one full procedure with no settings and no questions.
+  It recomposes a draft, or edits it at clause level when the caller says they
+  wrote it, so its authorship stays intact. Findings-only requests return
+  notes and withhold the artifact.
 
   ```ruby
   npx skills@latest add KrishRVH/skills/animize

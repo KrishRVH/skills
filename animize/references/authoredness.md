@@ -1,7 +1,7 @@
 # Authoredness
 
-Use this reference during Rewrite and Write jobs. Its purpose is to make prose
-feel intentionally composed, not to add cosmetic irregularity or claim proof of
+Use this reference in every Recompose run. Its purpose is to make prose feel
+intentionally composed, not to add cosmetic irregularity or claim proof of
 human authorship.
 
 A reader experiences authorship through the choices behind the text: what is
@@ -21,7 +21,7 @@ alone are weak substitutes.
 - [Openings](#8-openings)
 - [Endings](#9-endings)
 - [Genre-native defaults](#10-genre-native-defaults)
-- [Voice modes](#11-voice-modes)
+- [Voice](#11-voice)
 - [Continuous read tests](#12-continuous-read-tests)
 
 ## 1. Selection and hierarchy
@@ -205,10 +205,10 @@ repetition. Naturalness never outranks legal precision.
 Follow the brief's narrator, point of view, world facts, and stylistic
 constraints. Invention is permitted only within the creative brief.
 
-## 11. Voice modes
+## 11. Voice
 
-For `preserve` and `match`, complete a voice record before drafting.
-Record three to five observable signals, each tied to source evidence, such as
+When the caller supplied writing samples, complete a voice record before
+drafting. Record three to five observable signals, each tied to source evidence, such as
 sentence movement, density, register, stance, vocabulary, paragraph shape,
 humor, qualification, or deliberate roughness. Exclude topic vocabulary,
 demographic inference, isolated punctuation, and memorable phrases that would
@@ -222,7 +222,7 @@ writer could recognize the same decision-making habits after topic words and
 protected phrases are removed. Recognition is a voice-fidelity test, not proof
 of authorship.
 
-### Rebuild: default for generated drafts and briefs
+### Default: no samples supplied
 
 Treat source cadence, sentence shapes, transitions, headings, and lexical habits
 as editable rather than protected. Use a direct, unshowy register suited to the
@@ -232,19 +232,15 @@ Rebuilding is permission to change the structure, not a quota for change. Leave
 an exact, deliberate, genre-native passage intact when a rewrite would serve no
 reader-facing purpose.
 
-### Preserve: human drafts
+### The caller's own draft
 
-`voice: auto` resolves to `preserve` when the caller says the draft is their
-own writing, and the deep pass then runs the Preserve regime described in
-[the deep pass](deep-recomposition.md#preserve-branch). Use the completed
-voice record to protect source-owned unusual details, mixed feelings, asides,
-fragments, and self-corrections when they are clear and functional. Every
-change is a deletion, a reorder, an edit within a clause, or a merge or split
-at a clause boundary. Never generate a new reaction or mannerism, and never
-regenerate a sentence from its meaning. Repair material defects within that
-policy and list the rest in the notes.
+A draft the caller calls their own writing runs under
+[the Preserve branch](procedure.md#preserve-branch), whose edit policy
+protects the author's voice by construction: every change is a deletion, a
+reorder, a defect repair within a clause, or a merge or split at a clause
+boundary. That branch needs no voice record.
 
-### Match: explicit or sample-led request
+### Supplied samples
 
 Infer durable traits from more than one passage when possible. Separate writer
 traits from topic vocabulary and genre requirements. Match functional
@@ -285,7 +281,7 @@ Use these after drafting:
 - **Necessity:** What can be removed without loss?
 - **Defensibility:** Does an unusual phrase, fragment, aside, or rhetorical
   device perform an identifiable job, or is a formula supplying the effect?
-- **Recognition:** Under `preserve` or `match`, do the recorded voice
+- **Recognition:** When the caller supplied samples, do the recorded voice
   signals remain observable without copied catchphrases or invented biography?
 - **Template:** Do several paragraphs move in the same prebuilt pattern?
 - **Ending:** Did the piece finish its job, or merely announce that it is done?

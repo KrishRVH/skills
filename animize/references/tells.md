@@ -57,6 +57,17 @@ the supported comparison.
 
 **"Not just X, but Y."** State the point directly.
 
+**"The real X."** `The real problem`, `the real question`, `the real work`,
+`the real win`, `the real story`. The phrase promises a truth hidden behind a
+decoy the text never showed, which stages an ordinary point as a revelation.
+State the claim with the thing as its subject: "the real bottleneck is review
+time" → "review time is the bottleneck". Swapping in `true`, `actual`, or
+`underlying` keeps the defect. Retain `real` when the text has shown the
+apparent version it corrects ("the listed price is $40; the real price with
+fees is $57"), when it separates the thing from a stand-in ("real traffic,
+not the load test"), and in fixed terms such as `real number` and `real
+time`.
+
 **Clipped negations.** Tails such as `no guessing`, `no friction`, and `no
 wasted motion` often gesture at a benefit without stating the actor, mechanism,
 or condition. Write the supported clause or delete the tail. Retain concise
@@ -128,7 +139,7 @@ relationship, split the sentence or remove nonessential clauses.
 
 ## Protected spans
 
-Before a deep line sweep, replace protected exact spans with stable placeholders.
+Before the line sweep, replace protected exact spans with stable placeholders.
 Mask quotations, code, structured data, URLs, citation locators, published
 titles, proper names, defined terms, caller-designated spans, and other material
 whose exact form is outside the stylistic assignment. Diagnose the surrounding
@@ -179,9 +190,9 @@ tags in documentation, or repeated exclamation marks and ellipses in a quiet
 register expose the wrong delivery convention. Match the actual medium and
 supplied samples; do not enforce punctuation quotas.
 
-**Quotation marks and apostrophes.** Under `rebuild`, default to straight marks.
-Under `preserve` or `match`, follow the supplied pattern; a single new
-curly apostrophe in otherwise straight-punctuated prose is an integration seam.
+**Quotation marks and apostrophes.** Default to straight marks. Under
+Preserve, or when the caller supplied samples, follow the supplied pattern; a
+single new curly apostrophe in otherwise straight-punctuated prose is an integration seam.
 Do not normalize protected quoted material. Before delivery, scan for U+2018,
 U+2019, U+201C, and U+201D when straight marks are selected.
 
@@ -229,7 +240,7 @@ If a formulaic sentence carries a unique judgment, repair its expression while
 preserving that judgment's force; do not delete it or replace it with a plausible
 new reaction.
 
-For every `retain` decision in a deep diagnostic, record the exact candidate,
+For every `retain` decision, record the exact candidate,
 the apparent rule match, the function that makes it legitimate, and the source
 or genre evidence for that function. "It sounds human" is not a defense. Report
 defended false positives only in a findings-only run or when notes would help the caller;

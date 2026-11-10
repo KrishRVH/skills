@@ -1,8 +1,8 @@
 # Backends
 
 This note is for callers who control their model stack. It sits outside the
-prose rules. Nothing in the skill's passes depends on it, and no prompt-level
-rule in the skill substitutes for it.
+prose rules. Nothing in the skill's procedure depends on it, and no
+prompt-level rule in the skill substitutes for it.
 
 ## What the evidence says
 
@@ -24,11 +24,11 @@ a false negative rate under half a percent (Pangram 4 Technical Report, arXiv
 
 ## Running Animize on top of a paraphrase
 
-A caller who runs a base-model paraphrase first can use the deep pass as the
-editing layer on top of it. The caller must state that the paraphrase output
-is the source; the skill will not guess. Under that statement the pass treats
-the paraphrase as the draft, and `voice: preserve` applies the Preserve regime
-to it: clause-level edits under budget, with the clause diff in the notes.
+A caller who runs a base-model paraphrase first can use Animize as the
+editing layer on top of it. By default the run recomposes the paraphrase like
+any other model-written draft. A caller who wants clause-level edits instead
+states that the paraphrase is the draft to keep, and the Preserve regime
+applies: edits under budget, with the clause diff in the notes.
 
 Say plainly what this stacks: an honest constraint (the model adds few tokens
 to a draft) on top of a technique whose purpose is evasion. The caller owns

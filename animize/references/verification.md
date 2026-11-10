@@ -150,7 +150,7 @@ Compare source and output for:
 
 Do not normalize exact elements without authorization.
 
-For deep stylistic diagnostics, mask each protected exact span with a stable
+For stylistic diagnostics, mask each protected exact span with a stable
 identifier and restore it exactly afterward. Masking keeps the diagnostic from
 rewriting the span; it does not replace the source-versus-output exactness
 check.
@@ -256,7 +256,7 @@ Structural independence is not a license to reorder chronology, logic, or
 procedural steps incorrectly.
 
 Under the Preserve regime, structural independence is not the goal. Run the
-clause diff from [the deep pass](deep-recomposition.md#p3-clause-diff) instead
+clause diff from [the procedure](procedure.md#p3-clause-diff) instead
 and confirm zero added clauses and a model-token share under budget.
 
 ## 8. Skeptical-reader red team

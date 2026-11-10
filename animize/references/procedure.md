@@ -1,9 +1,10 @@
-# Deep pass
+# Procedure
 
-Use this workflow when the pass is `deep`. Complete the shared Frame step in
-[the entry point](../SKILL.md#frame) first, including the regime decision. The
-Preserve branch applies to a human draft. The Recompose branch applies to an
-AI draft, an AI-assisted draft, or a brief with no draft.
+Every run follows this procedure. Complete Routing and Frame in
+[the entry point](../SKILL.md#routing) first. The Preserve branch applies
+when the caller says the draft is their own writing or asks to keep its
+wording. The Recompose branch applies to everything else. Run every step of the routed branch in order,
+whatever the artifact's length.
 
 ## Contents
 
@@ -11,7 +12,7 @@ AI draft, an AI-assisted draft, or a brief with no draft.
   - [P1. Edit policy](#p1-edit-policy)
   - [P2. Budget](#p2-budget)
   - [P3. Clause diff](#p3-clause-diff)
-  - [P4. Disclosure and delivery](#p4-disclosure-and-delivery)
+  - [P4. Verify, disclose, and deliver](#p4-verify-disclose-and-deliver)
 - [Recompose branch](#recompose-branch)
   - [2. Lock the content](#2-lock-the-content)
   - [3. Test sufficiency](#3-test-sufficiency)
@@ -32,10 +33,9 @@ meaning alone. The result is honestly describable as human-written with AI
 assistance. The skill does not verify that the draft is human. It takes the
 caller's word and says so in its notes.
 
-Preserve does not load `tells.md` or `skeptic-patterns.md` as repair lists.
-Read the draft for defects a reader would notice, then repair each one within
-the edit policy. When a defect cannot be repaired within the policy, list it in
-the notes.
+Preserve works without the repair catalogs. Read the draft for defects a
+reader would notice, then repair each one within the edit policy. When a
+defect cannot be repaired within the policy, list it in the notes.
 
 ### P1. Edit policy
 
@@ -76,11 +76,11 @@ permitted operations.
 ### P2. Budget
 
 `PRESERVE_BUDGET = 0.15`. Model-added tokens must be strictly fewer than the
-source's tokens and under 15% of the output's tokens. The constant lives here
-and is not a caller control. A caller who needs a stricter budget states it in
-the brief, and the pass honors the stricter number. A caller cannot loosen it;
-a draft that needs more change than the budget allows belongs in Recompose,
-and the notes say so.
+source's tokens and under 15% of the output's tokens. The constant lives
+here. A caller who needs a stricter budget states it in the brief, and the
+run honors the stricter number. A caller cannot loosen it; a draft that needs
+more change than the budget allows belongs in Recompose, and the notes say
+so.
 
 The 15% figure is the share below which a window of text keeps one dominant
 provenance label in the labeling scheme Pangram publishes for mixed
@@ -126,29 +126,35 @@ model-added tokens; source tokens; output tokens; share. Under Preserve any
 violation. Repair a violation by reverting the offending clause to a permitted
 operation or by moving the fix to the notes.
 
-### P4. Disclosure and delivery
+### P4. Verify, disclose, and deliver
+
+Run the addition and deletion ledger, the exact-element checks, the
+high-risk semantic checks, and the human-integrity check in
+[verification.md](verification.md) on the output against the draft. Revert
+any change that fails one.
 
 Deliver the artifact, then the notes:
 
-- the clause-diff summary from P3, unless the caller asked for `clean`
-- one line stating that the draft was treated as the caller's own writing on
-  the caller's word, or on the fallback when the routing question went
-  unanswered
-- residual defects left unrepaired because of the budget, each with the
-  smallest repair the caller could make
+- the clause-diff summary from P3, unless the caller asked for the text alone
+- one line stating why Preserve ran: the caller's statement of authorship,
+  which the run did not verify, or the caller's request to keep the wording
+- residual defects left unrepaired because of the edit policy or the budget,
+  each with the smallest repair the caller could make
 - suggested openings, transitions, or endings, clearly marked as suggestions
   and not present in the artifact
 
 Complete the Preserve branch when the artifact contains only permitted
-operations, the diff shows zero added clauses and a share under budget, and
-the notes account for every residual defect and suggestion. The Recompose
+operations, the diff shows zero added clauses and a share under budget, every
+verification check passes, and the notes account for every residual defect
+and suggestion. The Recompose
 branch's acceptance gate applies with its Proportion check read as the
 Preserve edit policy.
 
 ## Recompose branch
 
-Use this branch for an AI draft, an AI-assisted draft, or a write job from a
-brief. The steps below are numbered to follow Frame as step 1.
+Use this branch for a draft a model produced, a draft of unstated origin, or
+a write job from a brief. The steps below are numbered to follow Frame as
+step 1.
 
 ## 2. Lock the content
 
@@ -182,9 +188,8 @@ Classify the material:
 
 - **Sufficient:** enough claims and particulars exist for a specific piece.
 - **Thin:** the point is usable, but evidence, examples, mechanisms, or stakes
-  are sparse. Write the strongest narrower piece the source supports. If the
-  entry point's three framing questions are unanswered, ask them now rather
-  than drafting around the gap.
+  are sparse. Write the strongest narrower piece the source supports, and
+  name in the notes each framing question the material left open.
 - **Unsafe:** a central claim is unsupported, contradictory, or misleading.
   Preserve and flag it. Correct it only from sources the caller supplied.
   Qualify or withhold it when publishing it unqualified would mislead.
@@ -245,16 +250,16 @@ substance, not as a sentence skeleton.
 - end paragraphs when their local work is complete
 - use sentence-case headings, straight quotes, spare bold, and no decorative
   emoji when no destination style controls those choices
-- apply [the clear-communication profile](clear-communication.md) when
-  `clarity` resolves to `plain`
+- apply [the clear-communication profile](clear-communication.md) when the
+  entry point's genre rule selects it
 - follow the entry point's tier 8 dash default unless a stronger tier decides
 - stop when the piece's final job is done
 
 Retain an original sentence only when it is already exact, natural, and
 structurally appropriate, not merely to minimize edits. Recomposition permits
 structural rebuilding; it does not require changing an already deliberate,
-genre-native passage. Under `voice: match`, apply the recorded voice signals
-to expression only.
+genre-native passage. When the caller supplied writing samples, apply the
+recorded voice signals to expression only.
 
 Complete recomposition when every locked item is represented, every omission
 is authorized, no defect survives from inertia, and no working passage changed
@@ -273,13 +278,14 @@ sentences assembled into a template:
 - rhythm driven by thought
 - non-mechanical paragraph shapes
 - a genre-native opening and ending
-- strong passages left intact, and recorded voice signals protected under
-  `match`
+- strong passages left intact, and recorded voice signals protected when the
+  caller supplied samples
 
-Consult [authoredness.md](authoredness.md) for long, complex, genre-sensitive,
-personal, sample-led, or still-generic prose.
+Check each property against its definition and genre defaults in
+[authoredness.md](authoredness.md), then run that file's continuous read
+tests.
 
-Complete the test when the applicable properties pass without manufactured
+Complete the test when every applicable property passes without manufactured
 quirks or changes to substance.
 
 ## 7. Red-team the skeptical reader
@@ -304,9 +310,9 @@ Review for mutually reinforcing structural choices:
 - formulaic challenges and outlook sections that manufacture conflict before a
   vague optimistic close
 
-When two or more cues cluster or local patches keep creating new mannerisms,
-consult [skeptic-patterns.md](skeptic-patterns.md) and rebuild the affected
-section.
+Run every diagnostic in [skeptic-patterns.md](skeptic-patterns.md) against
+the draft. When two or more cues cluster or local patches keep creating new
+mannerisms, rebuild the affected section.
 
 For prose longer than about one page, compare the claims made by distant
 sections. Merge or remove a later restatement that adds no condition,
@@ -315,17 +321,17 @@ defined terms, refrains, and intentionally modular sections.
 
 ### Line sweep
 
-Consult [tells.md](tells.md) and check each unmasked sentence for AI-default
-vocabulary, fancy copulas, `not just X, but Y`, forced triads, false ranges,
-superficial `-ing` tails, filler, significance adverbs, false agency, clipped
-negations, unsupported verdicts, unmotivated passives, stacked declarations,
-feeling-instead-of-mechanism claims, and typographic or drafting residue.
+Check each unmasked sentence against every entry in [tells.md](tells.md):
+AI-default vocabulary, fancy copulas, `not just X, but Y`, `the real X`,
+forced triads, false ranges, superficial `-ing` tails, filler, significance
+adverbs, false agency, clipped negations, unsupported verdicts, unmotivated
+passives, stacked declarations, feeling-instead-of-mechanism claims, and
+typographic or drafting residue.
 
 Classify each candidate as `fix`, `retain`, or `flag`. Fix it only when the form
 is a defect rather than a specific genre, logical, precision, or voice choice.
 Record defensible false positives internally; report them only in a
-findings-only run or when `delivery` is `with_notes` and the information helps
-the caller.
+findings-only run or when the caller asked what changed.
 
 Complete the pass when every material cluster is repaired, no known tell
 survives without a defensible function, and clean or constrained prose remains
@@ -348,11 +354,9 @@ Compare the completed artifact with the content map, not only with memory.
 - confirm that instructions and examples about the artifact did not leak into
   it
 
-Consult [verification.md](verification.md) for all fact-bearing nonfiction and
-always for technical, academic, scientific, legal, policy, medical, financial,
-or citation-bearing prose. Verification is internal to the pass. Its findings
-reach the caller only as notes, or as the whole response in a findings-only
-run.
+Run every check in [verification.md](verification.md). Verification is
+internal to the run. Its findings reach the caller only as notes, or as the
+whole response in a findings-only run.
 
 Complete verification when every locked item and output claim is accounted
 for, every exact element matches, and no unauthorized addition or deletion
@@ -375,20 +379,17 @@ Before delivery, scan generated text for hidden Unicode residue and for dash
 characters the tier 8 default does not allow. Preserve and flag suspicious
 source characters rather than silently normalizing protected spans.
 
-- `adaptive`: return only the artifact when nothing requires reporting;
-  otherwise append concise source notes or withhold an unsafe artifact.
-- `clean`: return only the artifact; use only when no unresolved issue requires
-  a flag.
-- `with_notes`: append material structural changes and unresolved source issues.
-- findings-only: return the notes and withhold the artifact.
+Deliver by the entry point's
+[destination and delivery](../SKILL.md#destination-and-delivery) rules: the
+artifact alone when nothing requires reporting, notes after it when something
+does, and the notes alone in a findings-only run or when the artifact is
+unsafe.
 
 For file targets, edit only bounded prose and preserve frontmatter, code,
-structured data, and link targets outside scope. Complete delivery when the
-artifact and any required notes match the controls and the acceptance gate.
-Keep source gaps, fidelity warnings, and explanations of removed source prose
-outside the artifact. If `delivery: clean` conflicts with a required warning,
-report that conflict or withhold the artifact rather than embedding the warning
-as content.
+structured data, and link targets outside scope. Keep source gaps, fidelity
+warnings, and explanations of removed source prose outside the artifact.
+Complete delivery when the artifact and every required note match those
+rules and the acceptance gate.
 
 ## Acceptance gate
 
@@ -424,5 +425,7 @@ The artifact is ready only when all applicable checks pass:
   decided otherwise
 - **Detector silence:** no sentence describes the output's standing with any
   detector
+- **Unattended:** no question reached the caller, and each named default
+  taken is stated in the notes
 - **Delivery:** output contains only the requested artifact and necessary
   unresolved warnings, or only the notes in a findings-only run

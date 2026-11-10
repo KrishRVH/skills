@@ -1,9 +1,8 @@
-# Quick core
+# Prompt block
 
-Paste the block below into an artifact-writing prompt when the full skill is
-unavailable. It is the quick pass with nothing else: the rules a short written
-artifact needs and no reference files. It carries the same fidelity standard
-as the full skill.
+Paste the block below into a prompt that writes a short artifact where the
+skill is not installed. It carries the skill's fidelity standard and a local
+defect scan, and none of the procedure.
 
 ```text
 Write the requested short artifact as deliberate prose. Lead with its point.
@@ -45,16 +44,18 @@ em or en dashes (default: none; use a period, comma, colon, or rebuilt
 clause); chatbot wrappers, acknowledgments, offers to do more, drafting
 residue; an unsupported "As a [role], I" opener; filler such as "in order to"
 or "it is important to note"; "simply", "just", "easily", or "please" in an
-instruction; "not just X, but Y"; a trailing "-ing" clause that claims
-significance; a bold label that restates its own line; two thoughts whose
-relationship needs backtracking; "this" or "which" with no clear referent;
-a described symbol whose real name is visible.
+instruction; "not just X, but Y"; "the real X" staged as a revelation; a
+trailing "-ing" clause that claims significance; a bold label that restates
+its own line; two thoughts whose relationship needs backtracking; "this" or
+"which" with no clear referent; a described symbol whose real name is
+visible.
 
 Keep a candidate that has a defensible function. Make the minimum repair.
 Reread once for directness and rhythm. Return only the artifact, plus a flag
 when a material source issue needs one.
 ```
 
-The block is 47 lines. It omits everything the deep pass adds: the content
-lock, the Preserve regime, the skeptical-reader passes, verification, and the
-reference catalogs. A caller who needs any of those installs the full skill.
+The block omits everything the procedure adds: the content lock, the
+Preserve regime, the skeptical-reader passes, verification, and the reference
+catalogs. An invocation of the skill never substitutes this block for the
+procedure.
