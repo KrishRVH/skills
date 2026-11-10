@@ -1,5 +1,82 @@
 # Changelog
 
+## animize: one home per rule (2026-11-09)
+
+Changes:
+
+- The entry point opens with the four steps of a run (route, frame, run the
+  procedure, deliver) and states the rules after them. The table of files a
+  branch loads sits in the step that loads them.
+- There is one gate. The entry point's universal gate merged into the
+  procedure's acceptance gate, which groups its checks as every run,
+  Preserve only, and Recompose only. `verification.md` lost a second
+  red-team pass and a third acceptance list.
+- The masking rule, the `fix`, `retain`, and `flag` rule, and the record for
+  a retained candidate each live once, in the procedure's red-team step.
+  Three files had stated them, with three different rules for reporting a
+  retained candidate.
+- The dash default is stated once, in Precedence tier 8, and the catalogs
+  point to it.
+- Recompose steps are numbered R1 to R8 beside Preserve's P1 to P4. Step
+  lists that summarized a catalog are gone, so each step applies every entry
+  of its file. The content lock has one name and one shape, the schema that
+  R1 fills.
+- The `Directions` section, the clear-communication profile's own brief and
+  completion check, and the session-residue section of `tells.md` are gone.
+  The procedure, the acceptance gate, and skeptic pattern 16 already held
+  their content.
+- Preserve runs without the clear-communication profile, whose file it never
+  loaded.
+- A findings-only run is defined: it skips the two drafting steps, runs the
+  rest as a diagnosis, ranks its findings by cost to the reader, and carries
+  no origin note. The fixed note said the draft had been recomposed.
+- The content lock fills from the whole source boundary, including task
+  evidence the caller did not paste, and narrowing a claim that evidence
+  does not support is authorized.
+- Smaller rules a forward test asked for: a Markdown artifact is returned
+  in a fence, PR descriptions and commit messages keep change framing,
+  moving a paragraph break is a Preserve operation, and the Preserve notes
+  name each edit in plain words.
+
+Measured, with the tables in `animize/references/evaluation-results.md`:
+
+- Size: a Recompose run reads 1,986 lines of instructions, down from
+  2,255.
+- Forward tests: seven sessions on the consolidated text across two model
+  tiers, then four top-tier sessions on the final text, one per path
+  (Preserve, Recompose, unstated origin, findings only). No session asked a
+  question, and each loaded exactly its branch's fixed reference set,
+  checked against its recorded tool calls.
+- Guardrail check, which also covers the previous entry: 54 documents on
+  each of two model tiers, scored with Binoculars and both open EditLens
+  models against the recorded baseline. No verdict moved toward
+  machine-written in any cell. Two cells are flagged because their mean
+  rose: Recompose on the pilot mirrors (0.484 to 0.515 on the Llama model,
+  one document carrying it) and Recompose on ordinary human drafts (0.020
+  to 0.032, all ten still read as human).
+- Where the outputs stand: every human draft outside one known false
+  positive reads as human after either branch, on both models. No
+  model-written draft reads as human after Recompose, as at baseline; the
+  Llama mean on generated text fell from 0.991 to 0.921.
+- Preserve no longer over-edits a strong draft: 0 edited clauses on six
+  polished passages, against 11.
+- Tier difference: both tiers pass the process checks and read the same on
+  human drafts. On model-written text the mid tier rebuilt half as much
+  and scored higher, and under Preserve it deleted content the top tier
+  left in and flagged. It wrote 1,400 to 4,000 tokens per document against
+  8,800 to 21,500.
+- Cost of a single run: 72,000 to 132,000 tokens and 3 to 10 minutes on
+  the top tier; 55,000 to 76,000 tokens and 36 to 65 seconds on the mid
+  tier.
+- Three worked Preserve examples were corrected: `clause_diff.py` counted
+  an added clause in two of them and different totals in two.
+- Not run: the production checker on these outputs (a blind packet of
+  twenty is prepared), a blind rating of the outputs or the tiers, and the
+  file-target, supplied-samples, text-alone, and long-document cases.
+- Open: the test sessions reported eight instructions they had to
+  interpret, listed in the results file. None was changed, so the text
+  tested is the text shipped.
+
 ## animize: one unattended procedure (2026-11-09)
 
 Changes:

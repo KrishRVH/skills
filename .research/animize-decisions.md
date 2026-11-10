@@ -131,6 +131,65 @@ promises a truth hidden behind a decoy the text never showed.
 
 Not done: the guardrail's before-and-after detector score for this change.
 
+## Revision of 2026-11-09: one home per rule
+
+The maintainer asked for a pass over the repository with a guide for writing
+documents that agents consume. Its test is whether an agent takes the same
+process on every run, and its main findings in this skill were duplication:
+three gates, a masking rule stated in five places, the dash default in five,
+and three different rules for when to report a retained candidate. Each rule
+now has one home, and the entry point leads with the steps of a run.
+
+Choices made while consolidating, each a judgment and none from the
+maintainer's words:
+
+- Preserve runs without the clear-communication profile. The entry point
+  said the profile applied under Preserve, but Preserve never loaded its
+  file, so the sentence promised checks that could not run. The Preserve
+  edit policy already repairs an ambiguity as a defect.
+- A findings-only run uses the Recompose steps as a diagnosis, skips the two
+  drafting steps, and carries no origin note. The first forward test of that
+  path found the fixed note would have told the caller a draft was
+  recomposed when nothing had changed.
+- The rules govern the artifact. Notes are written in the agent's ordinary
+  voice, and the two-sentence cap applies to notes that accompany an
+  artifact, not to findings.
+- The content lock fills from the whole source boundary. A PR description an
+  agent drafted is checked against the diff in the session, which the caller
+  never pasted.
+- The `Directions` section is gone. Its five words restated the procedure's
+  design and drafting steps and applied to one branch only.
+
+The pass was meant to move rules, not change them, and it did both. The
+forward tests surfaced unclear instructions, and about a dozen were fixed
+in the same pass, most after the sessions that had tested the text. The
+maintainer asked how fidelity had been lost. Nothing measured said it had,
+and nothing measured said it had not. What followed:
+
+- The consolidation and the rule changes are separate commits, so the
+  second can be reverted alone.
+- The final text was frozen and every path rerun on the frozen copy.
+- The guardrail check ran on that copy, on both corpora, before anything
+  was published. It covers the one-procedure revision as well, whose check
+  had not been run.
+- The reruns reported eight more instructions that needed interpreting.
+  They are listed in the results file and were left alone, so the text
+  tested is the text shipped.
+
+The guardrail check flagged two cells whose mean rose with no verdict
+change. Neither led to a rule change. The protocol sends a flag to a
+reader, and no reader has judged these outputs.
+
+A separate question came up during the pass: whether runs should default to
+a smaller, faster model. The guardrail check ran all seven cells on both
+tiers. The smaller model passed every process check and read the same as
+the larger one on drafts a person wrote. It did a fraction of the work per
+document, rebuilt half as much of a model-written draft and scored higher
+on it, and under Preserve deleted content the larger model left in and
+flagged. The evidence is one session per cell with no blind rating. No
+default was set: the skill's frontmatter cannot name a model under the
+repository's contract, and the choice is the maintainer's.
+
 ## Decisions forced by repository rules
 
 1. **No `agents/backends.md`.** The validator allows only `openai.yaml` inside

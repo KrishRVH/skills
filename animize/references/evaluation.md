@@ -307,25 +307,25 @@ reader-facing measure, and the guardrail is bounded:
 - Never adopt typos, casing tricks, homoglyphs, invisible characters, synonym
   churn, fake self-corrections, or any other transformation that changes a
   detector's reading while leaving the reader's experience the same or worse.
-- Fidelity, fabricated-humanity, and reader-preference results outrank the
-  score in every conflict. Never use a score as an optimization target or a release
+- Fidelity, fabricated-humanity, and reader-preference results outrank the score
+  in every conflict. Never use a score as an optimization target or a release
   criterion for prose quality.
 
 Record three columns:
 
-- **A trained classifier of the target family.** The Open Pangram release
-  (two EditLens models: a LoRA adapter on `meta-llama/Llama-3.2-3B` and a
+- **A trained classifier of the target family.** The Open Pangram release (two
+  EditLens models: a LoRA adapter on `meta-llama/Llama-3.2-3B` and a
   `roberta-large` classifier, CC BY-NC-SA 4.0, noncommercial only) runs on one
-  24 GB consumer GPU. Both are Pangram 3 lineage, trained on human,
-  AI-edited, and AI-generated versions of news, educational web text,
-  reviews, and fiction written to prompts, with no humanizer head, no
-  tokenwise decoding, and narrower domain coverage than the production
-  model. Both read a quarter to a third of the AI-edited documents in their
-  own test split as human, so a human verdict cannot rule out light editing. Use them for the negative check
-  and for AI-fraction estimates on Preserve output. Report their verdicts as
-  EditLens verdicts, never as production verdicts. The vendor's free web
-  checker can spot-check up to twenty final documents against the production
-  model by hand; record those separately.
+  24 GB consumer GPU. Both are Pangram 3 lineage, trained on human, AI-edited,
+  and AI-generated versions of news, educational web text, reviews, and fiction
+  written to prompts, with no humanizer head, no tokenwise decoding, and
+  narrower domain coverage than the production model. Both read a quarter to a
+  third of the AI-edited documents in their own test split as human, so a human
+  verdict cannot rule out light editing. Use them for the negative check and for
+  AI-fraction estimates on Preserve output. Report their verdicts as EditLens
+  verdicts, never as production verdicts. The vendor's free web checker can
+  spot-check up to twenty final documents against the production model by hand;
+  record those separately.
 - **A perplexity-family detector** (Binoculars, open source) to compare how
   a perplexity score and a trained classifier respond to the same edit.
 - **An optional second trained classifier** from another lineage, as another

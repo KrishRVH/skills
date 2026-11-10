@@ -12,7 +12,9 @@ stated in every job. On those dates the skill also had a lighter pass for
 short artifacts and asked the caller one question about a first-person draft
 of unstated origin. Both were removed on 2026-11-09, when the skill became
 one unattended procedure. [Unattended runs](#unattended-runs) holds the
-forward test of that change.
+forward tests of that change and of the consolidation that followed, and
+[Guardrail check after consolidation](#guardrail-check-after-consolidation)
+holds the detector scores for both.
 
 ## Contents
 
@@ -72,9 +74,12 @@ forward test of that change.
 
 ## What was not run
 
-- A detector re-score after the changes of 2026-11-09 (one procedure, no
-  question to the caller, fixed reference loading, and one new line-level
-  tell). The guardrail baseline below predates them.
+- The production checker on outputs of the current text. A blind packet of
+  twenty outputs from the guardrail check is prepared and has not been
+  pasted. The production results below are from the pilot run.
+- A blind rating of the current text's outputs, or of the two model tiers.
+- A guardrail check that separates the two changes of 2026-11-09. One run
+  covers both.
 - The full procedure on the short-artifact defect suite. That suite was run
   against the lighter pass the skill then had.
 - The humanizer-head metric. Neither open model has such a head.
@@ -372,6 +377,180 @@ expert rated level with human originals. A score from these detectors can
 flag a regression. It has not tracked how a skilled reader judged the same
 prose.
 
+### Guardrail check after consolidation
+
+Run of 2026-11-09 on the skill text as committed after two changes: one
+unattended procedure, and one home per rule. The baseline predates both, so
+this check covers them together and cannot separate them. The corpora,
+`calibration.json`, and the three detectors are unchanged, and re-scoring
+the 18 pilot sources reproduced the recorded EditLens scores exactly.
+
+The sessions differ from the baseline's in one way that matters. Each job
+was a caller message and nothing else: "I wrote this draft myself", "A
+model generated this draft", or no statement, then "Run Animize on this:"
+and the text. No session was told a regime, a budget, or a genre. One
+session ran each cell: seven cells and 54 documents on the top tier, and
+the same seven on the mid tier. The human drafts reached Recompose by
+having no stated origin, which is how they reach it now. Raw rows are in
+the harness folder under `consolidated/`.
+
+Unattended checks, from `run_animize.py merge` and each session's recorded
+tool calls: 108 jobs, 0 questions, 0 wrong regimes, 0 missing origin notes,
+and every session loaded exactly its branch's fixed set.
+
+Top tier. Counts read human / AI-assisted / AI-generated. Each score
+column reads source, then baseline output, then this run's output.
+
+| Pilot cell              | n   | RoBERTa mean          | RoBERTa verdicts now | Llama mean            | Llama verdicts: source | baseline  | now       |
+| ----------------------- | --- | --------------------- | -------------------- | --------------------- | ---------------------- | --------- | --------- |
+| human_defect, Preserve  | 6   | 0.095 / 0.055 / 0.051 | 6 / 0 / 0            | 0.254 / 0.159 / 0.130 | 2 / 4 / 0              | 5 / 1 / 0 | 5 / 1 / 0 |
+| human, Preserve         | 6   | 0.050 / 0.055 / 0.054 | 6 / 0 / 0            | 0.134 / 0.155 / 0.145 | 5 / 1 / 0              | 5 / 1 / 0 | 5 / 1 / 0 |
+| ai, Recompose           | 6   | 0.098 / 0.064 / 0.100 | 6 / 0 / 0            | 0.467 / 0.484 / 0.515 | 0 / 6 / 0              | 0 / 6 / 0 | 0 / 6 / 0 |
+| human_defect, Recompose | 6   | 0.095 / 0.060 / 0.056 | 6 / 0 / 0            | 0.254 / 0.171 / 0.152 | 2 / 4 / 0              | 3 / 3 / 0 | 5 / 1 / 0 |
+
+| Second cell          | n   | RoBERTa mean          | RoBERTa verdicts: source | baseline   | now        | Llama mean            | Llama verdicts: source | baseline   | now        |
+| -------------------- | --- | --------------------- | ------------------------ | ---------- | ---------- | --------------------- | ---------------------- | ---------- | ---------- |
+| human, Preserve      | 10  | 0.018 / 0.035 / 0.036 | 10 / 0 / 0               | 10 / 0 / 0 | 10 / 0 / 0 | 0.007 / 0.013 / 0.014 | 10 / 0 / 0             | 10 / 0 / 0 | 10 / 0 / 0 |
+| generated, Recompose | 10  | 0.999 / 0.996 / 0.991 | 0 / 1 / 9                | 0 / 1 / 9  | 0 / 1 / 9  | 0.991 / 0.946 / 0.921 | 0 / 1 / 9              | 0 / 4 / 6  | 0 / 4 / 6  |
+| human, Recompose     | 10  | 0.018 / 0.040 / 0.051 | 10 / 0 / 0               | 10 / 0 / 0 | 10 / 0 / 0 | 0.007 / 0.020 / 0.032 | 10 / 0 / 0             | 10 / 0 / 0 | 10 / 0 / 0 |
+
+Clause-diff accounting from `clause_diff.py` as it stands, run on the
+baseline outputs and on this run's. Share is model-added tokens over output
+tokens.
+
+| Cell                           | Run      | Kept | Edited | Deleted | Added | Mean share | Max share | Output length |
+| ------------------------------ | -------- | ---- | ------ | ------- | ----- | ---------- | --------- | ------------- |
+| Pilot, human_defect, Preserve  | baseline | 105  | 7      | 32      | 0     | 0.002      | 0.009     | 82%           |
+| Pilot, human_defect, Preserve  | now      | 106  | 7      | 31      | 0     | 0.000      | 0.000     | 83%           |
+| Pilot, human, Preserve         | baseline | 99   | 11     | 2       | 0     | 0.015      | 0.032     | 100%          |
+| Pilot, human, Preserve         | now      | 112  | 0      | 0       | 0     | 0.000      | 0.000     | 100%          |
+| Pilot, ai, Recompose           | baseline | 65   | 53     | 12      | 15    | 0.127      | 0.231     | 96%           |
+| Pilot, ai, Recompose           | now      | 108  | 12     | 10      | 7     | 0.058      | 0.185     | 97%           |
+| Pilot, human_defect, Recompose | baseline | 52   | 48     | 44      | 10    | 0.141      | 0.280     | 79%           |
+| Pilot, human_defect, Recompose | now      | 95   | 12     | 37      | 1     | 0.018      | 0.097     | 82%           |
+| Second, human, Preserve        | baseline | 240  | 16     | 0       | 2     | 0.008      | 0.039     | 100%          |
+| Second, human, Preserve        | now      | 244  | 12     | 0       | 2     | 0.008      | 0.034     | 100%          |
+| Second, generated, Recompose   | baseline | 70   | 136    | 45      | 39    | 0.190      | 0.361     | 94%           |
+| Second, generated, Recompose   | now      | 50   | 135    | 66      | 55    | 0.253      | 0.490     | 94%           |
+| Second, human, Recompose       | baseline | 130  | 92     | 34      | 31    | 0.157      | 0.291     | 98%           |
+| Second, human, Recompose       | now      | 123  | 98     | 35      | 37    | 0.147      | 0.307     | 98%           |
+
+Findings:
+
+- **No verdict moved toward machine-written in any cell, on either
+  model.** One cell moved the other way: Recompose on the pilot's defect
+  drafts read 3 / 3 / 0 on Llama at baseline and reads 5 / 1 / 0 now.
+- **Two cells are flagged, because their mean rose against the baseline.**
+  Recompose on the pilot mirrors went from 0.484 to 0.515 on Llama. One
+  document carries it: the Twain mirror scored 0.422 as a source, 0.570 at
+  baseline, and 0.655 now, with 6% of its tokens from the model. Three of
+  the six scored below their baseline. The Paine mirror came back with two
+  cuts, a paragraph break, and no model-added token, and moved from 0.593
+  to 0.613, so a move of 0.02 on this model takes no new wording. Recompose
+  on the second cell's human drafts went from 0.020 to 0.032 on Llama and
+  0.040 to 0.051 on RoBERTa. All ten read as human on both; the highest
+  output scored 0.074 against a human line of 0.199, and 0.109 against
+  0.290. Neither flag led to a rule change. Both are for a reader's
+  judgment, as the protocol says.
+- **Recompose on generated text still reads as machine-written, ten of
+  ten.** The Llama mean fell from 0.991 to 0.921, every output scored at or
+  below its source, and the verdicts match the baseline's. The lowest
+  output scored 0.564. No model-written document reads as human after the
+  skill on either model, here or at baseline. A regex screen for common
+  machine constructions (dashes, `not just X but Y`, signposts, stock
+  vocabulary, `-ing` tails) counts 13.0 per thousand words in those ten
+  sources and 2.7 in the outputs, with no dash and no `not just`. What
+  remains is stock wording inside praise the source owned, such as "deeply
+  moving". The classifiers are not reading those surface features.
+- **Preserve stopped over-editing strong drafts.** The baseline changed 11
+  clauses across six polished passages. This run changed none: five came
+  back byte for byte, and Paine got two semicolons for comma splices. That
+  Paine draft still reads AI-assisted on Llama, 0.247 as a source and 0.311
+  after the two semicolons.
+- **Preserve removed 29 of 30 injected defects, against 30.** "In order to"
+  stayed in the Darwin draft on both tiers. Without the repair catalogs the
+  sessions did not read it as a defect, and in that passage it is ordinary
+  period English. Recompose removed all 30.
+- **Recompose keeps more of a good draft than it did.** On the pilot's
+  defect drafts the model-token share fell from 0.141 to 0.018, and on the
+  mirrors from 0.127 to 0.058. The sessions said why: with the injected
+  scaffolding cut, nearly every remaining sentence passed R4's test for
+  retaining a sentence that is already exact. On the second cell's ordinary
+  drafts, which have real defects, the share is where it was (0.147 against
+  0.157), and on real model output Recompose rebuilt more than before
+  (0.253 against 0.190).
+- **The two `added` clauses under Preserve are the baseline's two
+  instrument artifacts**, in the same two documents: repaired dialogue
+  punctuation, and "as" corrected to "was". Without them the largest share
+  in the cell is 0.008.
+- **Binoculars moved by less than its spread**, as before. Pilot output
+  means run from 0.979 to 0.993 against sources of 0.979 to 1.003.
+- **Fidelity checks:** 0 source numbers missing from any pilot output and 0
+  generated dash characters, on both tiers.
+
+Outputs that read as human, top tier, as a count per cell:
+
+| Draft and branch                                 | Corpus      | RoBERTa  | Llama    |
+| ------------------------------------------------ | ----------- | -------- | -------- |
+| Human draft, caller's own, Preserve              | pilot       | 12 of 12 | 10 of 12 |
+| Human draft, caller's own, Preserve              | second cell | 10 of 10 | 10 of 10 |
+| Human draft, origin unstated, Recompose          | pilot       | 6 of 6   | 5 of 6   |
+| Human draft, origin unstated, Recompose          | second cell | 10 of 10 | 10 of 10 |
+| Model-written draft, stated generated, Recompose | pilot       | 6 of 6   | 0 of 6   |
+| Model-written draft, stated generated, Recompose | second cell | 0 of 10  | 0 of 10  |
+
+The RoBERTa count on the pilot mirrors is that model failing to detect
+them as sources, not an effect of the skill. The three pilot outputs that
+do not read as human on Llama are the Paine passage, whose clean original
+already reads AI-assisted. So a person's draft reads as a person's after
+either branch, and a model's draft reads as a model's after Recompose with
+its surface constructions gone. The production checker has not been run on
+this run's outputs; a blind packet of twenty is prepared.
+
+The two tiers on the same jobs. Share is the mean model-token share, and
+length is output tokens over source tokens.
+
+| Cell                           | Llama mean, top / mid | Llama verdicts, top | mid        | Share, top / mid | Length, top / mid |
+| ------------------------------ | --------------------- | ------------------- | ---------- | ---------------- | ----------------- |
+| Pilot, human_defect, Preserve  | 0.130 / 0.133         | 5 / 1 / 0           | 5 / 1 / 0  | 0.000 / 0.000    | 83% / 82%         |
+| Pilot, human, Preserve         | 0.145 / 0.145         | 5 / 1 / 0           | 5 / 1 / 0  | 0.000 / 0.001    | 100% / 100%       |
+| Pilot, ai, Recompose           | 0.515 / 0.477         | 0 / 6 / 0           | 0 / 6 / 0  | 0.058 / 0.023    | 97% / 97%         |
+| Pilot, human_defect, Recompose | 0.152 / 0.133         | 5 / 1 / 0           | 5 / 1 / 0  | 0.018 / 0.002    | 82% / 82%         |
+| Second, human, Preserve        | 0.014 / 0.015         | 10 / 0 / 0          | 10 / 0 / 0 | 0.008 / 0.007    | 100% / 98%        |
+| Second, generated, Recompose   | 0.921 / 0.964         | 0 / 4 / 6           | 0 / 3 / 7  | 0.253 / 0.116    | 94% / 89%         |
+| Second, human, Recompose       | 0.032 / 0.024         | 10 / 0 / 0          | 10 / 0 / 0 | 0.147 / 0.072    | 98% / 98%         |
+
+- **On drafts a person wrote, the tiers read the same.** Every such cell
+  has the same verdict counts on both models, and the means sit within
+  0.02 of each other.
+- **On model-written text the mid tier rebuilt half as much and scored
+  higher.** Its share was 0.116 against 0.253. Three of its ten outputs
+  scored above their source on Llama, against none on the top tier. The
+  regex screen counts 3.9 per thousand words against 2.7, including a
+  `not just X but Y` and an `-ing` tail the top tier had removed. It also
+  cut more: one draft went from 284 words to 182 by withholding claims the
+  top tier had narrowed and kept.
+- **Under Preserve the mid tier deleted what the top tier flagged.** It
+  cut two photo captions from a news draft, a forum poster's opening
+  remark, and the label "state-of-the-art". The top tier deleted no clause
+  in the ten drafts and reported the captions in its notes. The mid-tier
+  session also withheld two punctuation repairs because its own clause
+  diff would have counted them as added clauses.
+- **The mid tier does a fraction of the work.** Per document it wrote 1,400
+  to 4,000 tokens, reasoning and output together, and took 11 to 31
+  seconds. The top tier wrote 8,800 to 21,500 and took 82 to 210 seconds.
+  Both report running every step.
+- **Routing, loading, and the unattended rules held on both.** A tier
+  difference shows in the edits, not in the process checks.
+
+Limits: one session per cell, and one session ran six or ten documents in
+a row, as in the baseline. The baseline sessions were told the regime and
+this run's were not, so a difference from baseline may come from the
+session prompt as well as from the skill text. Six to ten documents per
+cell cannot separate a mean shift of 0.03 from noise. The regex screen is
+a crude count of surface constructions, not the skill's catalog and not a
+reader.
+
 ## Prompt block versus the skill
 
 Six routine-communication drafts with 25 injected local defects (chatbot
@@ -556,27 +735,150 @@ made in response: the two named defaults, a length cap on notes, the
 Preserve wording about which residual defects go in the notes, and the rule
 against overwriting a file that version control cannot restore.
 
+### Re-test after consolidation, on two model tiers
+
+Forward test of 2026-11-09 on the consolidated text: one gate, one home per
+rule, and Recompose steps numbered R1 to R8. The session shape is the one
+above. Each case ran on the model the earlier test used (top tier) and on a
+smaller, faster model from the same family (mid tier), one session per
+cell. The reference counts come from each session's recorded tool calls.
+
+| Case                                         | Tier | Regime        | References loaded | Questions | Tokens  | Time       |
+| -------------------------------------------- | ---- | ------------- | ----------------- | --------- | ------- | ---------- |
+| PR description the agent drafted             | top  | Recompose     | 6 of 6            | 0         | 105,000 | 5 min 42 s |
+| The same PR description                      | mid  | Recompose     | 6 of 6            | 0         | 71,000  | 36 s       |
+| Cover note, "I wrote this ... myself"        | top  | Preserve      | 2 of 2            | 0         | 73,000  | 3 min 27 s |
+| The same cover note                          | mid  | Preserve      | 2 of 2            | 0         | 55,000  | 52 s       |
+| First-person status email, "my update email" | mid  | Recompose     | 6 of 6            | 0         | 75,000  | 62 s       |
+| README section, edits forbidden              | top  | Findings only | 6 of 6            | 0         | 114,000 | 7 min 25 s |
+| The same section, after the fixes below      | mid  | Findings only | 6 of 6            | 0         | 76,000  | 65 s       |
+
+Findings:
+
+- **Zero failures in seven on regime, loading, and the unattended check, on
+  both tiers.** The email session returned the origin note word for word.
+- **Both tiers made the same Preserve edits.** Two scaffolding phrases cut
+  and two grammar corrections, reported as 11 clauses, 9 kept, 2 edited, 0
+  added, at a model-token share of 0.014. The top-tier session also moved
+  the closing sentence into its own paragraph.
+- **Both tiers withheld the same unsupported claims from the PR
+  description**, and both flagged the same ambiguity in the evidence: it
+  says "retries up to 3 times" and also "gives up after 3 attempts".
+- **The mid tier ran no scripts.** Every top-tier session computed its
+  clause diff, word counts, and Unicode scan with a script. Every mid-tier
+  session did them by reading. Its Preserve note reported 149 source tokens
+  and 142 output tokens where the scripted count is 154 and 147; the share
+  came out the same.
+- **The mid tier's judgment slipped in two places.** Its findings-only
+  review advised deleting a paragraph that holds an owned judgment about
+  existing caches, hedged with "if the point is yours"; the top-tier review
+  kept the judgment at full strength and repaired its framing. Its email
+  changed "I think we book it" to "I think we should book it" and returned
+  a three-sentence note.
+- **The findings-only path had never run, and it was broken in four
+  places.** The fixed origin note says the draft "was fully recomposed",
+  which is false when nothing changed. The two-sentence cap on notes
+  contradicted the four parts a finding carries. Nothing ranked the
+  findings. Verification had no revision to compare. The top-tier session
+  worked around each and reported it. The skill now gives a findings-only
+  run no origin note, ranks findings by cost to the reader, applies the cap
+  only to notes that accompany an artifact, and runs only the Unicode scan
+  when there is a single text. The mid-tier session ran on the fixed text
+  and followed all four.
+- **The traces produced nine more edits.** The content lock fills from the
+  whole source boundary, including task evidence the caller did not paste.
+  Narrowing an unsupported claim is authorized, so verification does not
+  count it as a weakened one. An open framing question is named as a
+  default. PR descriptions and commit messages keep change framing. An
+  artifact that carries markup is fenced. Marketing copy inside a technical
+  destination gets the clear-communication profile. Moving a paragraph
+  break is a Preserve operation. The Preserve notes name each edit in plain
+  words, because the clause labels count clauses and reported "0 deleted"
+  beside two visible cuts. Notes are written in the agent's ordinary voice.
+
+Limits: one session per cell, short artifacts, cases written for the test,
+and the tier differences graded by the maintainer's agent with no blind
+rating. The top-tier sessions and the first three mid-tier sessions ran
+before the edits listed above. The file-target, supplied-samples,
+text-alone, and long-document cases remain unrun, as does any tier
+comparison on a long or fidelity-critical document.
+
+### Final text, every path
+
+The edits above landed after most of the sessions that prompted them, so
+the four cases ran once more, top tier, on a frozen copy of the text as
+committed. The cases and the session shape are unchanged.
+
+| Case                                         | Regime        | References loaded | Questions | Tokens  | Time       |
+| -------------------------------------------- | ------------- | ----------------- | --------- | ------- | ---------- |
+| PR description the agent drafted             | Recompose     | 6 of 6            | 0         | 104,000 | 5 min 21 s |
+| Cover note, "I wrote this ... myself"        | Preserve      | 2 of 2            | 0         | 72,000  | 3 min 10 s |
+| First-person status email, "my update email" | Recompose     | 6 of 6            | 0         | 132,000 | 9 min 53 s |
+| README section, edits forbidden              | Findings only | 6 of 6            | 0         | 105,000 | 5 min 55 s |
+
+Findings:
+
+- **Zero failures in four on regime, loading, and the unattended check.**
+- **The outputs match the earlier runs where the rules did not change.**
+  Preserve made the same four edits to the cover note. The PR description
+  lost the same unsupported claims and kept the same flag on the retry
+  count. The email carried the origin note word for word and kept "I think
+  we book", which the mid-tier session had changed.
+- **The edits did what they were written for.** The PR description came
+  back fenced, with three notes of at most two sentences. The Preserve
+  notes named each edit in words. The findings-only review ranked five
+  findings, carried no origin note, withheld the artifact, and listed the
+  seven spans it had checked and kept.
+
+The sessions also reported instructions they had to interpret. None was
+changed, so that the text tested is the text shipped:
+
+- The gate requires each named default to be stated in the notes, and a
+  findings-only run on a draft of unstated origin carries no origin note.
+- The origin note says the draft "was fully recomposed". Two sessions kept
+  most sentences as already exact and found the note overstated the change.
+- The two-sentence cap on a note strains against what a path must report:
+  Preserve's diff line, edit line, residuals, and suggestions, or a PR
+  description with eight unsupported claims.
+- A plain-text artifact is returned unfenced, and nothing says how to mark
+  where it ends and the notes begin.
+- P3 does not define a clause when a parenthetical splits a subject from
+  its verb, or whether a hyphenated compound is one token. Its similarity
+  measure (shared in-order tokens over the longer clause) also differs
+  from the one `clause_diff.py` computes (the mean of a sequence ratio and
+  token-set overlap). Counts differed by one clause between readings; the
+  added-token count and the zero-violation result did not.
+- An email's subject line is either a protected title or an editable
+  heading; the text supports both readings.
+- R4 says to retain a sentence only when it is already exact, and also
+  that no working passage changes merely for consistency. On prose that is
+  already good the two give no line for how much to rebuild.
+- Under Preserve, deleting a generic opener can strand a pronoun whose
+  antecedent it held. The text does not say whether to keep the opener,
+  supply the antecedent, or flag it.
+
 ## Acceptance criteria, pass or fail
 
-| Criterion                                                               | Result at pilot scale                                                                                                                                                             |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Preserve: zero added clauses, share under budget                        | Pass: 0 added clauses in 34 outputs after hand review of 2 flagged clauses, max share 0.039                                                                                       |
-| Preserve: at least 95% labeled human or AI-assisted                     | Pass at this scale: 10 of 10 Human on production (famous text), 10 of 10 human on both open models (ordinary text), 5 human and 1 assisted on Llama (famous text)                 |
-| Preserve: zero humanizer-head positives                                 | Not measurable; the open models have no such head                                                                                                                                 |
-| Preserve fidelity at or above Recompose                                 | Pass: 0 number losses, 0 added clauses, 2 flagged inferences, all in notes                                                                                                        |
-| Recompose: output no more machine-written than its source               | Pass at this scale: unchanged on production (6 of 6) and RoBERTa (10 of 10); on Llama 9 of 10 scored lower and 3 of 10 moved from AI-generated to AI-assisted; none read as human |
-| Human preference at least 60% on defect drafts                          | 6 of 6, one rater                                                                                                                                                                 |
-| Human preference at most 45% on strong drafts                           | 2 of 5, one rater; both named objections were lexical substitutions                                                                                                               |
-| Skeptical-observer parity with human controls                           | Mean authorship 3.33 for human sources, 3.33 for Recompose outputs, 2.33 for Preserve outputs; one rater, three passages per class                                                |
-| Routing: Preserve only on a caller statement, origin note when unstated | 5 of 5 sessions under the current rule, 2 of them unstated; 0 wrong guesses in 18 under the earlier rule, which also asked 6 questions                                            |
-| Unattended matrix: no question, right regime, notes present             | 5 of 5 sessions; five of the matrix's cases not run                                                                                                                               |
-| Fixed loading and every step at every length                            | 5 of 5 by tool-call trace, including a one-sentence artifact                                                                                                                      |
-| Prompt block matches the skill's local-defect repair                    | 25/25 for the block against 25/25 for the since-removed lighter pass; one stance drift in the block; not run against the full procedure                                           |
+| Criterion                                                               | Result at pilot scale                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Preserve: zero added clauses, share under budget                        | Pass: 0 added clauses in 34 outputs after hand review of 2 flagged clauses, max share 0.039; after consolidation, 0 in 22 top-tier outputs after hand review of the same 2 flagged clauses, max share 0.034                                                                                                                                                                            |
+| Preserve: at least 95% labeled human or AI-assisted                     | Pass at this scale: 10 of 10 Human on production (famous text), 10 of 10 human on both open models (ordinary text), 5 human and 1 assisted on Llama (famous text)                                                                                                                                                                                                                      |
+| Preserve: zero humanizer-head positives                                 | Not measurable; the open models have no such head                                                                                                                                                                                                                                                                                                                                      |
+| Preserve fidelity at or above Recompose                                 | Pass: 0 number losses, 0 added clauses, 2 flagged inferences, all in notes                                                                                                                                                                                                                                                                                                             |
+| Recompose: output no more machine-written than its source               | Pass at this scale: unchanged on production (6 of 6) and RoBERTa (10 of 10); on Llama 9 of 10 scored lower and 3 of 10 moved from AI-generated to AI-assisted; none read as human; after consolidation the verdicts are the same, every Llama score on the second cell's generated text is at or below its source, and the pilot mirrors' Llama mean rose 0.048 with no verdict change |
+| Human preference at least 60% on defect drafts                          | 6 of 6, one rater                                                                                                                                                                                                                                                                                                                                                                      |
+| Human preference at most 45% on strong drafts                           | 2 of 5, one rater; both named objections were lexical substitutions                                                                                                                                                                                                                                                                                                                    |
+| Skeptical-observer parity with human controls                           | Mean authorship 3.33 for human sources, 3.33 for Recompose outputs, 2.33 for Preserve outputs; one rater, three passages per class                                                                                                                                                                                                                                                     |
+| Routing: Preserve only on a caller statement, origin note when unstated | 5 of 5 sessions under the current rule, 2 of them unstated; 0 wrong guesses in 18 under the earlier rule, which also asked 6 questions; 108 of 108 batch jobs after consolidation                                                                                                                                                                                                      |
+| Unattended matrix: no question, right regime, notes present             | 5 of 5 sessions, then 11 of 11 after consolidation with findings-only added; four of the matrix's cases not run                                                                                                                                                                                                                                                                        |
+| Fixed loading and every step at every length                            | 5 of 5 by tool-call trace, including a one-sentence artifact; 11 of 11 sessions and 14 of 14 batch sessions after consolidation                                                                                                                                                                                                                                                        |
+| Prompt block matches the skill's local-defect repair                    | 25/25 for the block against 25/25 for the since-removed lighter pass; one stance drift in the block; not run against the full procedure                                                                                                                                                                                                                                                |
 
 One instruction changed in response to the rating. The Preserve edit policy
 now says a lexical replacement must repair a defect, and that the author's
-diction, period idiom, and register are not defects. The outputs measured
-here predate that sentence, and it has not been re-measured.
+diction, period idiom, and register are not defects. The outputs in the
+table predate that sentence. The guardrail check after consolidation
+re-measured it: 0 edited clauses on the six strong drafts, against 11.
 
 ## Manual production spot check
 
@@ -614,10 +916,10 @@ Reading:
   scored Preserve output on ordinary unpublished writing (see
   [Trained-classifier column](#trained-classifier-column)); a production
   check on such drafts has not been done.
-- **Recompose on a human draft mostly still reads Human.** Three of four
-  did, and the fourth was labeled assisted with the exact regenerated
-  sentence identified. Under the vendor's own scope rule (the model's added
-  tokens stayed below the human's), that is the expected label, not an
-  evasion; the drafts were human. It also shows what a statement of
-  authorship protects: the checker found the one rewritten sentence, and the author's
-  wording it did not find had been discarded.
+- **Recompose on a human draft mostly still reads Human.** Three of four did,
+  and the fourth was labeled assisted with the exact regenerated sentence
+  identified. Under the vendor's own scope rule (the model's added tokens stayed
+  below the human's), that is the expected label, not an evasion; the drafts
+  were human. It also shows what a statement of authorship protects: the checker
+  found the one rewritten sentence, and the author's wording it did not find had
+  been discarded.
